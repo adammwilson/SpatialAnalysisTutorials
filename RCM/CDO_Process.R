@@ -1,6 +1,6 @@
 
 ### set the working directory
-setwd("/home/user/ClimateLabs/RCM")
+setwd("/home/user/ost4sem/exercise/SpatialAnalysisTutorials/RCM")
 
 ## load some libraries that we will need
 library(ncdf)
