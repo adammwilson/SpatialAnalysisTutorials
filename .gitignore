@@ -1,2 +1,6 @@
 RCM/*.nc
+<<<<<<< HEAD
 .Rproj.user
+=======
+*.Rdata
+>>>>>>> a7a96460265a5cff29e00a5361919e48cea060ae
