@@ -5,3 +5,4 @@ climate/RCM/figure
 =======
 *.Rdata
 *.Rproj
+.DS_Store
