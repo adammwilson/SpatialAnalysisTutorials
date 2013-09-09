@@ -199,10 +199,31 @@ I then subsetted all of them them to the New England region and reprojected them
 The climate/data/ directory contains the following files:1. GFDL_RCM3_Current.nc - this is the 1968-2000 daily data from the RCM3 RCM forced by the GFDL GCM for the historical period from NARCCAP .* GFDL_RCM3_Future.nc - this is the 2038-2070 daily data from the RCM3 RCM forced by the GFDL GCM for the future period (A2 scenario) from NARCCAP
 * NewEngland.shp(and related files): This is a vector shapefile (polygon map) of the New England states. We’ll use it to make some plots later.* CDO_Process.R: This is a R script that * You will also see the two files that you should have downloaded from the IRI data library (GFDL_Future.nc and GFDL_Current.nc). We also put them in the repository in case the website did not cooperate during class.
 #### Exploring with Panoply
-Panoply is a useful program for ‘browsing’ netcdf files developed by NASA.You can view all the metadata (units, dimensions, variable names, and other attributes) and look at simple plots. This section will use Panoply to explore the data you just downloaded.
-Open Panoply by opening a terminal and typing (/usr/bin/panoply.sh), then open one of the netcdf (.nc) files.
+[Panoply](http://www.giss.nasa.gov/tools/panoply/) is a useful program for ‘browsing’ netcdf files developed by NASA.You can view all the metadata (units, dimensions, variable names, and other attributes) and look at simple plots. This section will use Panoply to explore the data you just downloaded.
+![image](http://www.giss.nasa.gov/tools/panoply/panoply_290.jpg)
+1. Open Panoply by opening a terminal and typing (`/usr/local/PanoplyJ/panoply.sh`), then open one of the netcdf (.nc) files.
+* Explore the interface: What variables are present? How are the data structured? How many latitude grid cells are there, how many time steps? What are the units of the variables?
+* Make a plot:    * double click on a variable and choose “lon-lat” plot    * The default display shows the entire globe, but these data are only forNew England so the data only cover a small proportion of the globe
+* So we need to change the view parameters in the “Map” tab below the image. Feel free to choose your own, or enter the following:
+    * Projection: Equirectangular (Regional)
+    * Center on: Lon. -70 E, Lat. 44.5N
+    * Width: 22, Height: 8
+* This will reveal the region more clearly.  If you want this to be the default region the next time you open Panoply, change the parameters in the preferences as well (edit-> preferences-> lonlat tab).
+* What does the “Interpolate” checkbox (near the bottom on the right) do? Is this useful?
+* Note the time/date at the bottom of the “Array” tab. To navigate to different times, change the time index or choose a date in the list to the right. You can put the cursor in the time box and use the up and down arrow keys to animate the display (note that there may be a delay between when you select a different time and when the display updates).
+* Now look directly at the data being displayed by clicking on the “Array 1” tab at the top.  You can browse these data in the same way as the image (the only difference is the first panel assigns a color to each number and overlays a map of the coastline).
+* Saving subsets of data or images:
+    *If you want to save an image of your current view, you can choose file -> Save Image.
+    * You can also export the data as a text file or a KML file for viewing inGoogle Earth (or any program that supports kml).
+* Do you notice any patterns as you look at different days? Do you see differences over the land and water? How would you use daily data in analysis?
 
 ### Processing Climate data with CDO and R
 ___________________
-To illustrate processing these data with R and other tools, we will use the Climate Data Operators ([CDO Tools](https://code.zmaw.de/projects/cdo)) developed by the Max-Plank Institute for Meteorology.  To continue, open the script climate/RCM/CDO_Process.Rmd in RStudio.
 
+Now we have four netCDF files with more than 12,000 days of temperature and precipitation data. How do you summarize this into something useful? There are many ways to work with these data, but one of the easiest and most powerful are the Climate Data Operators ([CDO Tools](https://code.zmaw.de/projects/cdo)) developed by the Max-Plank Institute for Meteorology. Check out the CDO tools documentation (https://code.zmaw.de/embedded/cdo/1.4.7/cdo.html) to get an idea of what this program can do.
+
+We’re going to use R to ‘drive’ the process, because R scripts are wonderful ways to organize and store your analytical workflow (starting with your original data and resulting in your figures, tables, and other results).
+
+Open the R script called “CDO_Process.Rmd” in climate/RCM in RStudio. It will guide you through some exploratory data analysis and there are a few exercises at the end. Start working on through that script now and come back to this document if you finish early.
+
+If you finish early, explore the other functions available through the [CDO tools](https://code.zmaw.de/embedded/cdo/1.4.7/cdo.html) and practice stringing together commands to generate the data you are interested in. In another session we’ll explore some of the climate indices available through the CDO tools. You can explore them [here](https://code.zmaw.de/embedded/cdo/1.4.7/cdo.html#x1-6390002.16).
