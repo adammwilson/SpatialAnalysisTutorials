@@ -9,10 +9,16 @@ To familiarize you with accessing and working with climate model output, in this
 ## Instructions
 ------------
 ### Global Climate Model Output
-Download mean annual temperature and precipitation from the INGRID site:
 
-* From the IRI/LDEO website: http://iridl.ldeo.columbia.edu/, click on the “expert” button on the left-hand side of the screen.
-* For future monthly data for precip and temperature copy and paste the following script for the GFDL CM2.0 sresA2 run (2038-2070) into the expert box and click “OK”:
+Download mean annual temperature and precipitation from the [IRI/LDEO site](http://iridl.ldeo.columbia.edu/)
+
+The IRI Data library provides convenient access to a variety of data sets especially climate and remotely sensed.  It has unusual flexibility in asking for *server side* processing of datasets.  This means you can ask for spatial or temporal subsets or even do some calculations with the data before you download it.  For more information, [check out their tutorials](http://iridl.ldeo.columbia.edu/dochelp/Tutorial/).
+
+#### Future Climate data
+
+* Open the [IRI/LDEO website](http://iridl.ldeo.columbia.edu/) in a browser
+* Click on the “expert” button on the left-hand column of the screen
+* Paste the following code, which specifies the GFDL CM2.0 sresA2 run (2038-2070), into the expert box and click “OK”:
 
 ``` 
 expert
@@ -40,8 +46,13 @@ SOURCES .WCRP .CMIP3
 
 Do you understand what’s happing there? We’re asking for two sources (temp -tas- and precip -pr-) and subsetting both to a region and time. In addition, the lines that look like “ c:0.001(m3 kg-1):c“ convert the units from kg m-2 day-1 to mm/day (a more familiar unit). The new units (mm/ day) will be documented in the data you download (nice!).
 
-Next click on the red “Data Downloads & Files” button next to the views. Then, scroll down and download the link that says “netCDF file.” Save the file with the name: GFDL_Future.nc
+Next:
 
+* Click on the red “Data Downloads & Files” button next to the views
+* Scroll down and download the link that says “netCDF file.” 
+* Save the file with the name: GFDL_Future.nc
+
+#### Historical Data
 For the past monthly data for precip and temperature copy and paste the following script for the GFDL CM2.0 20c run (1968-2000) into the expert box and click “OK”:
 
 ```
@@ -108,6 +119,7 @@ Run the script again and download a netCDF for temperature change but replace �
 
 ### Regional Climate Model Output
 Now we’ll work with output from a regional climate model (RCM) that was forced by the same GCM. We’ll get these data from the North American Regional Climate Change Assessment Program [http://www.narccap.ucar.edu/](http://www.narccap.ucar.edu/). Explore the site a little to see what they offer. Here’s a figure of their "region of interest."
+
 ![NARCCAP Domain](http://narccap.ucar.edu/img/narccap-domain.png)
 
 I’ve already downloaded the data from NARCCAP you need for this exercise and put it the 'climate/data' folder, but it will be good to explore the site and see how the data are organized. 
