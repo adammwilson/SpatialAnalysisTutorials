@@ -106,12 +106,15 @@ Then hit “ok”. Next click on the red “Data Files” button next to the vie
 Run the script again and download a netCDF for temperature change but replace “.pr” with “.tas”
 
 ### Regional Climate Model Output
-Now we’ll work with output from a regional climate model (RCM) that was forced by the same GCM. We’ll get these data from the North American Regional Climate Change Assessment Program (http://www.narccap.ucar.edu/). Explore the site a little to see what they offer. Here’s a figure of their "region of interest."
-NARCCAP Domain
-I’ve already downloaded the data from NARCCAP you need for this exercise and put it on the website in the zipped “Class3_Data” file on the website, but it will be good to explore the site and see how the data are organized. When you are ready to look at data, click on the “output data catalog” in the left column.
-Choose the folder of data from the RCM3 regional climate model embedded in the GFDL global climate model.
+Now we’ll work with output from a regional climate model (RCM) that was forced by the same GCM. We’ll get these data from the North American Regional Climate Change Assessment Program [http://www.narccap.ucar.edu/](http://www.narccap.ucar.edu/). Explore the site a little to see what they offer. Here’s a figure of their "region of interest."
+![NARCCAP Domain](http://narccap.ucar.edu/img/narccap-domain.png)
 
-Select NARCCAP RCM3 gfdl-future Table 2 and explore the “Variables” tab to see what variables are available
+I’ve already downloaded the data from NARCCAP you need for this exercise and put it the 'climate/data' folder, but it will be good to explore the site and see how the data are organized. 
+
+1. Click on the “output data catalog” in the left column.
+2. Choose the folder of data from the RCM3 regional climate model embedded in the GFDL global climate model (Row 5, Column 4).
+
+Select [NARCCAP RCM3 gfdl-future Table 2](http://www.earthsystemgrid.org/dataset/narccap.rcm3.gfdl-future.table2.html) and explore the “Variables” tab to see what variables are available
 
 ```
 huss
