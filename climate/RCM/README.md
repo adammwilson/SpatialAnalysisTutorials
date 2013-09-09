@@ -1,8 +1,9 @@
 #Objective
+__________________
 
-To familiarize you with accessing and working with climate model output, in this exercise we'll compare the output from global climate models (GCM) and regional climate models (RCM). First, we'll download monthly data from the GFDL GCM output using the IRI data library. Then we download and process daily RCM output from NARCCAP and compare them. We’ve selected the GFDL model as an example for today. Here are a few relevant links:
+To familiarize you with accessing and working with climate model output, in this exercise we'll compare the output from global climate models (GCMs) and regional climate models (RCMs). First, we'll download monthly data from the Geophysical Fluid Dynamics Laboratory (GFDL) GCM output using the IRI data library. Then we download and process daily RCM output from NARCCAP and compare them.  We’ve selected the GFDL model as an example for today. Here are a few relevant links:
 
-* Overview of the GFDL model
+* [Overview of the GFDL model](http://www.gfdl.noaa.gov/brief-history-of-global-atmospheric-modeling-at-gfdl)
 * [NARCCAP website](http://www.gfdl.noaa.gov/brief-history-of-global-atmospheric-modeling-at-gfdl)
 
 ## Instructions
@@ -73,7 +74,7 @@ Next click on the red “Data Downloads & Files” button next to the views. The
 ####OPTIONAL
 >You could also calculate the difference (future-current) directly on the IRI webpage if you wanted, but we’re going to do it later using a new tool explained below. But, for the curious, here is how you would do it. For the future minus present data (in a single step) repeat step 1, and in the “expert” box, copy and paste the following script for the GFDL CM2.0 sresA2 run (yrs 2038-2070) minus the 20c run (yrs 1968-2000) monthly mean precipitation. Again, this is optional, you don’t need to run this for the rest of the exercise.
 
-```
+>```
 expert
 SOURCES .WCRP .CMIP3
    (ipcc4/sresa2) @@
@@ -102,7 +103,7 @@ SOURCES .WCRP .CMIP3
 sub
 ```
 
-Then hit “ok”. Next click on the red “Data Files” button next to the views. Then, at the bottom of the page click on red “netCDF” .
+>Then hit “ok”. Next click on the red “Data Files” button next to the views. Then, at the bottom of the page click on red “netCDF” .
 Run the script again and download a netCDF for temperature change but replace “.pr” with “.tas”
 
 ### Regional Climate Model Output
@@ -174,7 +175,13 @@ To select a specific variable, check the box on the left and click “Sub-Select
 
 **You do NOT need to actually download any data from here.** These are the 3-hourly data, note the size of the files and time periods available. Do you see why we didn’t want all of you to download a dozen or more files from here at the same time? NARCCAP has not set up a mechanism to subset the data (like what is available via IRI Data Library) so the entire file has to be downloaded even if only a small portion is required. To avoid everyone downloading the full dataset, I’ve already downloaded the complete 3-hourly precipitation and temperature data from the NARCCAP site for several GCM-RCM combinations for the
 
-1. historic (1968-2000)
-2. future (2038-2070) time periods.
+1. Historic (1968-2000)
+2. Future (2038-2070) time periods
+3. Historic *Observed* (1979-2004) from the NCEP reanalysis dataset
 
-I also downloaded the RCMs that were forced by the ‘observed’ data in the NCEP reanalysis dataset (1) observed (1979-2004). I then subsetted all of them them to just the New England region and reprojected them to wgs84 latitude-longitude grid. I then took used the 3-hourly data to generate the daily total precipitation and min/mean/max temperature for each day. This reduced the size of the data from ~221GB to 1.2GB. I’ve posted the code I used to do this below ([DownloadData.sh](https://github.com/adammwilson/SpatialAnalysisTutorials/blob/master/climate/RCM/DownloadData.sh) and [ClipDaily.R]) if you are interested...
+I then subsetted all of them them to the New England region and reprojected them to WGS84 latitude-longitude grid. I then took used the 3-hourly data to generate the daily total precipitation and min/mean/max temperature for each day. This reduced the size of the data from ~221GB to 1.2GB. I’ve posted the code I used to do this in climate/RCM/ as DownloadData.sh and ClipDaily.R if you are interested...
+
+### Processing Climate data with CDO and R
+___________________
+To illustrate processing these data with R and other tools, we will use the Climate Data Operators ([CDO Tools](https://code.zmaw.de/projects/cdo)) developed by the Max-Plank Institute for Meteorology.  To continue, open the script climate/RCM/CDO_Process.Rmd in RStudio.
+
