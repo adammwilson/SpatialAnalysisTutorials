@@ -1,6 +1,7 @@
-RCM/*.nc
-<<<<<<< HEAD
+## Ignore Tutorial-specific output
+climate/RCM/*.nc
+climate/RCM/figure
 .Rproj.user
 =======
 *.Rdata
->>>>>>> a7a96460265a5cff29e00a5361919e48cea060ae
+*.Rproj
