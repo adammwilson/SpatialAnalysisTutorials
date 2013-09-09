@@ -8,13 +8,52 @@ First, set the working directory and load libraries.
 
 ```r
 setwd("/home/user/ost4sem/exercise/SpatialAnalysisTutorials/RCM")
+```
+
+```
+## Error: cannot change working directory
+```
+
+```r
 library(ncdf)
+```
+
+```
+## Error: there is no package called 'ncdf'
+```
+
+```r
 library(rasterVis)
+```
+
+```
+## Error: there is no package called 'rasterVis'
+```
+
+```r
 library(sp)
 library(rgdal)
+```
+
+```
+## Error: there is no package called 'rgdal'
+```
+
+```r
 library(reshape)
+```
+
+```
+## Error: there is no package called 'reshape'
+```
+
+```r
 library(lattice)
 library(xtable)
+```
+
+```
+## Error: there is no package called 'xtable'
 ```
 
 If you get the error: Error in library(xx): there is no package called 'xx'
@@ -31,7 +70,7 @@ list.files("../data")
 ```
 ## [1] "GFDL_Current.nc"      "GFDL_Future.nc"       "gfdl_RCM3_Current.nc"
 ## [4] "gfdl_RCM3_Future.nc"  "NewEngland.dbf"       "NewEngland.prj"      
-## [7] "NewEngland.shp"       "NewEngland.shx"
+## [7] "NewEngland.shp"       "NewEngland.shx"       "README.md"
 ```
 
 
@@ -129,6 +168,10 @@ Now load these summarized data into R as a 'raster' class (defined by the raster
 mat_dif = raster("gfdl_RCM3_mat_dif.nc", varname = "tmean", band = 1)
 ```
 
+```
+## Error: could not find function "raster"
+```
+
 
 Also load a polygon (shapefile) of New England to overlay on the grid so you know what you are looking at
  the shapefile has polygons, but since we just want this for an overlay, let's convert to lines as well
@@ -138,10 +181,7 @@ ne = as(readOGR("../data/NewEngland.shp", "NewEngland"), "SpatialLines")
 ```
 
 ```
-## OGR data source with driver: ESRI Shapefile 
-## Source: "../data/NewEngland.shp", layer: "NewEngland"
-## with 6 features and 7 fields
-## Feature type: wkbPolygon with 2 dimensions
+## Error: could not find function "readOGR"
 ```
 
 
@@ -151,7 +191,9 @@ Take a look at the data:
 levelplot(mat_dif, margin = F) + layer(sp.lines(ne))
 ```
 
-![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
+```
+## Error: object 'mat_dif' not found
+```
 
 
 Questions:
@@ -167,7 +209,9 @@ hist(mat_dif, col = "grey", main = "Change (future-current) \n Mean Annual Tempe
     xlab = "Change (Degrees C)", xlim = c(1.3, 2.5))
 ```
 
-![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14.png) 
+```
+## Error: object 'mat_dif' not found
+```
 
 
  We now need to calculate the change in mean annual temp and precipitation in the GCM output.
@@ -196,8 +240,19 @@ Let's compare the GCM and RCM data and resolutions by plotting them.  First we n
 ```r
 gcm = brick(raster("GFDL_dif.nc", varname = "tmean"), raster("GFDL_dif.nc", 
     varname = "ptot"))
+```
+
+```
+## Error: could not find function "brick"
+```
+
+```r
 rcm = brick(raster("GFDL_RCM3_dif.nc", varname = "tmean"), raster("GFDL_RCM3_dif.nc", 
     varname = "ptot"))
+```
+
+```
+## Error: could not find function "brick"
 ```
 
 
@@ -208,7 +263,9 @@ c(levelplot(gcm[[1]], margin = F, main = "Projected change in \n mean annual tem
     levelplot(rcm[[1]], margin = F)) + layer(sp.lines(ne))
 ```
 
-![plot of chunk unnamed-chunk-18](figure/unnamed-chunk-181.png) 
+```
+## Error: object 'gcm' not found
+```
 
 ```r
 
@@ -216,7 +273,9 @@ c(levelplot(gcm[[2]], margin = F, main = "Projected change in \n mean annual pre
     levelplot(rcm[[2]], margin = F)) + layer(sp.lines(ne))
 ```
 
-![plot of chunk unnamed-chunk-18](figure/unnamed-chunk-182.png) 
+```
+## Error: object 'gcm' not found
+```
 
 
 * Do you see differences in patterns or absolute values?
@@ -237,11 +296,27 @@ Read the file into R using the 'brick' command to read in all 4 time steps from 
 
 ```r
 difseas = brick("gfdl_seasdif.nc", varname = "tmean", band = 1:4)
+```
+
+```
+## Error: could not find function "brick"
+```
+
+```r
 names(difseas) = c("Winter", "Spring", "Summer", "Fall")
+```
+
+```
+## Error: object 'difseas' not found
+```
+
+```r
 levelplot(difseas, col.regions = rev(heat.colors(20))) + layer(sp.lines(ne))
 ```
 
-![plot of chunk unnamed-chunk-20](figure/unnamed-chunk-20.png) 
+```
+## Error: object 'difseas' not found
+```
 
 
 Which season is going to warm the most?
@@ -253,14 +328,18 @@ Let's marginalize across space and look at the data in a few different ways:
 densityplot(difseas, auto.key = T)
 ```
 
-![plot of chunk unnamed-chunk-21](figure/unnamed-chunk-211.png) 
+```
+## Error: object 'difseas' not found
+```
 
 ```r
 bwplot(difseas, ylab = "Temperature Change", xlab = "Season", scales = list(y = list(lim = c(1, 
     5))))
 ```
 
-![plot of chunk unnamed-chunk-21](figure/unnamed-chunk-212.png) 
+```
+## Error: object 'difseas' not found
+```
 
 
 We can also look at the relationship between variables with a scatterplot matrix:
@@ -269,7 +348,9 @@ We can also look at the relationship between variables with a scatterplot matrix
 splom(difseas, colramp = colorRampPalette("blue"))
 ```
 
-![plot of chunk unnamed-chunk-22](figure/unnamed-chunk-22.png) 
+```
+## Error: object 'difseas' not found
+```
 
 
 Or with a tabular correlation matrix:
@@ -279,16 +360,9 @@ print(xtable(layerStats(difseas, stat = "pearson")[[1]], caption = "Pearson Corr
     digits = 3), type = "html")
 ```
 
-<!-- html table generated in R 3.0.1 by xtable 1.7-1 package -->
-<!-- Fri Sep  6 16:29:39 2013 -->
-<TABLE border=1>
-<CAPTION ALIGN="bottom"> Pearson Correlation between seasonal change </CAPTION>
-<TR> <TH>  </TH> <TH> Winter </TH> <TH> Spring </TH> <TH> Summer </TH> <TH> Fall </TH>  </TR>
-  <TR> <TD align="right"> Winter </TD> <TD align="right"> 1.000 </TD> <TD align="right"> 0.835 </TD> <TD align="right"> -0.164 </TD> <TD align="right"> -0.348 </TD> </TR>
-  <TR> <TD align="right"> Spring </TD> <TD align="right"> 0.835 </TD> <TD align="right"> 1.000 </TD> <TD align="right"> 0.229 </TD> <TD align="right"> 0.002 </TD> </TR>
-  <TR> <TD align="right"> Summer </TD> <TD align="right"> -0.164 </TD> <TD align="right"> 0.229 </TD> <TD align="right"> 1.000 </TD> <TD align="right"> 0.899 </TD> </TR>
-  <TR> <TD align="right"> Fall </TD> <TD align="right"> -0.348 </TD> <TD align="right"> 0.002 </TD> <TD align="right"> 0.899 </TD> <TD align="right"> 1.000 </TD> </TR>
-   </TABLE>
+```
+## Error: could not find function "xtable"
+```
 
 
 # Additional excercises
