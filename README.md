@@ -11,3 +11,4 @@ To download a 'fresh' copy of the latest version from the repository (and overwr
 ```{bash} 
 git fetch --all; git reset --hard origin/master
 ```
+WARNING: this will overwrite any local changes to files that are being tracked by git!
