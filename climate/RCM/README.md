@@ -195,6 +195,13 @@ To avoid everyone downloading the full dataset, I’ve already downloaded the co
 
 I then subsetted all of them them to the New England region and reprojected them to WGS84 latitude-longitude grid. I then took used the 3-hourly data to generate the daily total precipitation and min/mean/max temperature for each day. This reduced the size of the data from ~221GB to 1.2GB. I’ve posted the code I used to do this in climate/RCM/ as DownloadData.sh and ClipDaily.R if you are interested...
 
+### Exploring the data
+The climate/data/ directory contains the following files:1. GFDL_RCM3_Current.nc - this is the 1968-2000 daily data from the RCM3 RCM forced by the GFDL GCM for the historical period from NARCCAP .* GFDL_RCM3_Future.nc - this is the 2038-2070 daily data from the RCM3 RCM forced by the GFDL GCM for the future period (A2 scenario) from NARCCAP
+* NewEngland.shp(and related files): This is a vector shapefile (polygon map) of the New England states. We’ll use it to make some plots later.* CDO_Process.R: This is a R script that * You will also see the two files that you should have downloaded from the IRI data library (GFDL_Future.nc and GFDL_Current.nc). We also put them in the repository in case the website did not cooperate during class.
+#### Exploring with Panoply
+Panoply is a useful program for ‘browsing’ netcdf files developed by NASA.You can view all the metadata (units, dimensions, variable names, and other attributes) and look at simple plots. This section will use Panoply to explore the data you just downloaded.
+Open Panoply by opening a terminal and typing (/usr/bin/panoply.sh), then open one of the netcdf (.nc) files.
+
 ### Processing Climate data with CDO and R
 ___________________
 To illustrate processing these data with R and other tools, we will use the Climate Data Operators ([CDO Tools](https://code.zmaw.de/projects/cdo)) developed by the Max-Plank Institute for Meteorology.  To continue, open the script climate/RCM/CDO_Process.Rmd in RStudio.
