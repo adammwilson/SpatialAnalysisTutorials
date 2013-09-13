@@ -1,1 +1,13 @@
+<<<<<<< HEAD
 .DS_Store
+=======
+## Ignore Tutorial-specific output
+climate/RCM/*.nc
+climate/RCM/figure
+.Rproj.user
+=======
+*.Rdata
+*.Rproj
+.DS_Store
+.RHistory
+>>>>>>> master
