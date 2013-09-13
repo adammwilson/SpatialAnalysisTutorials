@@ -1,12 +1,13 @@
 Example integration of R and CDO to process global climate model output
 ======
+`r opts_chunk$set(cache=TRUE)`
 
 Explore the data for this exercise
 -----------------
 
 First, set the working directory and load libraries.
 ```{r,results='hide',message=FALSE}
-setwd("/home/user/ost4sem/exercise/SpatialAnalysisTutorials/RCM")
+setwd("/home/user/ost4sem/exercise/SpatialAnalysisTutorials/climate/RCM")
 library(ncdf)
 library(rasterVis)
 library(sp)
@@ -45,7 +46,7 @@ in the directory tree, then go into the data directory to find the file.  Using 
 
  What is the output?  What variables are in that file?
  You can also explore the file with panoply with this command:
-```{r,eval=F}
+```{r,eval=FALSE}
   system("/usr/local/PanoplyJ/panoply.sh ../data/gfdl_RCM3_Future.nc &")
 ```
  
@@ -65,7 +66,7 @@ system("cdo selvar,tmean ../data/gfdl_RCM3_Future.nc gfdl_RCM3_Future_tmean.nc")
 
  One powerful feature of the CDO tools is the ability to string together commands to perform multiple operations at once.  You just have to add a dash ("-") before any subsequent commands.  The inner-most commands are run first. If you have a multi-core processor, these separate commands will be run in parallel if possible (up to 128 threads).  This comes in 
  handy when you are working with hundreds of GB of data.  Now convert the daily data  to mean annual temperature with the following command:
-```{r, eval=FALSE}
+```{r}
 system("cdo timmean -selvar,tmean ../data/gfdl_RCM3_Future.nc gfdl_RCM3_Future_mat.nc")
 ```
 
@@ -79,19 +80,19 @@ Now explore the new file (gfdl_RCM3_Future_mat.nc) with Panoply.
 
  Now calculate the same thing (mean annual temperature) from the model output for the "Current" 
  time period:
-```{r,eval=FALSE}
+```{r}
 system("cdo timmean -selvar,tmean ../data/gfdl_RCM3_Current.nc gfdl_RCM3_Current_mat.nc")
 ```
 
  And calculate the difference between them:
-```{r,eval=FALSE}
+```{r}
 system("cdo sub gfdl_RCM3_Future_mat.nc gfdl_RCM3_Current_mat.nc gfdl_RCM3_mat_dif.nc")
 ```
 Look at this file in Panoply.  
  * How much (mean annual) temperature change is projected for this model?
 
 Or you can string the commands above together and do all of the previous  operations in one step with the following command  (and if you have a dual core - or more - processor it will use all of them, isn't that cool!):
-```{r eval=FALSE}
+```{r}
 system("cdo sub -timmean -selvar,tmean ../data/gfdl_RCM3_Future.nc -timmean -selvar,tmean ../data/gfdl_RCM3_Current.nc gfdl_RCM3_mat_dif.nc")
 ```
 
@@ -126,7 +127,7 @@ hist(mat_dif,col="grey",main="Change (future-current) \n Mean Annual Temperature
 ```
 
  We now need to calculate the change in mean annual temp and precipitation in the GCM output.
-```{r,eval=FALSE}
+```{r}
 system("cdo sub -timmean ../data/GFDL_Future.nc -timmean ../data/GFDL_Current.nc GFDL_dif.nc")
 ```
 You might see some warnings about missing "scanVarAttributes", this is due to how IRI writes it's netCDF files
@@ -138,7 +139,7 @@ _____________________________________________
 
 Calculate the mean change (future-current) for all the variables in the GFDL_RCM3 dataset (tmin, tmax, tmean, and precipitation) like we did for just temperature above (Hint: do them one by one or simply don't subset a variable). After you run the command, check the output file with Panoply to check that it has the correct number of variables and only one time step.
 
-```{r,eval=F}
+```{r}
 system("cdo sub -timmean ../data/gfdl_RCM3_Future.nc -timmean ../data/gfdl_RCM3_Current.nc GFDL_RCM3_dif.nc")
 ```
 
@@ -164,7 +165,7 @@ c(levelplot(gcm[[2]],margin=F,main="Projected change in \n mean annual precipita
 ## Calculate the mean change BY SEASON for all the variables in the GFDL_RCM3 dataset
 The desired output will be a netcdf file with 4 time steps, the mean change for each of the 4 seasons.
   
-```{r,eval=FALSE}
+```{r}
 system("cdo sub -yseasmean ../data/GFDL_Future.nc -yseasmean ../data/GFDL_Current.nc  gfdl_seasdif.nc")
 ```
 
