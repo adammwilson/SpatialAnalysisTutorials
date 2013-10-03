@@ -6,22 +6,19 @@ library(rgdal)
 library(reshape)
 library(lattice)
 library(xtable)
-```
-If you get the error: Error in library(xx): there is no package called 'xx'
- then run the following for the missing package (replace ncdf with the package that is missing):
- install.packages("ncdf")
- and then re-run the lines above to load the newly installed libraries
 
-Look at the files in the data directory:
-```{r}
-list.files("../data")
-```
 
-To run a CDO command from R, we have to 'wrap' it with a "system" call.  
-Try this:
-```{r}
+### get list of potential files
+search=c(Ensemble=ensemble
+Experiment: experiment
+Experiment Family: experiment_family
+Institute: institute
+MIP Table: cmor_table
+Model: model
+
+http://esg-datanode.jpl.nasa.gov/esg-search/search?facets=model,experiment,project&limit=0
+
 system("cdo -V")
-```
 
 That command tells R to run the command "cdo -V" at the system level (at the linux prompt rather than R).
  "-V says you want to see what version of CDO you are have installed.
