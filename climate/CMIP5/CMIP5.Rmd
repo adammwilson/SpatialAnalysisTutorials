@@ -6,17 +6,29 @@ library(rgdal)
 library(reshape)
 library(lattice)
 library(xtable)
+library(plyr)
 
 
+### Find data via CMIP5
 ### get list of potential files
-search=c(Ensemble=ensemble
-Experiment: experiment
-Experiment Family: experiment_family
-Institute: institute
-MIP Table: cmor_table
-Model: model
+search=c(
+project="CMIP5"), 
+#experiment="RCP8.5",
+time_frequency="day",
+cf_standard_name="air_temperature")
+fields="fields=id,model,experiment&limit=15"
+fields="fields=id&limit=5"
+## url
+url="http://esg-datanode.jpl.nasa.gov/esg-search/search?"
+## search URL
+surl=paste(url,paste(names(search),"=",search,collapse="&",sep=""),"&",fields,sep="")
 
-http://esg-datanode.jpl.nasa.gov/esg-search/search?facets=model,experiment,project&limit=0
+download.file(surl,destfile="search.xml")
+## isolate the results in the xml file
+res=xmlRoot(xmlTreeParse("search.xml"))[["result"]]
+## extract just the ids we need to select files
+ids=xmlSApply(res,function(x) xmlValue(x[["str"]]),simplify=T)
+
 
 system("cdo -V")
 
