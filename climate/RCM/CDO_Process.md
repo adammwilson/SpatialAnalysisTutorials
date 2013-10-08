@@ -239,6 +239,7 @@ Read the file into R using the 'brick' command to read in all 4 time steps from 
 ```r
 difseas = brick("gfdl_seasdif.nc", varname = "tmean", band = 1:4)
 names(difseas) = c("Winter", "Spring", "Summer", "Fall")
+## and make a plot of the differences
 levelplot(difseas, col.regions = rev(heat.colors(20))) + layer(sp.lines(ne))
 ```
 
@@ -251,13 +252,13 @@ Let's marginalize across space and look at the data in a few different ways:
 * "violin" plot
 
 ```r
-densityplot(difseas, auto.key = T)
+densityplot(difseas, auto.key = T, xlab = "Temperature Change (C)")
 ```
 
 ![plot of chunk unnamed-chunk-21](figure/unnamed-chunk-211.png) 
 
 ```r
-bwplot(difseas, ylab = "Temperature Change", xlab = "Season", scales = list(y = list(lim = c(1, 
+bwplot(difseas, ylab = "Temperature Change (C)", xlab = "Season", scales = list(y = list(lim = c(1, 
     5))))
 ```
 
@@ -281,7 +282,7 @@ print(xtable(layerStats(difseas, stat = "pearson")[[1]], caption = "Pearson Corr
 ```
 
 <!-- html table generated in R 3.0.1 by xtable 1.7-1 package -->
-<!-- Fri Sep 13 13:05:30 2013 -->
+<!-- Tue Oct  8 11:51:37 2013 -->
 <TABLE border=1>
 <CAPTION ALIGN="bottom"> Pearson Correlation between seasonal change </CAPTION>
 <TR> <TH>  </TH> <TH> Winter </TH> <TH> Spring </TH> <TH> Summer </TH> <TH> Fall </TH>  </TR>

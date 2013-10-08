@@ -174,7 +174,8 @@ Read the file into R using the 'brick' command to read in all 4 time steps from 
 ```{r}
 difseas=brick("gfdl_seasdif.nc",varname="tmean",band=1:4)
       names(difseas)=c("Winter","Spring","Summer","Fall") 
-      levelplot(difseas,col.regions=rev(heat.colors(20)))+layer(sp.lines(ne))
+## and make a plot of the differences
+levelplot(difseas,col.regions=rev(heat.colors(20)))+layer(sp.lines(ne))
 ```
 
 Which season is going to warm the most?
@@ -182,8 +183,8 @@ Let's marginalize across space and look at the data in a few different ways:
 * density plot (like a histogram) with the four seasons.
 * "violin" plot
 ```{r}
-    densityplot(difseas,auto.key=T)
-    bwplot(difseas,ylab="Temperature Change",xlab="Season",scales=list(y=list(lim=c(1,5))))
+    densityplot(difseas,auto.key=T,xlab="Temperature Change (C)")
+    bwplot(difseas,ylab="Temperature Change (C)",xlab="Season",scales=list(y=list(lim=c(1,5))))
 ```
 
 We can also look at the relationship between variables with a scatterplot matrix:
