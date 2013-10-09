@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+
+<lst name="responseHeader">
+  <int name="status">0</int>
+  <int name="QTime">25</int>
+  <lst name="params">
+    <str name="fl">id,model,experiment,score</str>
+    <str name="echoParams">all</str>
+    <str name="tie">0.01</str>
+    <str name="qf">text</str>
+    <str name="q.alt">*:*</str>
+    <str name="rows">15</str>
+    <str name="facet">true</str>
+    <str name="fl">id,model,experiment,score</str>
+    <str name="shards">localhost:8983/solr/datasets,localhost:8986/solr/datasets,localhost:8987/solr/datasets,localhost:8985/solr/datasets,localhost:8988/solr/datasets,localhost:8989/solr/datasets,localhost:8990/solr/datasets,localhost:8991/solr/datasets,localhost:8992/solr/datasets,localhost:8993/solr/datasets,localhost:8994/solr/datasets,localhost:8995/solr/datasets,localhost:8996/solr/datasets,localhost:8997/solr/datasets,localhost:8998/solr/datasets,localhost:8999/solr/datasets</str>
+    <str name="indent">true</str>
+    <str name="start">0</str>
+    <str name="q">*</str>
+    <arr name="fq">
+      <str>type:Dataset</str>
+      <str>project:"CMIP5"</str>
+    </arr>
+    <str name="rows">15</str>
+    <str name="facet">true</str>
+    <str name="facet.mincount">1</str>
+    <str name="facet.sort">lex</str>
+    <str name="facet.limit">-1</str>
+    <str name="facet.method">enum</str>
+  </lst>
+</lst>
+<result name="response" numFound="133235" start="0" maxScore="1.0">
+  <doc>
+    <str name="id">cmip5.output1.NCAR.CCSM4.1pctCO2.day.atmos.cfDay.r2i1p1.v20130218|tds.ucar.edu</str>
+    <arr name="experiment">
+      <str>1pctCO2</str>
+    </arr>
+    <arr name="model">
+      <str>CCSM4</str>
+    </arr>
+    <arr name="score"><float name="score">1.0</float></arr>
+  </doc>
+  <doc>
+    <str name="id">cmip5.output1.NCAR.CCSM4.1pctCO2.day.atmos.cfDay.r2i1p1.v20120717|tds.ucar.edu</str>
+    <arr name="experiment">
+      <str>1pctCO2</str>
+    </arr>
+    <arr name="model">
+      <str>CCSM4</str>
+    </arr>
+    <arr name="score"><float name="score">1.0</float></arr>
+  </doc>
+  <doc>
+    <str name="id">cmip5.output1.NCAR.CCSM4.1pctCO2.day.atmos.cfDay.r2i1p1.v20120709|tds.ucar.edu</str>
+    <arr name="experiment">
+      <str>1pctCO2</str>
+    </arr>
+    <arr name="model">
+      <str>CCSM4</str>
+    </arr>
+    <arr name="score"><float name="score">1.0</float></arr>
+  </doc>
+  <doc>
+    <str name="id">cmip5.output1.NCAR.CCSM4.1pctCO2.day.atmos.day.r2i1p1.v20120708|tds.ucar.edu</str>
+    <arr name="experiment">
+      <str>1pctCO2</str>
+    </arr>
+    <arr name="model">
+      <str>CCSM4</str>
+    </arr>
+    <arr name="score"><float name="score">1.0</float></arr>
+  </doc>
+  <doc>
+    <str name="id">cmip5.output1.NCAR.CCSM4.1pctCO2.fx.atmos.fx.r0i0p0.v20120413|tds.ucar.edu</str>
+    <arr name="experiment">
+      <str>1pctCO2</str>
+    </arr>
+    <arr name="model">
+      <str>CCSM4</str>
+    </arr>
+    <arr name="score"><float name="score">1.0</float></arr>
+  </doc>
+  <doc>
+    <str name="id">cmip5.output1.NCAR.CCSM4.1pctCO2.fx.atmos.fx.r0i0p0.v20120213|tds.ucar.edu</str>
+    <arr name="experiment">
+      <str>1pctCO2</str>
+    </arr>
+    <arr name="model">
+      <str>CCSM4</str>
+    </arr>
+    <arr name="score"><float name="score">1.0</float></arr>
+  </doc>
+  <doc>
+    <str name="id">cmip5.output1.NCAR.CCSM4.1pctCO2.fx.land.fx.r0i0p0.v20130312|tds.ucar.edu</str>
+    <arr name="experiment">
+      <str>1pctCO2</str>
+    </arr>
+    <arr name="model">
+      <str>CCSM4</str>
+    </arr>
+    <arr name="score"><float name="score">1.0</float></arr>
+  </doc>
+  <doc>
+    <str name="id">cmip5.output1.NCAR.CCSM4.1pctCO2.fx.land.fx.r0i0p0.v20120213|tds.ucar.edu</str>
+    <arr name="experiment">
+      <str>1pctCO2</str>
+    </arr>
+    <arr name="model">
+      <str>CCSM4</str>
+    </arr>
+    <arr name="score"><float name="score">1.0</float></arr>
+  </doc>
+  <doc>
+    <str name="id">cmip5.output1.NCAR.CCSM4.1pctCO2.fx.ocean.fx.r0i0p0.v20130312|tds.ucar.edu</str>
+    <arr name="experiment">
+      <str>1pctCO2</str>
+    </arr>
+    <arr name="model">
+      <str>CCSM4</str>
+    </arr>
+    <arr name="score"><float name="score">1.0</float></arr>
+  </doc>
+  <doc>
+    <str name="id">cmip5.output1.NCAR.CCSM4.1pctCO2.fx.ocean.fx.r0i0p0.v20120614|tds.ucar.edu</str>
+    <arr name="experiment">
+      <str>1pctCO2</str>
+    </arr>
+    <arr name="model">
+      <str>CCSM4</str>
+    </arr>
+    <arr name="score"><float name="score">1.0</float></arr>
+  </doc>
+  <doc>
+    <str name="id">cmip5.output1.NCAR.CCSM4.1pctCO2.fx.ocean.fx.r0i0p0.v20120214|tds.ucar.edu</str>
+    <arr name="experiment">
+      <str>1pctCO2</str>
+    </arr>
+    <arr name="model">
+      <str>CCSM4</str>
+    </arr>
+    <arr name="score"><float name="score">1.0</float></arr>
+  </doc>
+  <doc>
+    <str name="id">cmip5.output1.NCAR.CCSM4.1pctCO2.fx.ocean.fx.r0i0p0.v20120213|tds.ucar.edu</str>
+    <arr name="experiment">
+      <str>1pctCO2</str>
+    </arr>
+    <arr name="model">
+      <str>CCSM4</str>
+    </arr>
+    <arr name="score"><float name="score">1.0</float></arr>
+  </doc>
+  <doc>
+    <str name="id">cmip5.output1.NCAR.CCSM4.1pctCO2.mon.atmos.Amon.r1i1p1.v20121031|tds.ucar.edu</str>
+    <arr name="experiment">
+      <str>1pctCO2</str>
+    </arr>
+    <arr name="model">
+      <str>CCSM4</str>
+    </arr>
+    <arr name="score"><float name="score">1.0</float></arr>
+  </doc>
+  <doc>
+    <str name="id">cmip5.output1.NCAR.CCSM4.1pctCO2.mon.atmos.Amon.r1i1p1.v20120604|tds.ucar.edu</str>
+    <arr name="experiment">
+      <str>1pctCO2</str>
+    </arr>
+    <arr name="model">
+      <str>CCSM4</str>
+    </arr>
+    <arr name="score"><float name="score">1.0</float></arr>
+  </doc>
+  <doc>
+    <str name="id">cmip5.output1.NCAR.CCSM4.1pctCO2.mon.atmos.Amon.r1i1p1.v20120424|tds.ucar.edu</str>
+    <arr name="experiment">
+      <str>1pctCO2</str>
+    </arr>
+    <arr name="model">
+      <str>CCSM4</str>
+    </arr>
+    <arr name="score"><float name="score">1.0</float></arr>
+  </doc>
+</result>
+<lst name="facet_counts">
+  <lst name="facet_queries"/>
+  <lst name="facet_fields"/>
+  <lst name="facet_dates"/>
+  <lst name="facet_ranges"/>
+</lst>
+</response>
