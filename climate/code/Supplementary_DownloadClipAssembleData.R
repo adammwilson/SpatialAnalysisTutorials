@@ -1,7 +1,7 @@
 #### This script downloads the complete matrix of GCM-RCM temperature and precipitation from NARCCAP.
 
 ### choose a destination for the raw, 3-hour files
-setwd("/media/Data2/Data/narccap")
+setwd("data/narccap")
 
 ### Download the data
 ### Be careful, running this script will download ~220GB to your drive

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Objective</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+
+
+
+
+</head>
+
+<body>
+<p>#Working with Climate Model Output</p>
+
+<hr/>
+
+<h2>Objective</h2>
+
+<p>To familiarize you with accessing and working with climate model output, in this exercise we&#39;ll compare the output from global climate models (GCMs) and regional climate models (RCMs). First, we&#39;ll download monthly data from the Geophysical Fluid Dynamics Laboratory (GFDL) GCM output using the IRI data library. Then we download and process daily RCM output from NARCCAP and compare them.  We’ve selected the GFDL model as an example for today. </p>
+
+<p><a href="http://www.gfdl.noaa.gov/brief-history-of-global-atmospheric-modeling-at-gfdl"><img src="http://www.gfdl.noaa.gov/pix/user_images/wga/cm2.6_sst.png" alt="GFDL"/></a></p>
+
+<p>Here are a few relevant links:</p>
+
+<ul>
+<li><a href="http://www.gfdl.noaa.gov/brief-history-of-global-atmospheric-modeling-at-gfdl">Overview of the GFDL model</a></li>
+<li><a href="http://www.gfdl.noaa.gov/brief-history-of-global-atmospheric-modeling-at-gfdl">NARCCAP website</a></li>
+</ul>
+
+<h2>Instructions</h2>
+
+<hr/>
+
+<h3>Global Climate Model Output</h3>
+
+<p>The IRI Data library at Columbia University provides convenient access to a variety of data sets especially climate and remotely sensed.  It has unusual flexibility in asking for <em>server side</em> processing of datasets.  This means you can ask for spatial or temporal subsets or even do some calculations with the data before you download it.  For more information, <a href="http://iridl.ldeo.columbia.edu/dochelp/Tutorial/">check out their tutorials</a>.</p>
+
+<p>In this section we will download mean annual temperature and precipitation from the <a href="http://iridl.ldeo.columbia.edu/">IRI/LDEO site</a>.</p>
+
+<h4>Future Climate data</h4>
+
+<ul>
+<li>Open the <a href="http://iridl.ldeo.columbia.edu/">IRI/LDEO website</a> in a browser</li>
+<li>Click on the “expert” button on the left-hand column of the screen</li>
+<li>Paste the following code, which specifies the GFDL CM2.0 sresA2 run (2038-2070), into the expert box and click “OK”:</li>
+</ul>
+
+<pre><code>expert
+SOURCES .WCRP .CMIP3
+   (ipcc4/sresa2) @@
+   (ipcc4/sresa2/gfdl_cm2_0) @@
+   .pcmdi.ipcc4.gfdl_cm2_0.sresa2.run1.atm.mo.xml .tas
+  time (2038) (2070) RANGEEDGES
+  lat (40N) (49N) RANGEEDGES
+  lon (77W) (65W) RANGEEDGES
+SOURCES .WCRP .CMIP3
+   (ipcc4/sresa2) @@
+   (ipcc4/sresa2/gfdl_cm2_0) @@
+   .pcmdi.ipcc4.gfdl_cm2_0.sresa2.run1.atm.mo.xml .pr
+  c: 0.001 (m3 kg-1) :c
+  mul
+  c: 1000 (mm m-1) :c
+  mulc: 86400 (s day-1) :c
+  mul
+  time (2038) (2070) RANGEEDGES
+  lat (40N) (49N) RANGEEDGES
+  lon (77W) (65W) RANGEEDGES
+{tmean ptot}ds
+</code></pre>
+
+<blockquote>
+<p>Do you understand what’s happing there? We’re asking for two sources (temp -tas- and precip -pr-) and subsetting both to a region and time. In addition, the lines that look like “ c:0.001(m3 kg-1):c“ convert the units from kg m-2 day-1 to mm/day (a more familiar unit). The new units (mm/ day) will be documented in the data you download (nice!).</p>
+</blockquote>
+
+<p>Next:</p>
+
+<ol>
+<li>Click on the red “Data Downloads &amp; Files” button next to the views</li>
+<li>Scroll down and download the link that says “netCDF file.” </li>
+<li>Save the file with the name: GFDL_Future.nc</li>
+</ol>
+
+<h4>Historical Data</h4>
+
+<p>For the past monthly data for precip and temperature copy and paste the following script for the GFDL CM2.0 20c run (1968-2000) into the expert box and click “OK”:</p>
+
+<pre><code>expert
+SOURCES .WCRP .CMIP3
+   (ipcc4/20c3m) @@
+   (ipcc4/20c3m/gfdl_cm2_0) @@
+   .pcmdi.ipcc4.gfdl_cm2_0.20c3m.run2.atm.mo.xml .tas
+  time (1968) (2000) RANGEEDGES
+  lat (40N) (49N) RANGEEDGES
+  lon (77W) (65W) RANGEEDGES
+SOURCES .WCRP .CMIP3
+   (ipcc4/20c3m) @@
+   (ipcc4/20c3m/gfdl_cm2_0) @@
+   .pcmdi.ipcc4.gfdl_cm2_0.20c3m.run2.atm.mo.xml .pr
+  c: 0.001 (m3 kg-1) :c
+  mul
+  c: 1000 (mm m-1) :c
+  mul
+  c: 86400 (s day-1) :c
+  mul
+  time (1968) (2000) RANGEEDGES
+  lat (40N) (49N) RANGEEDGES
+  lon (77W) (65W) RANGEEDGES
+{tmean ptot}ds
+</code></pre>
+
+<p>Then:</p>
+
+<ol>
+<li>Click on the red “Data Downloads &amp; Files” button next to the views</li>
+<li>Scroll down and download the link that says “netCDF file”</li>
+<li>Save the file with the name: GFDL_Current.nc</li>
+</ol>
+
+<blockquote>
+<p><strong>OPTIONAL:</strong> You could also calculate the difference (future-current) directly on the IRI webpage if you wanted, but we’re going to do it later using a new tool explained below. But, for the curious, here is how you would do it. For the future minus present data (in a single step) repeat step 1, and in the “expert” box, copy and paste the following script for the GFDL CM2.0 sresA2 run (yrs 2038-2070) minus the 20c run (yrs 1968-2000) monthly mean precipitation. Again, this is optional, you don’t need to run this for the rest of the exercise.</p>
+
+<pre><code>expert
+SOURCES .WCRP .CMIP3
+   (ipcc4/sresa2) @@
+   (ipcc4/sresa2/gfdl_cm2_0) @@
+   .pcmdi.ipcc4.gfdl_cm2_0.sresa2.run1.atm.mo.xml .pr
+  time 0.0 monthlyAverage
+  c: 0.001 (m3 kg-1) :c
+  mul
+  c: 1000 (mm m-1) :c
+  mul
+  c: 86400 (s day-1) :c
+  mul
+  time (Jan 2038) (Dec 2070) RANGE
+  lon (85W) (65W) RANGEEDGES
+  lat (30N) (50N) RANGEEDGES
+SOURCES .WCRP .CMIP3
+   (ipcc4/20c3m) @@
+   (ipcc4/20c3m/gfdl_cm2_0) @@
+   .pcmdi.ipcc4.gfdl_cm2_0.20c3m.run1.atm.mo.xml .pr
+  time 0.0 monthlyAverage
+  time (Jan 1968) (Dec 2000) RANGE
+  lon (85W) (65W) RANGEEDGES
+  lat (30N) (50N) RANGEEDGES
+  time 12 splitstreamgrid
+[time2]average
+sub
+</code></pre>
+
+<p>Then hit “ok”. Next click on the red “Data Files” button next to the views. Then, at the bottom of the page click on red “netCDF” .
+Run the script again and download a netCDF for temperature change but replace “.pr” with “.tas”</p>
+</blockquote>
+
+<h3>Regional Climate Model Output</h3>
+
+<p>Now we’ll work with output from a regional climate model (RCM) that was forced by the same GCM. We’ll get these data from the North American Regional Climate Change Assessment Program <a href="http://www.narccap.ucar.edu/">http://www.narccap.ucar.edu/</a>. Explore the site a little to see what they offer. Here’s a figure of their &ldquo;region of interest.&rdquo;</p>
+
+<p><img src="http://narccap.ucar.edu/img/narccap-domain.png" alt="NARCCAP Domain"/></p>
+
+<p>I’ve already downloaded the data from NARCCAP you need for this exercise and put it the &#39;climate/data&#39; folder, but it will be good to explore the site and see how the data are organized. </p>
+
+<ol>
+<li>Click on the “output data catalog” in the left column.</li>
+<li>Choose the folder of data from the RCM3 regional climate model embedded in the GFDL global climate model (Row 5, Column 4)</li>
+<li>Select <a href="http://www.earthsystemgrid.org/dataset/narccap.rcm3.gfdl-future.table2.html">NARCCAP RCM3 gfdl-future Table 2</a></li>
+<li>Explore the “Variables” tab to see what variables are available.  For example:</li>
+</ol>
+
+<p>Select <a href="http://www.earthsystemgrid.org/dataset/narccap.rcm3.gfdl-future.table2.html">NARCCAP RCM3 gfdl-future Table 2</a> and explore the “Variables” tab to see what variables are available</p>
+
+<pre><code>huss
+Description:    Surface_Specific_Humidity
+Units:   (kg kg-1)
+Standard Name:  specific_humidity
+Description:    &quot;specific&quot; means per unit mass. Specific humidity is the mass fraction of water vapor in (moist) air.
+Units:   (1)
+Type:   CF
+vas
+Description:    Meridional_Surface_Wind_Speed
+Units:   (m s-1)
+Standard Name:  northward_wind
+Description:    &quot;Northward&quot; indicates a vector component which is positive when directed northward (negative southward). Wind is defined as a two-dimensional (horizontal) air velocity vector, with no vertical component. (Vertical motion in the atmosphere has the standard name upward_air_velocity.)
+Units:   (m s-1)
+Type:   CF
+ps
+pr
+Description:    Precipitation
+Units:   (kg m-2 s-1)
+Standard Name:  precipitation_flux
+Description:    In accordance with common usage in geophysical disciplines, &quot;flux&quot; implies per unit area, called &quot;flux density&quot; in physics.
+Units:   (kg m-2 s-1)
+Type:   CF
+tas
+Description:    Surface_Air_Temperature
+Units:   (K)
+Standard Name:  air_temperature
+Description:    Air temperature is the bulk temperature of the air, not the surface (skin) temperature.
+Units:   (K)
+Type:   CF
+uas
+Description:    Zonal_Surface_Wind_Speed
+Units:   (m s-1)
+Standard Name:  eastward_wind
+Description:    &quot;Eastward&quot; indicates a vector component which is positive when directed eastward (negative westward). Wind is defined as a two-dimensional (horizontal) air velocity vector, with no vertical component. (Vertical motion in the atmosphere has the standard name upward_air_velocity.)
+Units:   (m s-1)
+Type:   CF
+</code></pre>
+
+<p><strong>You do NOT need to actually download any data from here.</strong> These are the 3-hourly data, note the size of the files and time periods available. Do you see why we didn’t want all of you to download a dozen or more files from here at the same time? NARCCAP has not set up a mechanism to subset the data (like what is available via IRI Data Library) so the entire file has to be downloaded even if only a small portion is required. </p>
+
+<blockquote>
+<p><strong>Optional:</strong> To download data from NARCCAP you would do the following: </p>
+
+<ol>
+<li>Register with an openID.</li>
+<li>On the “Summary” tab, click: “Download files for this collection.”</li>
+<li>To select a specific variable, check the box on the left and click “Sub-Select”</li>
+</ol>
+</blockquote>
+
+<p>To avoid everyone downloading the full dataset, I’ve already downloaded the complete 3-hourly precipitation and temperature data from the NARCCAP site for several GCM-RCM combinations:</p>
+
+<ol>
+<li>Historic (1968-2000)</li>
+<li>Future (2038-2070) time periods</li>
+<li>Historic <em>Observed</em> (1979-2004) from the NCEP reanalysis dataset</li>
+</ol>
+
+<p>I then subsetted all of them them to the New England region and reprojected them to WGS84 latitude-longitude grid. I then took used the 3-hourly data to generate the daily total precipitation and min/mean/max temperature for each day. This reduced the size of the data from ~221GB to 1.2GB. I’ve posted the code I used to do this in climate/RCM/ as DownloadData.sh and ClipDaily.R if you are interested&hellip;</p>
+
+<h3>Exploring the data</h3>
+
+<p>The climate/data/ directory contains the following files:</p>
+
+<ol>
+<li>GFDL_RCM3_Current.nc - this is the 1968-2000 daily data from the RCM3 RCM forced by the GFDL GCM for the historical period from NARCCAP .</li>
+<li>GFDL_RCM3_Future.nc - this is the 2038-2070 daily data from the RCM3 RCM forced by the GFDL GCM for the future period (A2 scenario) from NARCCAP</li>
+<li>NewEngland.shp(and related files): This is a vector shapefile (polygon map) of the New England states. We’ll use it to make some plots later.</li>
+<li>CDO_Process.R: This is a R script that </li>
+<li>You will also see the two files that you should have downloaded from the IRI data library (GFDL_Future.nc and GFDL_Current.nc). We also put them in the repository in case the website did not cooperate during class.</li>
+</ol>
+
+<h4>Exploring with Panoply</h4>
+
+<p><a href="http://www.giss.nasa.gov/tools/panoply/">Panoply</a> is a useful program for ‘browsing’ netcdf files developed by NASA.
+You can view all the metadata (units, dimensions, variable names, and other attributes) and look at simple plots. This section will use Panoply to explore the data you just downloaded.</p>
+
+<p><img src="http://www.giss.nasa.gov/tools/panoply/panoply_290.jpg" alt="image"/></p>
+
+<ol>
+<li>Open Panoply by opening a terminal and typing (<code>/usr/local/PanoplyJ/panoply.sh</code>), then open one of the netcdf (.nc) files.</li>
+</ol>
+
+<ul>
+<li><p>Explore the interface: What variables are present? How are the data structured? How many latitude grid cells are there, how many time steps? What are the units of the variables?</p></li>
+<li><p>Make a plot:</p>
+
+<ul>
+<li>double click on a variable and choose “lon-lat” plot</li>
+<li>The default display shows the entire globe, but these data are only for
+New England so the data only cover a small proportion of the globe</li>
+</ul></li>
+<li><p>So we need to change the view parameters in the “Map” tab below the image. Feel free to choose your own, or enter the following:</p>
+
+<ul>
+<li>Projection: Equirectangular (Regional)</li>
+<li>Center on: Lon. -70 E, Lat. 44.5N</li>
+<li>Width: 22, Height: 8</li>
+</ul></li>
+<li><p>This will reveal the region more clearly.  If you want this to be the default region the next time you open Panoply, change the parameters in the preferences as well (edit-&gt; preferences-&gt; lonlat tab).</p></li>
+<li><p>What does the “Interpolate” checkbox (near the bottom on the right) do? Is this useful?</p></li>
+<li><p>Note the time/date at the bottom of the “Array” tab. To navigate to different times, change the time index or choose a date in the list to the right. You can put the cursor in the time box and use the up and down arrow keys to animate the display (note that there may be a delay between when you select a different time and when the display updates).</p></li>
+<li><p>Now look directly at the data being displayed by clicking on the “Array 1” tab at the top.  You can browse these data in the same way as the image (the only difference is the first panel assigns a color to each number and overlays a map of the coastline).</p></li>
+<li><p>Saving subsets of data or images:</p>
+
+<p>*If you want to save an image of your current view, you can choose file -&gt; Save Image.</p>
+
+<ul>
+<li>You can also export the data as a text file or a KML file for viewing in
+Google Earth (or any program that supports kml).</li>
+</ul></li>
+<li><p>Do you notice any patterns as you look at different days? Do you see differences over the land and water? How would you use daily data in analysis?</p></li>
+</ul>
+
+<h3>Processing Climate data with CDO and R</h3>
+
+<hr/>
+
+<p>Now we have four netCDF files with more than 12,000 days of temperature and precipitation data. How do you summarize this into something useful? There are many ways to work with these data, but one of the easiest and most powerful are the Climate Data Operators (<a href="https://code.zmaw.de/projects/cdo">CDO Tools</a>) developed by the Max-Plank Institute for Meteorology. Check out the CDO tools documentation (<a href="https://code.zmaw.de/embedded/cdo/1.4.7/cdo.html">https://code.zmaw.de/embedded/cdo/1.4.7/cdo.html</a>) to get an idea of what this program can do.</p>
+
+<p>We’re going to use R to ‘drive’ the process, because R scripts are wonderful ways to organize and store your analytical workflow (starting with your original data and resulting in your figures, tables, and other results).</p>
+
+<p>Open the R script called “CDO_Process.Rmd” in climate/RCM in RStudio. It will guide you through some exploratory data analysis and there are a few exercises at the end. Start working on through that script now and come back to this document if you finish early.</p>
+
+<p>If you finish early, explore the other functions available through the <a href="https://code.zmaw.de/embedded/cdo/1.4.7/cdo.html">CDO tools</a> and practice stringing together commands to generate the data you are interested in. In another session we’ll explore some of the climate indices available through the CDO tools. You can explore them <a href="https://code.zmaw.de/embedded/cdo/1.4.7/cdo.html#x1-6390002.16">here</a>.</p>
+
+</body>
+
+</html>
+
