@@ -2,7 +2,7 @@
 __________________
 
 ## Objective
-To familiarize you with accessing and working with climate model output, in this exercise we'll compare the output from global climate models (GCMs) and regional climate models (RCMs). First, we'll download monthly data from the Geophysical Fluid Dynamics Laboratory (GFDL) GCM output using the IRI data library. Then we download and process daily RCM output from NARCCAP and compare them.  We’ve selected the GFDL model as an example for today. 
+To familiarize you with accessing and working with climate model output, in this exercise we'll compare the output from global climate models (GCMs) and regional climate models (RCMs).  We’ve selected the GFDL model as an example for today. 
 
 [![GFDL](http://www.gfdl.noaa.gov/pix/user_images/wga/cm2.6_sst.png)](http://www.gfdl.noaa.gov/brief-history-of-global-atmospheric-modeling-at-gfdl)
 
@@ -13,6 +13,7 @@ Here are a few relevant links:
 
 ## Instructions
 ------------
+
 ### Global Climate Model Output
 
 The IRI Data library at Columbia University provides convenient access to a variety of data sets especially climate and remotely sensed.  It has unusual flexibility in asking for *server side* processing of datasets.  This means you can ask for spatial or temporal subsets or even do some calculations with the data before you download it.  For more information, [check out their tutorials](http://iridl.ldeo.columbia.edu/dochelp/Tutorial/).
@@ -196,26 +197,59 @@ To avoid everyone downloading the full dataset, I’ve already downloaded the co
 I then subsetted all of them them to the New England region and reprojected them to WGS84 latitude-longitude grid. I then took used the 3-hourly data to generate the daily total precipitation and min/mean/max temperature for each day. This reduced the size of the data from ~221GB to 1.2GB. I’ve posted the code I used to do this in climate/RCM/ as DownloadData.sh and ClipDaily.R if you are interested...
 
 ### Exploring the data
-The climate/data/ directory contains the following files:1. GFDL_RCM3_Current.nc - this is the 1968-2000 daily data from the RCM3 RCM forced by the GFDL GCM for the historical period from NARCCAP .* GFDL_RCM3_Future.nc - this is the 2038-2070 daily data from the RCM3 RCM forced by the GFDL GCM for the future period (A2 scenario) from NARCCAP
-* NewEngland.shp(and related files): This is a vector shapefile (polygon map) of the New England states. We’ll use it to make some plots later.* CDO_Process.R: This is a R script that * You will also see the two files that you should have downloaded from the IRI data library (GFDL_Future.nc and GFDL_Current.nc). We also put them in the repository in case the website did not cooperate during class.
-#### Exploring with Panoply
-[Panoply](http://www.giss.nasa.gov/tools/panoply/) is a useful program for ‘browsing’ netcdf files developed by NASA.You can view all the metadata (units, dimensions, variable names, and other attributes) and look at simple plots. This section will use Panoply to explore the data you just downloaded.
-![image](http://www.giss.nasa.gov/tools/panoply/panoply_290.jpg)
-1. Open Panoply by opening a terminal and typing (`/usr/local/PanoplyJ/panoply.sh`), then open one of the netcdf (.nc) files.
-* Explore the interface: What variables are present? How are the data structured? How many latitude grid cells are there, how many time steps? What are the units of the variables?
-* Make a plot:    * double click on a variable and choose “lon-lat” plot    * The default display shows the entire globe, but these data are only forNew England so the data only cover a small proportion of the globe
-* So we need to change the view parameters in the “Map” tab below the image. Feel free to choose your own, or enter the following:
-    * Projection: Equirectangular (Regional)
-    * Center on: Lon. -70 E, Lat. 44.5N
-    * Width: 22, Height: 8
-* This will reveal the region more clearly.  If you want this to be the default region the next time you open Panoply, change the parameters in the preferences as well (edit-> preferences-> lonlat tab).
-* What does the “Interpolate” checkbox (near the bottom on the right) do? Is this useful?
-* Note the time/date at the bottom of the “Array” tab. To navigate to different times, change the time index or choose a date in the list to the right. You can put the cursor in the time box and use the up and down arrow keys to animate the display (note that there may be a delay between when you select a different time and when the display updates).
-* Now look directly at the data being displayed by clicking on the “Array 1” tab at the top.  You can browse these data in the same way as the image (the only difference is the first panel assigns a color to each number and overlays a map of the coastline).
-* Saving subsets of data or images:
-    *If you want to save an image of your current view, you can choose file -> Save Image.
-    * You can also export the data as a text file or a KML file for viewing inGoogle Earth (or any program that supports kml).
-* Do you notice any patterns as you look at different days? Do you see differences over the land and water? How would you use daily data in analysis?
+The climate/data/ directory contains the following files:
+
+1. GFDL_RCM3_Current.nc - this is the 1968-2000 daily data from the RCM3 RCM forced by the GFDL GCM for the historical period from NARCCAP .
+* GFDL_RCM3_Future.nc - this is the 2038-2070 daily data from the RCM3 RCM forced by the GFDL GCM for the future period (A2 scenario) from NARCCAP
+* GFDL_Current.nc - this is the current daily data from the GFDL GCM for the historical period downloaded from the IRI library as detailed above.
+* GFDL_Future.nc - this is the future daily data from the GFDL GCM for the future period (A2 scenario) also downloaded from the IRI data library.
+* NewEngland.shp(and related files): This is a vector shapefile (polygon map) of the New England states. We’ll use it to make some plots later.
+
+The climate/code/ directory contains the following files:
+1. CDO_Process.Rmd: This is a R markdown script that illustrates some simple processing of the daily climate data.
+*  ClimateMetrics.Rmd: This is a R markdown script that illustrates calculation of several climate metrics using the daily climate data.
+*  Several supplementary files used for pre-processing the climate data from NARCCAP.
+
+#### Exploring with Panoply
+
+[Panoply](http://www.giss.nasa.gov/tools/panoply/) is a useful program for ‘browsing’ netcdf files developed by NASA.
+You can view all the metadata (units, dimensions, variable names, and other attributes) and look at simple plots. This section will use Panoply to explore the data you just downloaded.
+
+![image](http://www.giss.nasa.gov/tools/panoply/panoply_290.jpg)
+
+1. Open Panoply by opening a terminal and typing (`/usr/local/PanoplyJ/panoply.sh`), then open one of the netcdf (.nc) files.
+
+* Explore the interface: What variables are present? How are the data structured? How many latitude grid cells are there, how many time steps? What are the units of the variables?
+
+* Make a plot:
+    * double click on a variable and choose “lon-lat” plot
+    * The default display shows the entire globe, but these data are only for
+New England so the data only cover a small proportion of the globe
+
+* So we need to change the view parameters in the “Map” tab below the image. Feel free to choose your own, or enter the following:
+
+    * Projection: Equirectangular (Regional)
+
+    * Center on: Lon. -70 E, Lat. 44.5N
+
+    * Width: 22, Height: 8
+
+* This will reveal the region more clearly.  If you want this to be the default region the next time you open Panoply, change the parameters in the preferences as well (edit-> preferences-> lonlat tab).
+
+* What does the “Interpolate” checkbox (near the bottom on the right) do? Is this useful?
+
+* Note the time/date at the bottom of the “Array” tab. To navigate to different times, change the time index or choose a date in the list to the right. You can put the cursor in the time box and use the up and down arrow keys to animate the display (note that there may be a delay between when you select a different time and when the display updates).
+
+* Now look directly at the data being displayed by clicking on the “Array 1” tab at the top.  You can browse these data in the same way as the image (the only difference is the first panel assigns a color to each number and overlays a map of the coastline).
+
+* Saving subsets of data or images:
+
+    *If you want to save an image of your current view, you can choose file -> Save Image.
+
+    * You can also export the data as a text file or a KML file for viewing in
+Google Earth (or any program that supports kml).
+
+* Do you notice any patterns as you look at different days? Do you see differences over the land and water? How would you use daily data in analysis?
 
 ### Processing Climate data with CDO and R
 ___________________
