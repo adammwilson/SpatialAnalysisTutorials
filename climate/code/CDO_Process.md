@@ -3,9 +3,8 @@ __________________
 
 ## Objective
 To familiarize you with accessing and working with climate model output, in this exercise we'll compare the output from global climate models (GCMs) and regional climate models (RCMs). First, we'll work with data from the Geophysical Fluid Dynamics Laboratory (GFDL) GCM output and Regional Climate Model (RCM) output from NARCCAP and compare them.  We’ve selected the GFDL model as an example for today. 
-[![GFDL](http://www.gfdl.noaa.gov/pix/user_images/wga/cm2.6_sst.png)](http://www.gfdl.noaa.gov/brief-history-of-global-atmospheric-modeling-at-gfdl)
 
-Here are a few relevant links:
+Here are a few relevant links (that will work when the government reopens):
 
 * [Overview of the GFDL model](http://www.gfdl.noaa.gov/brief-history-of-global-atmospheric-modeling-at-gfdl)
 * [NARCCAP website](http://www.gfdl.noaa.gov/brief-history-of-global-atmospheric-modeling-at-gfdl)
@@ -21,7 +20,7 @@ Explore the data for this exercise
 First, set the working directory and load libraries.
 
 ```r
-setwd("/home/user/ost4sem/exercise/SpatialAnalysisTutorials/climate/RCM")
+setwd("/home/user/ost4sem/exercise/SpatialAnalysisTutorials/climate/code")
 library(ncdf)
 library(rasterVis)
 library(sp)

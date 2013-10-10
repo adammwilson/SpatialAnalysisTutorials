@@ -4,6 +4,13 @@ Generating Climate Metrics from gridded daily weather data (or climate model out
 
 ```r
 setwd("/home/user/ost4sem/exercise/SpatialAnalysisTutorials/climate/RCM")
+```
+
+```
+## Error: cannot change working directory
+```
+
+```r
 library(ncdf)
 library(rasterVis)
 library(sp)

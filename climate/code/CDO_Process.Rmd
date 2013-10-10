@@ -19,7 +19,7 @@ Explore the data for this exercise
 
 First, set the working directory and load libraries.
 ```{r,results='hide',message=FALSE}
-setwd("/home/user/ost4sem/exercise/SpatialAnalysisTutorials/climate/RCM")
+setwd("/home/user/ost4sem/exercise/SpatialAnalysisTutorials/climate/code")
 library(ncdf)
 library(rasterVis)
 library(sp)
