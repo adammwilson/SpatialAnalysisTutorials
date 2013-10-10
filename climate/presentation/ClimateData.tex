@@ -14,7 +14,7 @@
 \usepackage{xmpmulti}
 \usefonttheme[onlymath]{serif}
 
-\title{NetCDF}
+\title{Introduction to NetCDF, Climate Data Processing, and ``Literate Programming"}
 \author{Adam M. Wilson}
 \date{November 15, 2012}
 \setbeamersize{text margin left=6mm, text margin right=6mm} 
@@ -28,6 +28,7 @@
 \setbeamerfont{alerted text}{series=\bfseries}
 
 \begin{document}
+\maketitle
 
 \frame{
   \frametitle{Overview}
@@ -35,13 +36,14 @@ Two broad objectives: \\ \bigskip
 
 {\bf Introduction to working with climate data}
  \begin{enumerate}
-\item {Explore how the IPCC AR5 data are organized}
-\item {Introduce HDF/NetCDF as a data format}
-\item {Use Climate Data Operators (CDO) from within R to process the daily data to climate metrics}
-\item {Make a few plots}
+\item Explore how the IPCC AR5 data are organized
+\item Introduce HDF/NetCDF as a data format
+\item Introduce Climate Data Operators (CDO) 
+\item Call CDO from R to process daily data into climate metrics
+\item Do a few simple analyses (plots, tables, etc.)
 \end{enumerate}
 
-\\ \bigskip {\bf Illustrate "Literate Programing"}
+\\ \bigskip {\bf Illustrate ``Literate Programing"}
 \begin{enumerate}
 \item {Use of R+Markdown to generate repeatable, "human-readable" reports of an analysis.}
 \end{enumerate}
@@ -54,15 +56,17 @@ Two broad objectives: \\ \bigskip
   \frametitle{Coupled Model Intercomparison Project Phase 5 (CMIP5)}
 % The CMIP5 experiment design includes the following experiments:
 \begin{center}
- \includegraphics<1>[width=.65\textwidth]{CMIP5_1}
- \includegraphics<2>[width=.65\textwidth]{CMIP5_2}
+ \includegraphics<1>[width=.62\textwidth]{CMIP5_1}
+ \includegraphics<2>[width=.62\textwidth]{CMIP5_2}
+ \includegraphics<3>[width=.62\textwidth]{CMIP5_3}
  %   \begin{enumerate}
  %   \item Decadal Hindcasts and Predictions simulations,
 %  \item	  "long-term" simulations, 
  % \item   "atmosphere-only" for computationally-demanding models.
   %   \end{enumerate}
-   \\  {\tiny  Taylor, et.al., (2012) BAMS 93(4):485--498}.
 \end{center}
+  \\ \uncover<3> {RCP8.5 increases to 8.5 $W m^{-2}$ in 2100} 
+\hfill  {\tiny  Taylor, et.al., (2012) BAMS 93(4):485--498}.
 }
 
 \frame[t]{
@@ -71,8 +75,8 @@ Two broad objectives: \\ \bigskip
 %    \begin{itemize}
 %    \item Expose 
 %    \end{itemize}
-   \includegraphics[width=.75\textwidth]{RCP}\\ \bigskip
-Plus several historical scenarios (`natural', `green house gases', etc.)
+   \includegraphics[width=.9\textwidth]{RCP}\\ \bigskip
+%Plus several historical scenarios (`natural', `green house gases', etc.)
   \end{center}}
 
 
@@ -138,7 +142,7 @@ _r1i1p1_20960101-21001231.nc' 'MD5' '801fc44c406377a084f87c4f509e9da8'
   \frametitle{What is NetCDF?}
   \begin{center}
     \begin{itemize}
-    \item A netCDF file has named variables,attributes, and dimensions.
+    \item A netCDF file has named variables, attributes, and dimensions.
     \item  Variables $\rightarrow$ data 
     \item Attibutes $\rightarrow$ metadata (for file or variable)
     \item Dimensions $\rightarrow $ Shapes of variables
@@ -237,17 +241,17 @@ represents, and of the spatial and temporal properties of the data.
 %    \end{itemize}
 %  \end{center}}
 
-\frame[t]{
-  \frametitle{Disadvantages}
-  \begin{center}
-    \begin{itemize}
-    \item NetCDF3 works everywhere, but NetCDF4 must run in Cygwin on Window{\scriptsize \$} (though this may
-      change very soon)
-    \item Less familiar (though this is changing)
-    \item More complicated for simple datasets
-    \end{itemize}
-   \vfill \includegraphics[width=.9\textwidth]{dilbert.png}\\
-  \end{center}}
+%\frame[t]{
+ % \frametitle{Disadvantages}
+%  \begin{center}
+  %  \begin{itemize}
+  %  \item NetCDF3 works everywhere, but NetCDF4 must run in Cygwin on Window{\scriptsize \$} (though this may
+  %    change very soon)
+ %   \item Less familiar (though this is changing)
+ %   \item More complicated for simple datasets
+ %   \end{itemize}
+ %  \vfill \includegraphics[width=.9\textwidth]{dilbert.png}\\
+ % \end{center}}
 
 \section{NetCDF Software}
 \subsection*{Software}
@@ -264,18 +268,15 @@ It's that easy! \bigskip
   interpolation, etc: \\
 \texttt{cdo monmean input.nc output.nc}
 \end{itemize}
-\bigskip \url{https://code.zmaw.de/embedded/cdo/1.5.5/cdo.html}
+\bigskip \vfill {\footnotesize Max-Planck Institute for Meteorology: \url{https://code.zmaw.de/projects/cdo}}
 }
 
 \frame{
 \frametitle{CDO  Climate indices}
-\begin{tiny}
+\begin{footnotesize}
 
   2.16.1  ECACDD - Consecutive dry days index per time period \\
   2.16.2  ECACFD - Consecutive frost days index per time period \\
-  2.16.3  ECACSU - Consecutive summer days index per time period \\
-  2.16.4  ECACWD - Consecutive wet days index per time period \\
-  2.16.5  ECACWDI - Cold wave duration index w.r.t. mean of reference period \\
   2.16.6  ECACWFI - Cold-spell days index w.r.t. 10th percentile of reference period \\
   2.16.7  ECAETR - Intra-period extreme temperature range \\
   2.16.8  ECAFD - Frost days index per time period \\
@@ -284,28 +285,16 @@ It's that easy! \bigskip
   2.16.11  ECAHWDI - Heat wave duration index w.r.t. mean of reference period \\
   2.16.12  ECAHWFI - Warm spell days index w.r.t. 90th percentile of reference period \\
   2.16.13  ECAID - Ice days index per time period \\
-  2.16.14  ECAPD - Precipitation days index per time period \\
-  2.16.15  ECAR75P - Moderate wet days w.r.t. 75th percentile of reference period \\
-  2.16.16  ECAR75PTOT - Precipitation percent due to R75p days \\
-  2.16.17  ECAR90P - Wet days w.r.t. 90th percentile of reference period \\
-  2.16.18  ECAR90PTOT - Precipitation percent due to R90p days \\
-  2.16.19  ECAR95P - Very wet days w.r.t. 95th percentile of reference period \\
   2.16.20  ECAR95PTOT - Precipitation percent due to R95p days \\
   2.16.21  ECAR99P - Extremely wet days w.r.t. 99th percentile of reference period \\
   2.16.22  ECAR99PTOT - Precipitation percent due to R99p days \\
   2.16.23  ECARR1 - Wet days index per time period \\
   2.16.24  ECARX1DAY - Highest one day precipitation amount per time period \\
-  2.16.25  ECARX5DAY - Highest five-day precipitation amount per time period \\
   2.16.26  ECASDII - Simple daily intensity index per time period \\
   2.16.27  ECASU - Summer days index per time period \\
   2.16.28  ECATG10P - Cold days percent w.r.t. 10th percentile of reference period \\
   2.16.29  ECATG90P - Warm days percent w.r.t. 90th percentile of reference period \\
-  2.16.30  ECATN10P - Cold nights percent w.r.t. 10th percentile of reference period \\
-  2.16.31  ECATN90P - Warm nights percent w.r.t. 90th percentile of reference period \\
-  2.16.32  ECATR - Tropical nights index per time period \\
-  2.16.33  ECATX10P - Very cold days percent w.r.t. 10th percentile of reference period \\
-  2.16.34  ECATX90P - Very warm days percent w.r.t. 90th percentile of reference period \\
-\end{tiny}
+\end{footnotesize}
 }
 
 \frame{
@@ -373,6 +362,15 @@ plot(ne2)}
 \subsection{R Markdown}
 
 \frame{
+\frametitle{Literate Programming}
+"... an explanation of a program in a natural language, such as English, interspersed with snippets of code"
+\bigskip \begin{center}
+\includegraphics[width=\textwidth]{LitProg} 
+  \end{center}
+\vfill \hfill {\tiny Knuth, Donald Ervin. 1992. \textit{Literate Programming}}
+}
+
+\frame{
 \frametitle{Example Workflow (again...)}
 %% crop the title
 \begin{center} \includegraphics[trim = 0mm 10mm 0mm 20mm, clip,width=\textwidth]{workflow.pdf} \end{center}
@@ -380,20 +378,31 @@ Let's link the various steps together
 }
 
 \frame{
-\frametitle{Literate Programming}
-%% crop the title
-\begin{center}
- 
- \end{center}
+\frametitle{Literate Programming with R}
+text+code $\rightarrow$ html/docx/pdf with RStudio 
+\begin{center} \includegraphics[width=\textwidth]{Rmd}  \end{center}
+\vfill \hfill {\tiny Gandrud, Christopher. 2014. \textit{Reproducible Research with R and RStudio}}
 }
 
 \frame{
-\frametitle{Literate Programming with R}
-\begin{itemize}
-\item RStudio $\rightarrow$ nice tools
-\item markdown or \LaTeX
-  \end{itemize}
+\frametitle{Exercise in Climate Data Processing}
+{\bf Before Class (or now):}\\
+\texttt{\small 
+cd $\sim$/ost4sem/exercise/ \\
+git clone https://github.com/adammwilson/SpatialAnalysisTutorials.git
 }
+
+\bigskip 
+{\bf Everyone:}\\
+\texttt{\small 
+cd $\sim$/ost4sem/exercise/ \\
+git pull \\
+Open RStudio $\rightarrow$ ~/ost4sem/exercise/SpatialAnalysisTutorials/ \\
+\hspace{40} climate/code/CDO\_Process.Rmd \\
+}
+}
+
+
 
 \end{document}
     
