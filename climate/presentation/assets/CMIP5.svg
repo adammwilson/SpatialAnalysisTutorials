@@ -24,7 +24,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -49,11 +49,11 @@
      fit-margin-bottom="0"
      inkscape:zoom="0.72241212"
      inkscape:cx="386.33897"
-     inkscape:cy="371.62578"
+     inkscape:cy="316.25572"
      inkscape:window-x="1280"
      inkscape:window-y="22"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer3" />
+     inkscape:current-layer="svg5750" />
   <image
      width="954"
      height="924"
@@ -68,77 +68,17 @@
      transform="translate(13.71875,-2)" />
   <g
      inkscape:groupmode="layer"
-     id="layer1"
-     inkscape:label="Labels1"
-     style="display:inline"
-     transform="translate(13.71875,-2)">
-    <rect
-       style="fill:none;stroke:#000000;stroke-opacity:1"
-       id="rect6268"
-       width="490.38559"
-       height="475.7034"
-       x="-12.515063"
-       y="2.4992807" />
-    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Adobe Caslon Pro;-inkscape-font-specification:Adobe Caslon Pro"
-       x="8.0400219"
-       y="44.588268"
-       id="text6270"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan6272"
-         x="8.0400219"
-         y="44.588268">Model</tspan><tspan
-         sodipodi:role="line"
-         x="8.0400219"
-         y="94.588272"
-         id="tspan6274">Evaluation</tspan></text>
-    <rect
-       style="fill:none;stroke:#000000;stroke-opacity:1"
-       id="rect6268-9"
-       width="490.38559"
-       height="475.7034"
-       x="477.33871"
-       y="2.5416391" />
-    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Adobe Caslon Pro;-inkscape-font-specification:Adobe Caslon Pro"
-       x="754.87482"
-       y="47.524693"
-       id="text6294"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan6296"
-         x="754.87482"
-         y="47.524693">Climate</tspan><tspan
-         sodipodi:role="line"
-         x="754.87482"
-         y="97.524689"
-         id="tspan6298">Projections</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Adobe Caslon Pro;-inkscape-font-specification:Adobe Caslon Pro"
-       x="7.3884411"
-       y="903.91345"
-       id="text6270-0"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         x="7.3884411"
-         y="903.91345"
-         id="tspan6274-5">Understanding</tspan></text>
-    <rect
-       style="fill:none;stroke:#000000;stroke-width:1.41376829;stroke-opacity:1"
-       id="rect6268-3"
-       width="980.15363"
-       height="475.7034"
-       x="-13.004443"
-       y="479.18146" />
-  </g>
-  <g
-     inkscape:groupmode="layer"
      id="layer3"
-     inkscape:label="Simple">
+     inkscape:label="Simple"
+     style="display:inline">
+    <rect
+       style="fill:#fbf7c3;fill-opacity:1"
+       id="rect2996-1-3-8-4-8-6-5-4-5"
+       width="219.14539"
+       height="87.034431"
+       x="-571.60535"
+       y="-246.52356"
+       transform="matrix(-0.99989736,-0.01432711,-0.14494135,-0.98944025,0,0)" />
     <rect
        style="fill:#e7f2e0;fill-opacity:1"
        id="rect2996"
@@ -291,5 +231,98 @@
        x="-81.629997"
        y="-456.80096"
        transform="matrix(-0.72806016,0.68551324,-0.76435293,-0.6447981,0,0)" />
+    <rect
+       style="fill:#fce3e3;fill-opacity:1"
+       id="rect2996-1-3-8-4-8-6-5-5-7-8-7-7-8"
+       width="185.43637"
+       height="76.766144"
+       x="276.59039"
+       y="-464.12836"
+       transform="matrix(0.99992332,0.01238374,-0.05583326,-0.99844011,0,0)" />
+    <rect
+       style="fill:#fce3e3;fill-opacity:1"
+       id="rect2996-1-3-8-4-8-6-5-5-7-8-7-7-8-8"
+       width="165.14183"
+       height="72.714691"
+       x="481.36868"
+       y="-461.93781"
+       transform="matrix(0.99991322,0.0131741,-0.05249263,-0.99862131,0,0)" />
+    <rect
+       style="fill:#fce3e3;fill-opacity:1"
+       id="rect2996-1-3-8-4-8-6-5-5-7-8-7-7-8-7"
+       width="100.19758"
+       height="53.84848"
+       x="369.03674"
+       y="-340.77075"
+       transform="matrix(0.9998706,0.01608678,-0.04300596,-0.99907482,0,0)" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Labels1"
+     style="display:inline"
+     transform="translate(13.71875,-2)">
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Adobe Caslon Pro;-inkscape-font-specification:Adobe Caslon Pro"
+       x="8.0400219"
+       y="44.588268"
+       id="text6270"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan6272"
+         x="8.0400219"
+         y="44.588268">Model</tspan><tspan
+         sodipodi:role="line"
+         x="8.0400219"
+         y="94.588272"
+         id="tspan6274">Evaluation</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Adobe Caslon Pro;-inkscape-font-specification:Adobe Caslon Pro"
+       x="754.87482"
+       y="47.524693"
+       id="text6294"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan6296"
+         x="754.87482"
+         y="47.524693">Climate</tspan><tspan
+         sodipodi:role="line"
+         x="754.87482"
+         y="97.524689"
+         id="tspan6298">Projections</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Adobe Caslon Pro;-inkscape-font-specification:Adobe Caslon Pro"
+       x="7.3884411"
+       y="903.91345"
+       id="text6270-0"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="7.3884411"
+         y="903.91345"
+         id="tspan6274-5">Understanding</tspan></text>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:1.41376829;stroke-opacity:1"
+       id="rect6268-3"
+       width="980.15363"
+       height="475.7034"
+       x="-13.004443"
+       y="479.18146" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-opacity:1"
+       id="rect6268"
+       width="490.38559"
+       height="475.7034"
+       x="-12.515063"
+       y="2.4992807" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-opacity:1"
+       id="rect6268-9"
+       width="490.38559"
+       height="475.7034"
+       x="477.33871"
+       y="2.5416391" />
   </g>
 </svg>
