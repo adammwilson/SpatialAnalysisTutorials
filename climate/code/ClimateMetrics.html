@@ -329,8 +329,8 @@ hd
 <h3>Current Time Period:</h3>
 
 <pre><code class="r">system(paste(&quot;cdo -O &quot;, paste(&quot;mergetime &quot;, paste(&quot;-eca_cfd -selyear,&quot;, cyears, 
-    &quot; -selname,tmin gfdl_RCM3_Current.nc &quot;, sep = &quot;&quot;, collapse = &quot; &quot;)), &quot; gfdl_RCM3_Current_CFD.nc&quot;, 
-    sep = &quot;&quot;))
+    &quot; -selname,tmin ../data/gfdl_RCM3_Current.nc &quot;, sep = &quot;&quot;, collapse = &quot; &quot;)), 
+    &quot; gfdl_RCM3_Current_CFD.nc&quot;, sep = &quot;&quot;))
 </code></pre>
 
 <p>Now calculate the same thing for the Future time by changing the two places it says &ldquo;Current&rdquo; to &ldquo;Future&rdquo; (note the capital letters) and the &ldquo;cyears&rdquo; to &ldquo;fyears&rdquo; to extract the future years from the Future Dataset and save it as with Future in the file name</p>

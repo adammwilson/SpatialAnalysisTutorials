@@ -169,8 +169,8 @@ Flip through the various years.  Are the numbers believable (given what you know
 
 ```r
 system(paste("cdo -O ", paste("mergetime ", paste("-eca_cfd -selyear,", cyears, 
-    " -selname,tmin gfdl_RCM3_Current.nc ", sep = "", collapse = " ")), " gfdl_RCM3_Current_CFD.nc", 
-    sep = ""))
+    " -selname,tmin ../data/gfdl_RCM3_Current.nc ", sep = "", collapse = " ")), 
+    " gfdl_RCM3_Current_CFD.nc", sep = ""))
 ```
 
 
