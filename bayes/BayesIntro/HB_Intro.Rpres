@@ -1,0 +1,37 @@
+<style type="text/css">
+.rChart{width: 100%; height: auto}
+</style>
+
+
+Introduction to Hierarchical Bayes
+========================================================
+author: Adam M. Wilson
+date: November, 2013
+
+Bayesian Recap
+========================================================
+
+For more details on authoring R presentations click the
+**Help** button on the toolbar.
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+Bayes
+========================================================
+
+$$ P(\theta|\textbf{D}) = P(\theta ) \frac{P(\textbf{D} |\theta)}{P(\textbf{D})} $$
+
+```{r,echo=FALSE}
+library(rCharts)
+
+```
+
+Slide With Plot
+========================================================
+
+```{r, echo=FALSE,results="asis", fig.width=7, fig.height=5}
+names(iris) = gsub("\\.", "", names(iris))
+rPlot(SepalLength ~ SepalWidth | Species, data = iris, color = 'Species', type = 'point')
+```
