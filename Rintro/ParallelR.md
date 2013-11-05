@@ -72,8 +72,8 @@ Result[,1:4]
 
 ```
             result.1 result.2 result.3 result.4
-(Intercept)   0.8536    1.161   0.9671    1.202
-Petal.Width   2.4738    2.222   2.3046    2.215
+(Intercept)    1.406    1.044    1.064    1.191
+Petal.Width    1.942    2.336    2.125    2.358
 ```
 
 </small>
