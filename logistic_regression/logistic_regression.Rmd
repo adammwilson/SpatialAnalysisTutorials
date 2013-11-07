@@ -1,0 +1,121 @@
+Spatially-explicit logistic regression
+========================================================
+
+```{r, message=FALSE, warning=FALSE}
+  library(rgdal)
+  library(raster)
+  library(sp)
+  library(gam)
+  library(colorRamps)
+  library(ncf)
+```
+
+Loading the San Diego bird atlas data for Purple finch:
+```{r, , message=FALSE, warning=FALSE}
+  finch <- readOGR("finch", layer="finch")
+```
+
+Scaling and centering the environmental variables:
+```{r}
+  envi <- finch@data[,15:25] 
+  envi.scaled <- as.numeric(scale(envi))
+  finch@data[,15:25] <- envi.scaled
+```
+
+Plotting the response (presence/absence data) and the predictor (NDVI):
+```{r, fig.height=4}
+  spplot(finch, zcol=c("present"), col.regions=c("white","black"),
+         colorkey=FALSE)
+  spplot(finch, zcol=c("ndvi"), col.regions=topo.colors(20))
+```
+
+Now we will do the actual modelling. The first simple model links the presences and absences to NDVI.
+
+This is the model that we will fit:
+
+$\log ( \frac{p_i}{1-p_i} ) = \beta_0 + \beta_1 NDVI_i$
+
+$o_i \sim Bernoulli(p_i)$
+
+It can be fitted by simple glm() in R:
+```{r}
+  ndvi.only <- glm(present~ndvi, data=finch@data, family="binomial")
+  summary(ndvi.only)
+  ## and let's extract predictions and residuals:
+  preds.ndvi.only <- predict(ndvi.only, type="response")
+  resid.ndvi.only <- residuals(ndvi.only)
+```
+
+Now let's plot the logistic curve:
+```{r, fig.height=5}
+  newx <- data.frame(ndvi=seq(-2,3, by=0.1))
+  newy <- predict(ndvi.only, newdata=newx, type="response")
+  plot(newx[,1], newy, type="l", xlab="(Scaled) NDVI", ylab="P of presence", col="red")
+  points(finch@data$ndvi, finch@data$present)
+```
+
+The second model fits only the spatial trend in the data (using GAM and splines):
+```{r}
+  space.only <- gam(present~s(X_CEN, 5)+s(Y_CEN, 5),
+                   data=finch@data, family="binomial")
+  summary(space.only)
+  preds.space.only <- predict(space.only, type="response")
+```
+
+The third model uses both the NDVI and spatial trends to explain the finch's occurrences:
+```{r}
+  space.and.ndvi <- gam(present~ndvi + s(X_CEN,5)+s(Y_CEN, 5),
+                   data=finch@data, family="binomial")
+  summary(space.and.ndvi)
+  preds.space.and.ndvi <- predict(space.and.ndvi, type="response")
+  resid.space.and.ndvi <- residuals(space.and.ndvi)
+```
+
+Now let's put all of the predictions and residuals together. We will use this for plotting:
+```{r}
+  predictions <- data.frame(RC=finch@data$RC, preds.ndvi.only, 
+                                              resid.ndvi.only,
+                                              preds.space.only,
+                                              preds.space.and.ndvi,
+                                              resid.space.and.ndvi)
+  finch.preds <- merge(finch, predictions, by="RC")
+```
+
+Here we will plot the predictions of the three models, together with the actual observed presences and absences:
+```{r, fig.height=5}
+  spplot(finch.preds, 
+         zcol=c("present",
+                "preds.ndvi.only",
+                "preds.space.only",
+                "preds.space.and.ndvi"), 
+                 col.regions=matlab.like2(50))
+```
+
+It is always useful to check the magnitude of spatial correlation in residuals:
+```{r}
+  ndvi.only.cor <- correlog(finch.preds@data$X_CEN,
+                            finch.preds@data$Y_CEN, 
+                            finch.preds@data$resid.ndvi.only, 
+                            increment=0.2, resamp=1)
+  space.and.envi.cor <- correlog(finch.preds@data$X_CEN,
+                            finch.preds@data$Y_CEN,
+                            finch.preds@data$resid.space.and.ndvi,
+                            increment=0.2, resamp=1)
+```
+
+And we can plot the correlograms:
+```{r}
+  plot(ndvi.only.cor$mean.of.class, ndvi.only.cor$correlation,
+       type="b", xlab="Distance class", ylab="Moran's I",
+       main="Residual correlograms")
+  points(space.and.envi.cor$mean.of.class, 
+        space.and.envi.cor$correlation,
+        col="red", type="b")
+  abline(h=0, lty=2)
+  legend("topright", legend=c("ndvi.only",
+                              "space.and.ndvi"),
+         col=c("black", "red"), lwd=c(2,2))
+```
+
+
+

@@ -1,0 +1,18 @@
+
+      model
+      {
+        # priors
+        beta0 ~ dnorm(0,0.001)
+        beta1 ~ dnorm(0,0.001)
+        beta2 ~ dnorm(0,0.001)
+        
+        # likelihood
+        for(i in 1:N.cells)
+        {
+          n50[i] ~ dpois(lambda[i])
+          log(lambda[i]) <- beta0 + beta1*elev50[i] + beta2*pow(elev50[i],2)
+          # this part is here in order to make nice prediction curves:
+          prediction[i] ~ dpois(lambda[i])
+        } 
+      }
+  
