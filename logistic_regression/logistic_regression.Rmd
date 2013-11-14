@@ -10,9 +10,13 @@ Spatially-explicit logistic regression
   library(ncf)
 ```
 
-Loading the San Diego bird atlas data for Purple finch:
+Load a vector dataset (shapefile) representing the San Diego bird atlas data for Purple finch:
 ```{r, , message=FALSE, warning=FALSE}
   finch <- readOGR("finch", layer="finch")
+# Check how R handles vector data using the structure ("str") command to look at one of the polygons
+str(finch[1,])
+# Now look at the associated data frame (analogous to the *.dbf file that accompanied the shapefile)
+head(finch@data)
 ```
 
 Scaling and centering the environmental variables:
