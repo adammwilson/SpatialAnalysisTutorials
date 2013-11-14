@@ -38,7 +38,7 @@ hist(normal.world, xlab = "x", ylab = "Frequency", main = "Frequency histogram",
 
 
 
-p(D|H): The Likelihood
+$p(D|H)$: The Likelihood
 ----------------------
 Calculation of likelihood in R is easy! The R functions ```dnorm()```, ```dpois()```, ```dunif()```, ```dbinom()```, ```dgamma()```, ```dbeta()``` etc. are exactly for that!
 
@@ -83,7 +83,7 @@ The world is a raster of 50 x 50 cells. Each cell contains value that is an inde
 # the parameters of the Binomial distribution Note: if n.tosses=1 then we do
 # Bernoulli trial
 p = 0.3
-n.tosses = 1
+n.tosses = 100
 
 # random draws from Binomial
 binomial.world <- raster(matrix(NA, nrow = 50, ncol = 50))
@@ -143,7 +143,7 @@ Let's assume that there is an evnironmental variable that has a form of a linear
 
 ```r
 environment <- raster(matrix(NA, nrow = 50, ncol = 50))
-environment[] <- rep(1:50, each = 50)
+environment[] <- rep((1:50)^3, each = 50)
 plot(environment, main = "Predictor (Environmental Variable)")
 ```
 

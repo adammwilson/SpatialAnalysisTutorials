@@ -41,8 +41,9 @@ First we load the necessary packages:
   library(ncf) # has an easy function for correlograms
 ```
 
-Loading the San Diego bird atlas data for Purple finch:
+Load a vector dataset (shapefile) representing the San Diego bird atlas data for Purple finch:
 ```{r, , message=FALSE, warning=FALSE}
+<<<<<<< HEAD
    finch <- readOGR("finch", layer="finch")
 ```
 
@@ -53,6 +54,13 @@ Check how R handles vector data using the structure (```str```) command to look 
 Now look at the associated data frame (analogous to the *.dbf file that accompanied the shapefile):
 ```{r}
   head(finch@data)
+=======
+  finch <- readOGR("finch", layer="finch")
+# Check how R handles vector data using the structure ("str") command to look at one of the polygons
+str(finch[1,])
+# Now look at the associated data frame (analogous to the *.dbf file that accompanied the shapefile)
+head(finch@data)
+>>>>>>> 541b30e4de93cceff539effaf6d7ed70496933ed
 ```
 
 Scaling and centering the environmental variables to zero mean and variance of 1, using the ```scale``` function:
