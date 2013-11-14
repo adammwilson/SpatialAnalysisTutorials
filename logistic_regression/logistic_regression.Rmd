@@ -53,11 +53,6 @@ Check how R handles vector data using the structure (```str```) command to look 
 Now look at the associated data frame (analogous to the *.dbf file that accompanied the shapefile):
 ```{r}
   head(finch@data)
-  finch <- readOGR("finch", layer="finch")
-# Check how R handles vector data using the structure ("str") command to look at one of the polygons
-str(finch[1,])
-# Now look at the associated data frame (analogous to the *.dbf file that accompanied the shapefile)
-head(finch@data)
 ```
 
 Scaling and centering the environmental variables to zero mean and variance of 1, using the ```scale``` function:
@@ -114,6 +109,7 @@ The second model fits only the spatial trend in the data (using GAM and splines)
   summary(space.only)
   ## extracting predictions
   preds.space.only <- predict(space.only, type="response")
+  resid.space.only <- residuals(space.only)
 ```
 
 ### Model 3 - space and NDVI
@@ -137,7 +133,8 @@ Now let's put all of the predictions together:
                                               resid.ndvi.only,
                                               preds.space.only,
                                               preds.space.and.ndvi,
-                                              resid.space.and.ndvi)
+                                              resid.space.and.ndvi,
+                                              resid.space.only)
   finch.preds <- merge(finch, predictions, by="RC")
 ```
 
@@ -171,7 +168,12 @@ It is always useful to check the magnitude of spatial correlation in residuals. 
                             finch.preds@data$Y_CEN, 
                             finch.preds@data$resid.ndvi.only, 
                             increment=0.2, resamp=1)
-  space.and.envi.cor <- correlog(finch.preds@data$X_CEN,
+  space.only.cor <- correlog(finch.preds@data$X_CEN,
+                            finch.preds@data$Y_CEN, 
+                            finch.preds@data$resid.space.only, 
+                            increment=0.2, resamp=1)
+
+space.and.envi.cor <- correlog(finch.preds@data$X_CEN,
                             finch.preds@data$Y_CEN,
                             finch.preds@data$resid.space.and.ndvi,
                             increment=0.2, resamp=1)
@@ -186,11 +188,15 @@ And we can plot the correlograms:
   points(space.and.envi.cor$mean.of.class, 
          space.and.envi.cor$correlation,
          col="red", type="b", lwd=2)
-  abline(h=0, lty=2)
+  points(space.only.cor$mean.of.class, 
+         space.only.cor$correlation,
+         col="green", type="b", lwd=2)
+abline(h=0, lty=2)
   legend("topright", legend=c("raw response",
                               "ndvi.only",
+                              "space.only",
                               "space.and.ndvi"),
-         col=c("black", "blue","red"), lwd=c(2,2,2))
+         col=c("black", "blue","green","red"), lwd=c(2,2,2))
 ```
 
 What did we gain by making the model ``spatially explicit''?

@@ -123,112 +123,7 @@ head(finch@data)
 ```
 ##     RC FID_ATLAS1      AREA ID_COARSE FID_ATLA_1   AREA_1 PERIMETER
 ## 0  C-9          0 214130000        c1         11 24584734     19800
-## 1 C-10          0 214130000        c1         12 23355580     19453
-## 2 C-11          0 214130000        c1         22 23534602     19301
-## 3 D-10          0 214130000        c1         43 24535492     19735
-## 4 D-11          0 214130000        c1         45 23853714     19508
-## 5  D-9          0 214130000        c1         46 23849098     19561
-##   BIRD_ATLAS BIRD_ATL_1      TRQ      BLOCKNAME area_mdm  X_CEN Y_CEN
-## 0         13         13 T09R3WNE        Rainbow 24584493 -117.2 33.41
-## 1         14         14 T09R2WNW    Mt. Olympus 23355572 -117.1 33.40
-## 2         24         24 T09R2WNE Trujillo Creek 23534551 -117.0 33.40
-## 3         45         45 T09R2WSW    Gomez Creek 24535492 -117.1 33.36
-## 4         47         47 T09R2WSE           Pala 23853715 -117.0 33.36
-## 5         48         48 T09R3WSE  Monserate Mt. 23849098 -117.2 33.36
-##    ndvi meanelev minelev maxelev vegtypes maxtmp mintmp meanppt summert
-## 0 129.4    336.6  155.84   560.3       19  32.35   4.21   318.7   23.32
-## 1 123.2    470.0  173.03   675.8       16  32.30   3.64   346.1   23.35
-## 2 123.2    498.7  159.22  1008.6       22  32.88   3.55   342.9   23.58
-## 3 128.0    244.2   87.45   552.7       25  32.88   4.57   301.7   23.58
-## 4 112.5    228.6  110.70   611.5       27  33.55   4.75   292.6   24.08
-## 5 142.1    208.3   82.69   471.4       23  32.47   4.93   288.1   23.17
-##   wintert urban present
-## 0   11.68 10.48       1
-## 1   10.95  1.98       0
-## 2   10.94  0.83       1
-## 3   12.19  1.17       0
-## 4   12.36  8.55       1
-## 5   12.37 12.26       1
-```
-
-```r
-finch <- readOGR("finch", layer = "finch")
-```
-
-```
-## OGR data source with driver: ESRI Shapefile 
-## Source: "finch", layer: "finch"
-## with 414 features and 26 fields
-## Feature type: wkbPolygon with 2 dimensions
-```
-
-```r
-# Check how R handles vector data using the structure ('str') command to
-# look at one of the polygons
-str(finch[1, ])
-```
-
-```
-## Formal class 'SpatialPolygonsDataFrame' [package "sp"] with 5 slots
-##   ..@ data       :'data.frame':	1 obs. of  26 variables:
-##   .. ..$ RC        : Factor w/ 414 levels "C-10","C-11",..: 27
-##   .. ..$ FID_ATLAS1: num 0
-##   .. ..$ AREA      : num 2.14e+08
-##   .. ..$ ID_COARSE : Factor w/ 46 levels "c1","c10","c11",..: 1
-##   .. ..$ FID_ATLA_1: num 11
-##   .. ..$ AREA_1    : num 24584734
-##   .. ..$ PERIMETER : num 19800
-##   .. ..$ BIRD_ATLAS: num 13
-##   .. ..$ BIRD_ATL_1: num 13
-##   .. ..$ TRQ       : Factor w/ 396 levels "T09R1ENE","T09R1ESE",..: 19
-##   .. ..$ BLOCKNAME : Factor w/ 395 levels "Agra","Agua Caliente",..: 286
-##   .. ..$ area_mdm  : num 24584493
-##   .. ..$ X_CEN     : num -117
-##   .. ..$ Y_CEN     : num 33.4
-##   .. ..$ ndvi      : num 129
-##   .. ..$ meanelev  : num 337
-##   .. ..$ minelev   : num 156
-##   .. ..$ maxelev   : num 560
-##   .. ..$ vegtypes  : int 19
-##   .. ..$ maxtmp    : num 32.4
-##   .. ..$ mintmp    : num 4.21
-##   .. ..$ meanppt   : num 319
-##   .. ..$ summert   : num 23.3
-##   .. ..$ wintert   : num 11.7
-##   .. ..$ urban     : num 10.5
-##   .. ..$ present   : num 1
-##   ..@ polygons   :List of 1
-##   .. ..$ :Formal class 'Polygons' [package "sp"] with 5 slots
-##   .. .. .. ..@ Polygons :List of 1
-##   .. .. .. .. ..$ :Formal class 'Polygon' [package "sp"] with 5 slots
-##   .. .. .. .. .. .. ..@ labpt  : num [1:2] 484697 3696562
-##   .. .. .. .. .. .. ..@ area   : num 24584493
-##   .. .. .. .. .. .. ..@ hole   : logi FALSE
-##   .. .. .. .. .. .. ..@ ringDir: int 1
-##   .. .. .. .. .. .. ..@ coords : num [1:37, 1:2] 487191 487167 487149 487153 486763 ...
-##   .. .. .. ..@ plotOrder: int 1
-##   .. .. .. ..@ labpt    : num [1:2] 484697 3696562
-##   .. .. .. ..@ ID       : chr "0"
-##   .. .. .. ..@ area     : num 24584493
-##   ..@ plotOrder  : int 1
-##   ..@ bbox       : num [1:2, 1:2] 482186 3694052 487191 3699070
-##   .. ..- attr(*, "dimnames")=List of 2
-##   .. .. ..$ : chr [1:2] "x" "y"
-##   .. .. ..$ : chr [1:2] "min" "max"
-##   ..@ proj4string:Formal class 'CRS' [package "sp"] with 1 slots
-##   .. .. ..@ projargs: chr NA
-```
-
-```r
-# Now look at the associated data frame (analogous to the *.dbf file that
-# accompanied the shapefile)
-head(finch@data)
-```
-
-```
-##     RC FID_ATLAS1      AREA ID_COARSE FID_ATLA_1   AREA_1 PERIMETER
-## 0  C-9          0 214130000        c1         11 24584734     19800
-## 1 C-10          0 214130000        c1         12 23355580     19453
+## 1 C-10          0 214130000        c1         12 23355580     19452
 ## 2 C-11          0 214130000        c1         22 23534602     19301
 ## 3 D-10          0 214130000        c1         43 24535492     19735
 ## 4 D-11          0 214130000        c1         45 23853714     19508
@@ -380,7 +275,7 @@ summary(space.only)
 ## 
 ## Approximate significance of smooth terms:
 ##                 edf Ref.df Chi.sq p-value   
-## s(X_CEN,Y_CEN) 28.8     29   51.2  0.0066 **
+## s(X_CEN,Y_CEN) 28.8     29   51.2  0.0067 **
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -391,6 +286,7 @@ summary(space.only)
 ```r
 ## extracting predictions
 preds.space.only <- predict(space.only, type = "response")
+resid.space.only <- residuals(space.only)
 ```
 
 
@@ -427,7 +323,7 @@ summary(space.and.ndvi)
 ## 
 ## Approximate significance of smooth terms:
 ##                 edf Ref.df Chi.sq p-value   
-## s(X_CEN,Y_CEN) 23.4   25.8   45.8  0.0091 **
+## s(X_CEN,Y_CEN) 23.4   25.8   47.7  0.0055 **
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -449,7 +345,7 @@ Now let's put all of the predictions together:
 
 ```r
 predictions <- data.frame(RC = finch@data$RC, preds.ndvi.only, resid.ndvi.only, 
-    preds.space.only, preds.space.and.ndvi, resid.space.and.ndvi)
+    preds.space.only, preds.space.and.ndvi, resid.space.and.ndvi, resid.space.only)
 finch.preds <- merge(finch, predictions, by = "RC")
 ```
 
@@ -508,6 +404,16 @@ ndvi.only.cor <- correlog(finch.preds@data$X_CEN, finch.preds@data$Y_CEN, finch.
 ```
 
 ```r
+space.only.cor <- correlog(finch.preds@data$X_CEN, finch.preds@data$Y_CEN, finch.preds@data$resid.space.only, 
+    increment = 0.2, resamp = 1)
+```
+
+```
+## 1  of  1
+```
+
+```r
+
 space.and.envi.cor <- correlog(finch.preds@data$X_CEN, finch.preds@data$Y_CEN, 
     finch.preds@data$resid.space.and.ndvi, increment = 0.2, resamp = 1)
 ```
@@ -525,9 +431,11 @@ points(ndvi.only.cor$mean.of.class, ndvi.only.cor$correlation, type = "b", col =
     lwd = 2)
 points(space.and.envi.cor$mean.of.class, space.and.envi.cor$correlation, col = "red", 
     type = "b", lwd = 2)
+points(space.only.cor$mean.of.class, space.only.cor$correlation, col = "green", 
+    type = "b", lwd = 2)
 abline(h = 0, lty = 2)
-legend("topright", legend = c("raw response", "ndvi.only", "space.and.ndvi"), 
-    col = c("black", "blue", "red"), lwd = c(2, 2, 2))
+legend("topright", legend = c("raw response", "ndvi.only", "space.only", "space.and.ndvi"), 
+    col = c("black", "blue", "green", "red"), lwd = c(2, 2, 2))
 ```
 
 ![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16.png) 
