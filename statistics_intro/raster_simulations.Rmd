@@ -37,7 +37,7 @@ The world is a raster of 50 x 50 cells. Each cell contains value that is an inde
 ```
 
 
-p(D|H): The Likelihood
+$p(D|H)$: The Likelihood
 ----------------------
 Calculation of likelihood in R is easy! The R functions ```dnorm()```, ```dpois()```, ```dunif()```, ```dbinom()```, ```dgamma()```, ```dbeta()``` etc. are exactly for that!
 
@@ -53,7 +53,7 @@ Example: What is the probability that x will have the observed values of 1.5, gi
 ```
 
 We can plot it:
-```{r, fig.width=5, fig.height=5}  
+```{r, fig.width=4, fig.height=5}  
   curve(dnorm(x, mean, sd), from=qnorm(0.001, mean, sd), 
                             to=qnorm(0.999, mean, sd),
         main=paste("x =", x, "; likelihood =", round(likelihood,3)),
@@ -73,7 +73,7 @@ The world is a raster of 50 x 50 cells. Each cell contains value that is an inde
   # the parameters of the Binomial distribution 
   # Note: if n.tosses=1 then we do Bernoulli trial
   p=0.3
-  n.tosses=1
+  n.tosses=100
 
   # random draws from Binomial
   binomial.world <- raster(matrix(NA, nrow=50, ncol=50))
@@ -136,7 +136,7 @@ Introducing spatial gradient
 Let's assume that there is an evnironmental variable that has a form of a linear gradient in space:
 ```{r, fig.width=5, fig.height=5}
   environment <- raster(matrix(NA, nrow=50, ncol=50))
-  environment[] <- rep(1:50, each=50)
+  environment[] <- rep((1:50)^3, each=50)
   plot(environment, main="Predictor (Environmental Variable)")
 ```
 
