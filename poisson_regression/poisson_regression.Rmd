@@ -11,13 +11,25 @@ The complete code of this post is available [here on GitHub](https://github.com/
 The data
 ========  
   
-I will use the data on the distribution of 3605 individual trees of *Beilschmiedia pendula* in 50-ha (500 x 1000 m) forest plot in Barro Colorado (Panama). The dataset is freely available as a part of the R's `spatstat` library. 
+I will use the data on the distribution of 3605 individual trees of *Beilschmiedia pendula* in 50-ha (500 x 1000 m) forest plot in Barro Colorado (Panama).
+The dataset is freely available as a part of the R's `spatstat` library. 
 
 First, I will load the necessary libraries:
 ```{r, message=FALSE, warning=FALSE}
   library(spatstat)
   library(raster)
   library(sp)
+  library(googleVis)
+  opts_chunk$set(cache=TRUE)
+```
+
+```{r,results='asis',echo = FALSE}
+loc=data.frame(latlon="9.15:-79.847",loc="Barrow Colorado Island, Panama",tip="Barrow Colorado Island")
+M1 <- gvisMap(loc, "latlon" , "loc", options=
+                list(showTip=F,showLine=F, enableScrollWheel=TRUE,
+              mapType='hybrid', useMapTypeControl=TRUE,zoomLevel=10,width=800,height=400))
+print(M1,"chart")
+
 ```
 
 Let's plot the spatial distribution of the individuals in the plot:
@@ -29,6 +41,8 @@ Let's plot the spatial distribution of the individuals in the plot:
   abline(h=500, col="grey") 
   abline(v=0, col="grey") 
   abline(v=1000, col="grey")
+
+
 ```
 
 The dataset also comes with two rasterized environmental layers: elevation and slope.  My goal will be to model density of tree individuals as a function of elevation [meters above sea level]. I am interested in predicting density of the trees (i.e. number **n** of individuals per unit area). Hence, I will resample the data into a grid of 50 x 50 m:

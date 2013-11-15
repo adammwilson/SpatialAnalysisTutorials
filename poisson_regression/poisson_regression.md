@@ -11,7 +11,8 @@ The complete code of this post is available [here on GitHub](https://github.com/
 The data
 ========  
   
-I will use the data on the distribution of 3605 individual trees of *Beilschmiedia pendula* in 50-ha (500 x 1000 m) forest plot in Barro Colorado (Panama). The dataset is freely available as a part of the R's `spatstat` library. 
+I will use the data on the distribution of 3605 individual trees of *Beilschmiedia pendula* in 50-ha (500 x 1000 m) forest plot in Barro Colorado (Panama).
+The dataset is freely available as a part of the R's `spatstat` library. 
 
 First, I will load the necessary libraries:
 
@@ -19,7 +20,107 @@ First, I will load the necessary libraries:
 library(spatstat)
 library(raster)
 library(sp)
+library(googleVis)
+opts_chunk$set(cache = TRUE)
 ```
+
+
+<!-- Map generated in R 3.0.1 by googleVis 0.4.7 package -->
+<!-- Thu Nov 14 21:57:05 2013 -->
+
+
+<!-- jsHeader -->
+<script type="text/javascript">
+ 
+// jsData 
+function gvisDataMapID58d340d5199f () {
+var data = new google.visualization.DataTable();
+var datajson =
+[
+ [
+ 9.15,
+-79.847,
+"Barrow Colorado Island, Panama" 
+] 
+];
+data.addColumn('number','Latitude');
+data.addColumn('number','Longitude');
+data.addColumn('string','loc');
+data.addRows(datajson);
+return(data);
+}
+ 
+// jsDrawChart
+function drawChartMapID58d340d5199f() {
+var data = gvisDataMapID58d340d5199f();
+var options = {};
+options["showTip"] = false;
+options["showLine"] = false;
+options["enableScrollWheel"] = true;
+options["mapType"] = "hybrid";
+options["useMapTypeControl"] = true;
+options["zoomLevel"] =     10;
+options["width"] =    800;
+options["height"] =    400;
+
+    var chart = new google.visualization.Map(
+    document.getElementById('MapID58d340d5199f')
+    );
+    chart.draw(data,options);
+    
+
+}
+  
+ 
+// jsDisplayChart
+(function() {
+var pkgs = window.__gvisPackages = window.__gvisPackages || [];
+var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
+var chartid = "map";
+  
+// Manually see if chartid is in pkgs (not all browsers support Array.indexOf)
+var i, newPackage = true;
+for (i = 0; newPackage && i < pkgs.length; i++) {
+if (pkgs[i] === chartid)
+newPackage = false;
+}
+if (newPackage)
+  pkgs.push(chartid);
+  
+// Add the drawChart function to the global list of callbacks
+callbacks.push(drawChartMapID58d340d5199f);
+})();
+function displayChartMapID58d340d5199f() {
+  var pkgs = window.__gvisPackages = window.__gvisPackages || [];
+  var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
+  window.clearTimeout(window.__gvisLoad);
+  // The timeout is set to 100 because otherwise the container div we are
+  // targeting might not be part of the document yet
+  window.__gvisLoad = setTimeout(function() {
+  var pkgCount = pkgs.length;
+  google.load("visualization", "1", { packages:pkgs, callback: function() {
+  if (pkgCount != pkgs.length) {
+  // Race condition where another setTimeout call snuck in after us; if
+  // that call added a package, we must not shift its callback
+  return;
+}
+while (callbacks.length > 0)
+callbacks.shift()();
+} });
+}, 100);
+}
+ 
+// jsFooter
+</script>
+ 
+<!-- jsChart -->  
+<script type="text/javascript" src="https://www.google.com/jsapi?callback=displayChartMapID58d340d5199f"></script>
+ 
+<!-- divChart -->
+  
+<div id="MapID58d340d5199f"
+  style="width: 800px; height: 400px;">
+</div>
 
 
 Let's plot the spatial distribution of the individuals in the plot:
@@ -33,7 +134,11 @@ abline(v = 0, col = "grey")
 abline(v = 1000, col = "grey")
 ```
 
-![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
+
+```r
+
+```
 
 
 The dataset also comes with two rasterized environmental layers: elevation and slope.  My goal will be to model density of tree individuals as a function of elevation [meters above sea level]. I am interested in predicting density of the trees (i.e. number **n** of individuals per unit area). Hence, I will resample the data into a grid of 50 x 50 m:
@@ -65,7 +170,7 @@ plot(stack(elev50, n50), main = c("Predictor: Mean Elevation in 50x50 m cells",
     "Response: # of Individuals in 50x50 m cells"), axes = FALSE)
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
 
 
 Now let's see how the predictor and the response look plotted against each other. 
@@ -75,7 +180,7 @@ plot(elev50[], n50[], cex = 1, pch = 19, col = "grey", ylab = "# of Individuals"
     xlab = "Mean Elevation [m]")
 ```
 
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
+![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
 
 There seems to be a unimodal response of # of individuals to elevation. For this reason I will use a polynomial function rather than the simplest (linear) function to model the response. Also, you can see that the variability of the data increases in intermediate elevations, and I also note that this is count data -- it makes it an excellent candidate for Poisson error structure (the larger the mean the larger the variance), or maybe even Negative-binomial error structure (not considered in this post). 
 
@@ -175,7 +280,7 @@ plot(elev50, n50, cex = 1, col = "lightgrey", pch = 19, ylab = "# of Individuals
 lines(elev.seq, new.predict, col = "red", lwd = 2)
 ```
 
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
 
 
 ### Advantages of glm()  
@@ -238,14 +343,14 @@ m.like
 
 ```
 ## $par
-## [1]  3.194198  0.004315 -0.421811
+## [1]  3.19443  0.00485 -0.42199
 ## 
 ## $value
 ## [1] 2082
 ## 
 ## $counts
 ## function gradient 
-##      102       NA 
+##      142       NA 
 ## 
 ## $convergence
 ## [1] 0
@@ -266,7 +371,7 @@ new.predict <- exp(m.like$par[1] + m.like$par[2] * elev.seq + m.like$par[3] *
 lines(elev.seq, new.predict, col = "red", lwd = 2)
 ```
 
-![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15.png) 
+![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16.png) 
 
   
 ### Advantages of likelihood optimization
@@ -350,19 +455,19 @@ I can plot the Markov chains of the three regression coefficients, and their pos
 plot(as.mcmc.list(jm.sample$beta0), main = "Beta_0")
 ```
 
-![plot of chunk unnamed-chunk-23](figure/unnamed-chunk-231.png) 
+![plot of chunk unnamed-chunk-24](figure/unnamed-chunk-241.png) 
 
 ```r
 plot(as.mcmc.list(jm.sample$beta1), main = "Beta_1")
 ```
 
-![plot of chunk unnamed-chunk-23](figure/unnamed-chunk-232.png) 
+![plot of chunk unnamed-chunk-24](figure/unnamed-chunk-242.png) 
 
 ```r
 plot(as.mcmc.list(jm.sample$beta2), main = "Beta_2")
 ```
 
-![plot of chunk unnamed-chunk-23](figure/unnamed-chunk-233.png) 
+![plot of chunk unnamed-chunk-24](figure/unnamed-chunk-243.png) 
 
 
 Here I pull out a summary for an individual parameter, e.g. $\beta_2$:
@@ -382,12 +487,12 @@ summary(as.mcmc.list(jm.sample$beta2))
 ##    plus standard error of the mean:
 ## 
 ##           Mean             SD       Naive SE Time-series SE 
-##      -0.423909       0.020753       0.000379       0.000675 
+##      -0.422020       0.020847       0.000381       0.000606 
 ## 
 ## 2. Quantiles for each variable:
 ## 
 ##   2.5%    25%    50%    75%  97.5% 
-## -0.464 -0.438 -0.423 -0.410 -0.385
+## -0.463 -0.437 -0.422 -0.408 -0.381
 ```
 
 
@@ -414,7 +519,7 @@ legend("topleft", legend = c("95% P.I.", "lambda_i"), col = c("black", "red"),
     lwd = c(2, 2))
 ```
 
-![plot of chunk unnamed-chunk-26](figure/unnamed-chunk-26.png) 
+![plot of chunk unnamed-chunk-27](figure/unnamed-chunk-27.png) 
 
 
 You can see that the estimated parameter values very well match those from ```glm()``` and from the ML optimization. The striking result is that the data are clearly over-dispersed. Prediction intervals are really good at showing that -- the data simply spread a lot out of the black P.I. boundaries. 
