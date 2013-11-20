@@ -1,33 +1,26 @@
-<style type="text/css">
-.rChart{width: 100%; height: auto}
-</style>
+HB_Intro
+=======================
 
+```
+processing file: HB_Intro.Rpres
+Warning in block_exec(params) :
+  the package option stop_on_error was deprecated; use the chunk option error = FALSE instead
+Loading required package: slidify
+Loading required package: rHighcharts
+Loading required package: RJSONIO
+Loading required package: shiny
+Warning: package 'shiny' was built under R version 3.0.2
 
-Introduction to Hierarchical Bayes
-========================================================
-author: Adam M. Wilson
-date: November, 2013
+Attaching package: 'rHighcharts'
 
-Bayesian Recap
-========================================================
+The following object is masked from 'package:rCharts':
 
-For more details on authoring R presentations click the
-**Help** button on the toolbar.
+    chartOutput, renderChart
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+Warning in block_exec(params) :
+  the package option stop_on_error was deprecated; use the chunk option error = FALSE instead
+Warning in block_exec(params) :
+  the package option stop_on_error was deprecated; use the chunk option error = FALSE instead
 
-Bayes
-========================================================
-
-$$ P(\theta|\textbf{D}) = P(\theta ) \frac{P(\textbf{D} |\theta)}{P(\textbf{D})} $$
-
-
-
-
-Slide With Plot
-========================================================
-
-<iframe src=HB_Intro-figure/unnamed-chunk-2.html seamless></iframe>
-
+Listening on port 6299
+```

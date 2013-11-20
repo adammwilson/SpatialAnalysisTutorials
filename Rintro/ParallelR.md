@@ -159,7 +159,7 @@ Write the QSUB script
 ======================
 <small style="font-size:.7em"> 
 
-```r
+```{r}
 ### write qsub script to disk from R
 cat(paste("
 #PBS -S /bin/bash
