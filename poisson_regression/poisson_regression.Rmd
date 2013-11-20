@@ -20,14 +20,26 @@ First, I will load the necessary libraries:
   library(raster)
   library(sp)
   library(googleVis)
-  opts_chunk$set(cache=TRUE)
+  library(rgdal)
+library(knitr)
+  opts_chunk$set(cache=FALSE)
 ```
 
 ```{r,results='asis',echo = FALSE}
+### make an embedded google map showing data
 loc=data.frame(latlon="9.15:-79.847",loc="Barrow Colorado Island, Panama",tip="Barrow Colorado Island")
-M1 <- gvisMap(loc, "latlon" , "loc", options=
-                list(showTip=F,showLine=F, enableScrollWheel=TRUE,
-              mapType='hybrid', useMapTypeControl=TRUE,zoomLevel=10,width=800,height=400))
+beisp=as.data.frame(bei)
+## add origin to plot data using coordinates in Science 25 January 2002(295):5555 DOI: 10.1126/science.1066854
+## it's not clear if these coordinates are for the corner or center, so these should not be used for 'real' work, but for display is fine...
+beisp$x2=beisp$x+625753.97
+beisp$y2=beisp$y+1011568.99
+coordinates(beisp)=c("x2","y2")
+projection(beisp)="+proj=utm +zone=17 +ellps=GRS80 +datum=NAD83 +units=m +no_defs"
+beisp=spTransform(beisp,CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
+coords=as.data.frame(coordinates(beisp))
+coords$coords=paste(coords$y2,coords$x2,sep=":")
+M1 <- gvisMap(coords, "coords" , options=list(showTip=F,showLine=F, enableScrollWheel=TRUE,
+              mapType='hybrid', useMapTypeControl=TRUE,zoomLevel=1,width=800,height=400))
 print(M1,"chart")
 
 ```
