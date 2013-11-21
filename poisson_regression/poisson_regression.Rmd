@@ -1,17 +1,17 @@
-
 Poisson log-linear regression - fitted by glm(), maximum likelihood, and MCMC
 =============================================================================
 
 The goal of this post is to demonstrate how a simple statistical model (Poisson log-linear regression) can be fitted using three different approaches. I want to demonstrate that both frequentists and Bayesians use the same models, and that it is the fitting procedure and the inference that differs. This is also for those who understand the likelihood methods and do not have a clue about MCMC, and vice versa. I use an ecological dataset for the demonstration.
-
-The complete code of this post is available [here on GitHub](https://github.com/petrkeil/Statistics/tree/master/Poisson_regression)
 
 -------
 
 The data
 ========  
   
-I will use the data on the distribution of 3605 individual trees of *Beilschmiedia pendula* in 50-ha (500 x 1000 m) forest plot in Barro Colorado (Panama).
+I will use the data on the distribution of 3605 individual trees of *Beilschmiedia pendula* in 50-ha (500 x 1000 m) forest plot in Barro Colorado (Panama). Photo: Rolando Perez, Smithsonian Tropical Research Institute. 
+
+![purple finch figure](figure/pendula.png)
+
 The dataset is freely available as a part of the R's `spatstat` library. 
 
 First, I will load the necessary libraries:
@@ -21,27 +21,8 @@ First, I will load the necessary libraries:
   library(sp)
   library(googleVis)
   library(rgdal)
-library(knitr)
+  library(knitr)
   opts_chunk$set(cache=FALSE)
-```
-
-```{r,results='asis',echo = FALSE}
-### make an embedded google map showing data
-loc=data.frame(latlon="9.15:-79.847",loc="Barrow Colorado Island, Panama",tip="Barrow Colorado Island")
-beisp=as.data.frame(bei)
-## add origin to plot data using coordinates in Science 25 January 2002(295):5555 DOI: 10.1126/science.1066854
-## it's not clear if these coordinates are for the corner or center, so these should not be used for 'real' work, but for display is fine...
-beisp$x2=beisp$x+625753.97
-beisp$y2=beisp$y+1011568.99
-coordinates(beisp)=c("x2","y2")
-projection(beisp)="+proj=utm +zone=17 +ellps=GRS80 +datum=NAD83 +units=m +no_defs"
-beisp=spTransform(beisp,CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
-coords=as.data.frame(coordinates(beisp))
-coords$coords=paste(coords$y2,coords$x2,sep=":")
-M1 <- gvisMap(coords, "coords" , options=list(showTip=F,showLine=F, enableScrollWheel=TRUE,
-              mapType='hybrid', useMapTypeControl=TRUE,zoomLevel=1,width=800,height=400))
-print(M1,"chart")
-
 ```
 
 Let's plot the spatial distribution of the individuals in the plot:
@@ -53,8 +34,33 @@ Let's plot the spatial distribution of the individuals in the plot:
   abline(h=500, col="grey") 
   abline(v=0, col="grey") 
   abline(v=1000, col="grey")
+```
 
-
+Adam has created a little script that puts the individuals on Google Map:
+```{r, results='asis', echo = FALSE}
+### make an embedded google map showing data
+  loc=data.frame(latlon="9.15:-79.847",
+                 loc="Barrow Colorado Island, Panama",
+                 tip="Barrow Colorado Island")
+  beisp=as.data.frame(bei)
+## add origin to plot data using coordinates in Science 25 
+## January 2002(295):5555 DOI: 10.1126/science.1066854
+## it's not clear if these coordinates are for the corner or center, 
+#  so these should not be used for 'real' work, but for display is fine...
+  beisp$x2=beisp$x+625753.97
+  beisp$y2=beisp$y+1011568.99
+  coordinates(beisp)=c("x2","y2")
+  projection(beisp)="+proj=utm +zone=17 +ellps=GRS80 +datum=NAD83 +units=m +no_defs"
+  beisp=spTransform(beisp,CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
+  coords=as.data.frame(coordinates(beisp))
+  coords$coords=paste(coords$y2, coords$x2, sep=":")
+  M1 <- gvisMap(coords, "coords" , 
+                options=list(showTip=F, showLine=F, 
+                             enableScrollWheel=TRUE,
+                             mapType='hybrid', 
+                             useMapTypeControl=TRUE,
+                             zoomLevel=1,width=800,height=400))
+  print(M1,"chart")
 ```
 
 The dataset also comes with two rasterized environmental layers: elevation and slope.  My goal will be to model density of tree individuals as a function of elevation [meters above sea level]. I am interested in predicting density of the trees (i.e. number **n** of individuals per unit area). Hence, I will resample the data into a grid of 50 x 50 m:
@@ -62,24 +68,27 @@ The dataset also comes with two rasterized environmental layers: elevation and s
 # coarsening the predictor data into the 50 x 50 m grid by taking the 
 # mean of the 5 x 5 m grid cells:
   elev <- raster(bei.extra[[1]])
+
 # cropping the data so that they have exactly 500 x 1000 cells
   ext <- extent(2.5, 1002.5, 2.5, 1002.5)
   elev <- crop(elev, ext)
-# aggregating the elevation data
-  elev50 <- aggregate(elev, fact=10, fun=mean)
 
-# fitting the point data into the 40 x 40 m grid
+# aggregating the elevation data
+  elev50.raster <- aggregate(elev, fact=10, fun=mean)
+
+# fitting the point data into the 50 x 50 m grid
   xy <- data.frame(x=bei$x, y=bei$y)
-  n50 <- rasterize(xy, elev50, fun="count")
+  n50.raster <- rasterize(xy, elev50.raster, fun="count")
+
 # replacing the NA values by 0
-  n50[is.na(n50)] <- 0
+  n50.raster[is.na(n50.raster)] <- 0
 ```
 
 ### Initial data visualization 
   
 Initial plotting of the data is the necessary first step in any data analysis. So let's first plot the gridded data:
 ```{r, fig.width=10.3, fig.height=2.8}
-  plot(stack(elev50, n50), 
+  plot(stack(elev50.raster, n50.raster), 
        main=c("Predictor: Mean Elevation in 50x50 m cells", 
               "Response: # of Individuals in 50x50 m cells"),
        axes=FALSE)
@@ -87,7 +96,7 @@ Initial plotting of the data is the necessary first step in any data analysis. S
 
 Now let's see how the predictor and the response look plotted against each other. 
 ```{r, fig.width=6, fig.height=6}
-  plot(elev50[], n50[], cex=1, pch=19, col="grey", 
+  plot(elev50.raster[], n50.raster[], cex=1, pch=19, col="grey", 
        ylab="# of Individuals", xlab="Mean Elevation [m]")  
 ```
 There seems to be a unimodal response of # of individuals to elevation. For this reason I will use a polynomial function rather than the simplest (linear) function to model the response. Also, you can see that the variability of the data increases in intermediate elevations, and I also note that this is count data -- it makes it an excellent candidate for Poisson error structure (the larger the mean the larger the variance), or maybe even Negative-binomial error structure (not considered in this post). 
@@ -103,13 +112,13 @@ I find it necessary to center (to 0 mean) and standardize (to variance of 1) var
     return((x-meanx)/sdx)
   }
 
-  elev50 <- scale2(elev50[])
+  elev50 <- scale2(elev50.raster[])
 ```  
 
 Finally, some minor tweakings:
 ```{r}
   pow.elev50 <- elev50^2 # (I will be fitting a polynomial)
-  n50 <- n50[]
+  n50 <- n50.raster[]
 ```  
 
 -------
@@ -131,16 +140,56 @@ I recommend to write down such formal definition of any statistical model that y
 
 -------
 
+Exploring what the model parameters do, and what the model predicts
+=================================================================== 
+
+Here is a little function that explores what $\beta_0$, $\beta_1$, $\beta_2$ do with the model.
+```{r}
+  explore.model <- function(beta0, beta1, beta2, elev50.raster)
+  {
+      elev50 <- scale2(elev50.raster[])
+      n = length(elev50)
+    ## parameter lambda of the poisson distribution
+      lambda <- exp(beta0 + beta1*elev50 + beta2*(elev50^2))
+    ## 95% prediction intervals calculated by the qpois() function
+      lambda.up95 <- qpois(rep(0.975, times=n), lambda)
+      lambda.low95 <- qpois(rep(0.025, times=n), lambda)
+    ## new data simulated by rpois() function
+      samples <- rpois(n=n, lambda=lambda)
+    
+    ## plotting it all
+      par(mfrow=c(1,2))
+      plot(elev50, samples, pch=19, col="grey", 
+           xlab="Scaled Mean Elevation", ylab="# of Individuals")    
+      points(elev50, lambda, pch=19, col="red")
+      points(elev50, lambda.up95, pch=19, col="red", cex=0.5)
+      points(elev50, lambda.low95, pch=19, col="red", cex=0.5)
+      
+      elev50.raster[] <- lambda
+      plot(elev50.raster, 
+           main="Predicted Lambda (mean # of individuals)",
+           axes=FALSE)
+  }
+```
+
+Now try to experiment with the values of parameters $\beta$. Note: setting $\beta_2$ to zero fits a log-linear model:
+```{r, fig.width=12, fig.height=6}
+  explore.model(beta0=3, beta1=0.5, beta2=-0.5, elev50.raster=elev50.raster)  
+```
+Also, try to run the function several times with identical model paramters. The red lines will stay the same, but the simulated data will change!
+
+-------
+
 Fitting the model using glm()
 =============================  
    
-Fitting my model with the ```glm()``` function is easy. You just need to specify that the data are drawn from Poisson distribution and that $\lambda_i$ is modelled in logarithmic space. Specifying ```family="poisson"``` will do exactly that:
+Fitting the model with the ```glm()``` function is easy. You just need to specify that the data are drawn from Poisson distribution and that $\lambda_i$ is modelled in logarithmic space. Specifying ```family="poisson"``` will do exactly that:
 ```{r, message=FALSE, warning=FALSE}
   m.glm <- glm(n50 ~ elev50 + pow.elev50, family="poisson")
   summary(m.glm)
 ```
 
-I will then use the fitted model to make a smooth prediction curve of $\lambda_i$:
+We will then use the fitted model to make a smooth prediction curve of $\lambda_i$:
 ```{r, message=FALSE, warning=FALSE}
   elev.seq <- seq(-3, 2, by=0.05)
   new.data <- data.frame(elev50 = elev.seq,
@@ -163,7 +212,7 @@ And here I plot the data and the predicted $\lambda_i$ (red line):
 
 ### Disadvantages of glm()  
 - Not very flexible.
-- It is tricky to pull out prediction intervals. In my case I could use some combination of bootstrap and ```qpois()```, but it would get quite messy in any case.
+- It is tricky to pull out prediction intervals. In this case we could use some combination of bootstrap and ```qpois()```, but it would get quite messy in any case.
 
 
 -------
@@ -188,7 +237,21 @@ First, I will define the log-likelihood function for the polynomial Poisson regr
   }
 ```
 
-Then I need to set the initial values for the optimization procedure:
+We will coerce the data for the ```LogLike()``` function:
+```{r}
+  dat <- data.frame(y=n50, x=elev50)
+```
+
+### Minimizing negative log-likelihood by hand
+Let's see what log-likelihood will we get from different parameter values:
+```{r}
+  par <- c(beta0=10, beta1=0.05, beta2=-0.5)
+  LogLike(dat=dat, par=par)
+```
+Try to play around with various parameter values, and see which combination gives the lowest negative log-likelihood.
+
+### Minimizing negative log-likelihood automatically by ```optim()```
+For the automatic optimization procedure we will set random initial values:
 ```{r}
   beta0 <- rnorm(1)
   beta1 <- rnorm(1)
@@ -196,12 +259,7 @@ Then I need to set the initial values for the optimization procedure:
   par <- c(beta0, beta1, beta2)
 ```
 
-I will coerce my data for my ```LogLike()``` function:
-```{r}
-  dat <- data.frame(y=n50, x=elev50)
-```
-
-And now I can run the likelihood maximization using the ```optim()``` function.
+And now I can run the likelihood maximization (negative ***log-likelihood minimization***) using the ```optim()``` function.
 ```{r}
   m.like <- optim(par = par,
                   fn = LogLike, 
@@ -347,9 +405,3 @@ The three approaches gave roughly the same mean predicted values and the same me
 The model obviously is not ideal: the data are clearly over-dispersed. Negative Binomial or quazi-Poisson models would probably be more appropriate.
 
 An additional next thing to explore would be spatial dependence (spatial autocorrelation). 
-
-
-
-
-
-

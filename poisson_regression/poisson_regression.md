@@ -1,17 +1,17 @@
-
 Poisson log-linear regression - fitted by glm(), maximum likelihood, and MCMC
 =============================================================================
 
 The goal of this post is to demonstrate how a simple statistical model (Poisson log-linear regression) can be fitted using three different approaches. I want to demonstrate that both frequentists and Bayesians use the same models, and that it is the fitting procedure and the inference that differs. This is also for those who understand the likelihood methods and do not have a clue about MCMC, and vice versa. I use an ecological dataset for the demonstration.
-
-The complete code of this post is available [here on GitHub](https://github.com/petrkeil/Statistics/tree/master/Poisson_regression)
 
 -------
 
 The data
 ========  
   
-I will use the data on the distribution of 3605 individual trees of *Beilschmiedia pendula* in 50-ha (500 x 1000 m) forest plot in Barro Colorado (Panama).
+I will use the data on the distribution of 3605 individual trees of *Beilschmiedia pendula* in 50-ha (500 x 1000 m) forest plot in Barro Colorado (Panama). Photo: Rolando Perez, Smithsonian Tropical Research Institute. 
+
+![purple finch figure](figure/pendula.png)
+
 The dataset is freely available as a part of the R's `spatstat` library. 
 
 First, I will load the necessary libraries:
@@ -27,15 +27,30 @@ opts_chunk$set(cache = FALSE)
 ```
 
 
-<!-- Map generated in R 3.0.2 by googleVis 0.4.5 package -->
-<!-- Wed Nov 20 17:12:20 2013 -->
+Let's plot the spatial distribution of the individuals in the plot:
+
+```r
+plot(bei$x, bei$y, pch = 19, cex = 0.5, main = "Spatial distribution of individuals in the 50-ha Barro Colorado plot", 
+    xlab = "x coordinate [m]", ylab = "y coordinate [m]", frame = FALSE)
+abline(h = 0, col = "grey")
+abline(h = 500, col = "grey")
+abline(v = 0, col = "grey")
+abline(v = 1000, col = "grey")
+```
+
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
+
+
+Adam has created a little script that puts the individuals on Google Map:
+<!-- Map generated in R 3.0.1 by googleVis 0.4.7 package -->
+<!-- Thu Nov 21 00:14:52 2013 -->
 
 
 <!-- jsHeader -->
 <script type="text/javascript">
  
 // jsData 
-function gvisDataMapID145470fbcd06 () {
+function gvisDataMapID9846dd14b3b () {
 var data = new google.visualization.DataTable();
 var datajson =
 [
@@ -18068,8 +18083,8 @@ return(data);
 }
  
 // jsDrawChart
-function drawChartMapID145470fbcd06() {
-var data = gvisDataMapID145470fbcd06();
+function drawChartMapID9846dd14b3b() {
+var data = gvisDataMapID9846dd14b3b();
 var options = {};
 options["showTip"] = false;
 options["showLine"] = false;
@@ -18081,7 +18096,7 @@ options["width"] =    800;
 options["height"] =    400;
 
     var chart = new google.visualization.Map(
-    document.getElementById('MapID145470fbcd06')
+    document.getElementById('MapID9846dd14b3b')
     );
     chart.draw(data,options);
     
@@ -18105,9 +18120,9 @@ if (newPackage)
   pkgs.push(chartid);
   
 // Add the drawChart function to the global list of callbacks
-callbacks.push(drawChartMapID145470fbcd06);
+callbacks.push(drawChartMapID9846dd14b3b);
 })();
-function displayChartMapID145470fbcd06() {
+function displayChartMapID9846dd14b3b() {
   var pkgs = window.__gvisPackages = window.__gvisPackages || [];
   var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
   window.clearTimeout(window.__gvisLoad);
@@ -18131,31 +18146,13 @@ callbacks.shift()();
 </script>
  
 <!-- jsChart -->  
-<script type="text/javascript" src="https://www.google.com/jsapi?callback=displayChartMapID145470fbcd06"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi?callback=displayChartMapID9846dd14b3b"></script>
  
 <!-- divChart -->
   
-<div id="MapID145470fbcd06"
+<div id="MapID9846dd14b3b"
   style="width: 800px; height: 400px;">
 </div>
-
-
-Let's plot the spatial distribution of the individuals in the plot:
-
-```r
-plot(bei$x, bei$y, pch = 19, cex = 0.5, main = "Spatial distribution of individuals in the 50-ha Barro Colorado plot", 
-    xlab = "x coordinate [m]", ylab = "y coordinate [m]", frame = FALSE)
-abline(h = 0, col = "grey")
-abline(h = 500, col = "grey")
-abline(v = 0, col = "grey")
-abline(v = 1000, col = "grey")
-```
-
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
-
-```r
-
-```
 
 
 The dataset also comes with two rasterized environmental layers: elevation and slope.  My goal will be to model density of tree individuals as a function of elevation [meters above sea level]. I am interested in predicting density of the trees (i.e. number **n** of individuals per unit area). Hence, I will resample the data into a grid of 50 x 50 m:
@@ -18164,17 +18161,20 @@ The dataset also comes with two rasterized environmental layers: elevation and s
 # coarsening the predictor data into the 50 x 50 m grid by taking the mean
 # of the 5 x 5 m grid cells:
 elev <- raster(bei.extra[[1]])
+
 # cropping the data so that they have exactly 500 x 1000 cells
 ext <- extent(2.5, 1002.5, 2.5, 1002.5)
 elev <- crop(elev, ext)
-# aggregating the elevation data
-elev50 <- aggregate(elev, fact = 10, fun = mean)
 
-# fitting the point data into the 40 x 40 m grid
+# aggregating the elevation data
+elev50.raster <- aggregate(elev, fact = 10, fun = mean)
+
+# fitting the point data into the 50 x 50 m grid
 xy <- data.frame(x = bei$x, y = bei$y)
-n50 <- rasterize(xy, elev50, fun = "count")
+n50.raster <- rasterize(xy, elev50.raster, fun = "count")
+
 # replacing the NA values by 0
-n50[is.na(n50)] <- 0
+n50.raster[is.na(n50.raster)] <- 0
 ```
 
 
@@ -18183,7 +18183,7 @@ n50[is.na(n50)] <- 0
 Initial plotting of the data is the necessary first step in any data analysis. So let's first plot the gridded data:
 
 ```r
-plot(stack(elev50, n50), main = c("Predictor: Mean Elevation in 50x50 m cells", 
+plot(stack(elev50.raster, n50.raster), main = c("Predictor: Mean Elevation in 50x50 m cells", 
     "Response: # of Individuals in 50x50 m cells"), axes = FALSE)
 ```
 
@@ -18193,7 +18193,7 @@ plot(stack(elev50, n50), main = c("Predictor: Mean Elevation in 50x50 m cells",
 Now let's see how the predictor and the response look plotted against each other. 
 
 ```r
-plot(elev50[], n50[], cex = 1, pch = 19, col = "grey", ylab = "# of Individuals", 
+plot(elev50.raster[], n50.raster[], cex = 1, pch = 19, col = "grey", ylab = "# of Individuals", 
     xlab = "Mean Elevation [m]")
 ```
 
@@ -18212,7 +18212,7 @@ scale2 <- function(x) {
     return((x - meanx)/sdx)
 }
 
-elev50 <- scale2(elev50[])
+elev50 <- scale2(elev50.raster[])
 ```
 
 
@@ -18220,7 +18220,7 @@ Finally, some minor tweakings:
 
 ```r
 pow.elev50 <- elev50^2  # (I will be fitting a polynomial)
-n50 <- n50[]
+n50 <- n50.raster[]
 ```
 
 
@@ -18243,10 +18243,53 @@ I recommend to write down such formal definition of any statistical model that y
 
 -------
 
+Exploring what the model parameters do, and what the model predicts
+=================================================================== 
+
+Here is a little function that explores what $\beta_0$, $\beta_1$, $\beta_2$ do with the model.
+
+```r
+explore.model <- function(beta0, beta1, beta2, elev50.raster) {
+    elev50 <- scale2(elev50.raster[])
+    n = length(elev50)
+    ## parameter lambda of the poisson distribution
+    lambda <- exp(beta0 + beta1 * elev50 + beta2 * (elev50^2))
+    ## 95% prediction intervals calculated by the qpois() function
+    lambda.up95 <- qpois(rep(0.975, times = n), lambda)
+    lambda.low95 <- qpois(rep(0.025, times = n), lambda)
+    ## new data simulated by rpois() function
+    samples <- rpois(n = n, lambda = lambda)
+    
+    ## plotting it all
+    par(mfrow = c(1, 2))
+    plot(elev50, samples, pch = 19, col = "grey", xlab = "Scaled Mean Elevation", 
+        ylab = "# of Individuals")
+    points(elev50, lambda, pch = 19, col = "red")
+    points(elev50, lambda.up95, pch = 19, col = "red", cex = 0.5)
+    points(elev50, lambda.low95, pch = 19, col = "red", cex = 0.5)
+    
+    elev50.raster[] <- lambda
+    plot(elev50.raster, main = "Predicted Lambda (mean # of individuals)", axes = FALSE)
+}
+```
+
+
+Now try to experiment with the values of parameters $\beta$. Note: setting $\beta_2$ to zero fits a log-linear model:
+
+```r
+explore.model(beta0 = 3, beta1 = 0.5, beta2 = -0.5, elev50.raster = elev50.raster)
+```
+
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
+
+Also, try to run the function several times with identical model paramters. The red lines will stay the same, but the simulated data will change!
+
+-------
+
 Fitting the model using glm()
 =============================  
    
-Fitting my model with the ```glm()``` function is easy. You just need to specify that the data are drawn from Poisson distribution and that $\lambda_i$ is modelled in logarithmic space. Specifying ```family="poisson"``` will do exactly that:
+Fitting the model with the ```glm()``` function is easy. You just need to specify that the data are drawn from Poisson distribution and that $\lambda_i$ is modelled in logarithmic space. Specifying ```family="poisson"``` will do exactly that:
 
 ```r
 m.glm <- glm(n50 ~ elev50 + pow.elev50, family = "poisson")
@@ -18280,7 +18323,7 @@ summary(m.glm)
 ```
 
 
-I will then use the fitted model to make a smooth prediction curve of $\lambda_i$:
+We will then use the fitted model to make a smooth prediction curve of $\lambda_i$:
 
 ```r
 elev.seq <- seq(-3, 2, by = 0.05)
@@ -18297,7 +18340,7 @@ plot(elev50, n50, cex = 1, col = "lightgrey", pch = 19, ylab = "# of Individuals
 lines(elev.seq, new.predict, col = "red", lwd = 2)
 ```
 
-![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
+![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
 
 
 ### Advantages of glm()  
@@ -18308,7 +18351,7 @@ lines(elev.seq, new.predict, col = "red", lwd = 2)
 
 ### Disadvantages of glm()  
 - Not very flexible.
-- It is tricky to pull out prediction intervals. In my case I could use some combination of bootstrap and ```qpois()```, but it would get quite messy in any case.
+- It is tricky to pull out prediction intervals. In this case we could use some combination of bootstrap and ```qpois()```, but it would get quite messy in any case.
 
 
 -------
@@ -18334,7 +18377,29 @@ LogLike <- function(dat, par) {
 ```
 
 
-Then I need to set the initial values for the optimization procedure:
+We will coerce the data for the ```LogLike()``` function:
+
+```r
+dat <- data.frame(y = n50, x = elev50)
+```
+
+
+### Minimizing negative log-likelihood by hand
+Let's see what log-likelihood will we get from different parameter values:
+
+```r
+par <- c(beta0 = 10, beta1 = 0.05, beta2 = -0.5)
+LogLike(dat = dat, par = par)
+```
+
+```
+## [1] 3074255
+```
+
+Try to play around with various parameter values, and see which combination gives the lowest negative log-likelihood.
+
+### Minimizing negative log-likelihood automatically by ```optim()```
+For the automatic optimization procedure we will set random initial values:
 
 ```r
 beta0 <- rnorm(1)
@@ -18344,14 +18409,7 @@ par <- c(beta0, beta1, beta2)
 ```
 
 
-I will coerce my data for my ```LogLike()``` function:
-
-```r
-dat <- data.frame(y = n50, x = elev50)
-```
-
-
-And now I can run the likelihood maximization using the ```optim()``` function.
+And now I can run the likelihood maximization (negative ***log-likelihood minimization***) using the ```optim()``` function.
 
 ```r
 m.like <- optim(par = par, fn = LogLike, dat = dat)
@@ -18360,14 +18418,14 @@ m.like
 
 ```
 ## $par
-## [1]  3.194255  0.004291 -0.421675
+## [1]  3.194531  0.004519 -0.422090
 ## 
 ## $value
 ## [1] 2082
 ## 
 ## $counts
 ## function gradient 
-##       94       NA 
+##      154       NA 
 ## 
 ## $convergence
 ## [1] 0
@@ -18388,7 +18446,7 @@ new.predict <- exp(m.like$par[1] + m.like$par[2] * elev.seq + m.like$par[3] *
 lines(elev.seq, new.predict, col = "red", lwd = 2)
 ```
 
-![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16.png) 
+![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-19.png) 
 
   
 ### Advantages of likelihood optimization
@@ -18472,19 +18530,19 @@ I can plot the Markov chains of the three regression coefficients, and their pos
 plot(as.mcmc.list(jm.sample$beta0), main = "Beta_0")
 ```
 
-![plot of chunk unnamed-chunk-24](figure/unnamed-chunk-241.png) 
+![plot of chunk unnamed-chunk-27](figure/unnamed-chunk-271.png) 
 
 ```r
 plot(as.mcmc.list(jm.sample$beta1), main = "Beta_1")
 ```
 
-![plot of chunk unnamed-chunk-24](figure/unnamed-chunk-242.png) 
+![plot of chunk unnamed-chunk-27](figure/unnamed-chunk-272.png) 
 
 ```r
 plot(as.mcmc.list(jm.sample$beta2), main = "Beta_2")
 ```
 
-![plot of chunk unnamed-chunk-24](figure/unnamed-chunk-243.png) 
+![plot of chunk unnamed-chunk-27](figure/unnamed-chunk-273.png) 
 
 
 Here I pull out a summary for an individual parameter, e.g. $\beta_2$:
@@ -18504,12 +18562,12 @@ summary(as.mcmc.list(jm.sample$beta2))
 ##    plus standard error of the mean:
 ## 
 ##           Mean             SD       Naive SE Time-series SE 
-##      -0.421662       0.020699       0.000378       0.000618 
+##      -0.423177       0.020679       0.000378       0.000671 
 ## 
 ## 2. Quantiles for each variable:
 ## 
 ##   2.5%    25%    50%    75%  97.5% 
-## -0.462 -0.436 -0.421 -0.408 -0.381
+## -0.465 -0.437 -0.423 -0.409 -0.383
 ```
 
 
@@ -18536,7 +18594,7 @@ legend("topleft", legend = c("95% P.I.", "lambda_i"), col = c("black", "red"),
     lwd = c(2, 2))
 ```
 
-![plot of chunk unnamed-chunk-27](figure/unnamed-chunk-27.png) 
+![plot of chunk unnamed-chunk-30](figure/unnamed-chunk-30.png) 
 
 
 You can see that the estimated parameter values very well match those from ```glm()``` and from the ML optimization. The striking result is that the data are clearly over-dispersed. Prediction intervals are really good at showing that -- the data simply spread a lot out of the black P.I. boundaries. 
@@ -18561,9 +18619,3 @@ The three approaches gave roughly the same mean predicted values and the same me
 The model obviously is not ideal: the data are clearly over-dispersed. Negative Binomial or quazi-Poisson models would probably be more appropriate.
 
 An additional next thing to explore would be spatial dependence (spatial autocorrelation). 
-
-
-
-
-
-
