@@ -9,7 +9,7 @@ cd ..
 
 datasrc="dropbox"  #this term can be either 'dropbox' or 'worldclim' to download the data directly
 
-datadir=env       # this is where the data will go
+datadir=data       # this is where the data will go
 mkdir $datadir
 
 ## download worldclim data directly from the server
@@ -20,7 +20,7 @@ fi
 
 
 if [ $datasrc = "dropbox" ]  ; then 
-    cp /home/user/Dropbox/eeb713/week11/env/* $datadir
+    cp /home/user/Dropbox/eeb713/week11/data/* $datadir
 fi 
 
 ## loop through zipped files and uncompress them. Remove file that are not needed 

@@ -17,20 +17,6 @@ In this session we will:
  
  
 
-```
-## Loading required package: sp Checking rgeos availability: TRUE Loading
-## required package: lattice Loading required package: latticeExtra Loading
-## required package: RColorBrewer Loading required package: hexbin Loading
-## required package: grid rgeos version: 0.2-19, (SVN revision 394) GEOS
-## runtime version: 3.3.8-CAPI-1.7.8 Polygon checking: TRUE
-## 
-## rgdal: version: 0.8-10, (SVN revision 478) Geospatial Data Abstraction
-## Library extensions to R successfully loaded Loaded GDAL runtime: GDAL
-## 1.10.0, released 2013/04/24 Path to GDAL shared files:
-## /usr/share/gdal/1.10 Loaded PROJ.4 runtime: Rel. 4.8.0, 6 March 2012,
-## [PJ_VERSION: 480] Path to PROJ.4 shared files: (autodetected) Loading
-## required package: coda Linked to JAGS 3.4.0 Loaded modules: basemod,bugs
-```
 
 
 
@@ -47,7 +33,7 @@ Import some evironmental data (Climate, NPP, & Forest) and align it to a common 
 Read them in as a raster stack
 
 ```r
-env = stack(list.files(path = "../env/", pattern = "*_clip.tif$", full.names = TRUE))
+env = stack(list.files(path = "data/", pattern = "*_clip.tif$", full.names = TRUE))
 ## do some renaming for convenience
 names(env) = sub("_34", "", names(env))
 names(env) = sub("_clip", "", names(env))
@@ -64,27 +50,31 @@ names(env)
 ```
 
 ```
-##  [1] "alt_clip"                           
-##  [2] "alt"                                
-##  [3] "bio13_clip"                         
-##  [4] "bio13"                              
-##  [5] "bio14_clip"                         
-##  [6] "bio14"                              
-##  [7] "bio5_clip"                          
-##  [8] "bio5"                               
-##  [9] "bio6_clip"                          
-## [10] "bio6"                               
-## [11] "consensus_1km_class_1_clip"         
-## [12] "consensus_1km_class_1"              
-## [13] "consensus_1km_class_2_clip"         
-## [14] "consensus_1km_class_2"              
-## [15] "consensus_1km_class_3_clip"         
-## [16] "consensus_1km_class_3"              
-## [17] "consensus_1km_class_4_clip"         
-## [18] "consensus_1km_class_4"              
-## [19] "MOD17A3_Science_NPP_mean_00_12_clip"
-## [20] "npp"                                
-## [21] "forest"
+##  [1] "alt_clip_clip"                      
+##  [2] "alt_clip"                           
+##  [3] "alt"                                
+##  [4] "bio13_clip_clip"                    
+##  [5] "bio13_clip"                         
+##  [6] "bio13"                              
+##  [7] "bio14_clip_clip"                    
+##  [8] "bio14_clip"                         
+##  [9] "bio14"                              
+## [10] "bio5_clip_clip"                     
+## [11] "bio5_clip"                          
+## [12] "bio5"                               
+## [13] "bio6_clip"                          
+## [14] "bio6"                               
+## [15] "consensus_1km_class_1_clip"         
+## [16] "consensus_1km_class_1"              
+## [17] "consensus_1km_class_2_clip"         
+## [18] "consensus_1km_class_2"              
+## [19] "consensus_1km_class_3_clip"         
+## [20] "consensus_1km_class_3"              
+## [21] "consensus_1km_class_4_clip"         
+## [22] "consensus_1km_class_4"              
+## [23] "MOD17A3_Science_NPP_mean_00_12_clip"
+## [24] "npp"                                
+## [25] "forest"
 ```
 
 
@@ -111,19 +101,19 @@ gbif_points = gbif_points[!is.na(gbif_points$lat), ]
 Import the ebird points
 
 ```r
-ebird = read.table("../pointdata/lat_long_ebd.txt", header = TRUE)
+ebird = read.table("data/lat_long_ebd.txt", header = TRUE)
 ```
 
 
 Import a presence-absence shapefile from park checklists.
 
 ```r
-parks = readOGR("../shp/", "protected_areas")
+parks = readOGR("data/", "protected_areas")
 ```
 
 ```
 ## OGR data source with driver: ESRI Shapefile 
-## Source: "../shp/", layer: "protected_areas"
+## Source: "data/", layer: "protected_areas"
 ## with 46 features and 30 fields
 ## Feature type: wkbPolygon with 2 dimensions
 ```
@@ -142,12 +132,12 @@ nulls = coordinates(spsample(parks[parks$Presence == 0, ], 25, type = "stratifie
 Import IUCN expert range map
 
 ```r
-tin_range = readOGR("../shp/", "iucn_birds_proj")
+tin_range = readOGR("data/", "iucn_birds_proj")
 ```
 
 ```
 ## OGR data source with driver: ESRI Shapefile 
-## Source: "../shp/", layer: "iucn_birds_proj"
+## Source: "data/", layer: "iucn_birds_proj"
 ## with 1 features and 1 fields
 ## Feature type: wkbPolygon with 2 dimensions
 ```
@@ -177,7 +167,7 @@ points$type = paste(points$src, points$obs, sep = "_")
 Import a world country boundary to ground the map
 
 ```r
-World = readShapePoly("../shp/world_country_admin_boundary_shapefile_with_fips_codes.shp")
+World = readShapePoly("data/world_country_admin_boundary_shapefile_with_fips_codes.shp")
 projection(World) = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 ```
 
@@ -435,7 +425,7 @@ pred = calc(penv, function(x, niter = 30) {
 })
 names(pred) = c("Lower_CI_2.5", "Median", "Upper_CI_97.5")
 ## Write out the predictions
-writeRaster(pred, file = "../output/Prediction.tif", overwrite = T)
+writeRaster(pred, file = "output/Prediction.tif", overwrite = T)
 ```
 
 ```

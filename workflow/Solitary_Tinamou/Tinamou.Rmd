@@ -28,7 +28,7 @@ library(rgdal)
 library(rjags)
 library(coda)
 ## set working directory
-setwd("/home/user/ost4sem/exercise/SpatialAnalysisTutorials/workflow/Solitary_Tinamou/script")
+setwd("/home/user/ost4sem/exercise/SpatialAnalysisTutorials/workflow/Solitary_Tinamou")
 ```
 
 
@@ -42,7 +42,7 @@ Import some evironmental data (Climate, NPP, & Forest) and align it to a common 
 
 Read them in as a raster stack
 ```{r,ImportRaster}
-env=stack(list.files(path = "../env/", pattern="*_clip.tif$" , full.names = TRUE ))
+env=stack(list.files(path = "data/", pattern="*_clip.tif$" , full.names = TRUE ))
 ## do some renaming for convenience
 names(env)=sub("_34","",names(env))
 names(env)=sub("_clip","",names(env))
@@ -66,12 +66,12 @@ gbif_points=gbif_points[!is.na(gbif_points$lat),]
 ```
 Import the ebird points
 ```{r}
-ebird = read.table("../pointdata/lat_long_ebd.txt" ,header = TRUE  )
+ebird = read.table("data/lat_long_ebd.txt" ,header = TRUE  )
 ```
 
 Import a presence-absence shapefile from park checklists.
 ```{r}
-parks=readOGR("../shp/","protected_areas")
+parks=readOGR("data/","protected_areas")
 ## Many of the parks with no observered presences were recorded as NA in the "Presence" Column. Replace them with 0s.
 parks$Presence[is.na(parks$Presence)]=0
 ## generate an 'absence' dataset by sampling from the parks with no observed presences
@@ -81,7 +81,7 @@ nulls=coordinates(spsample(parks[parks$Presence==0,],25,type="stratified"))
 
 Import IUCN expert range map
 ```{r}
-tin_range=readOGR("../shp/","iucn_birds_proj")
+tin_range=readOGR("data/","iucn_birds_proj")
 tin_range=spTransform(tin_range,CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
 ```
 
@@ -103,7 +103,7 @@ points$type=paste(points$src,points$obs,sep="_")
 
 Import a world country boundary to ground the map
 ```{r}
-World  = readShapePoly ("../shp/world_country_admin_boundary_shapefile_with_fips_codes.shp")
+World  = readShapePoly ("data/world_country_admin_boundary_shapefile_with_fips_codes.shp")
 projection(World)="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 ```
 
@@ -252,7 +252,7 @@ pred=calc(penv,function(x,niter=30) {
 })
 names(pred)=c("Lower_CI_2.5","Median","Upper_CI_97.5")
 ## Write out the predictions
-writeRaster(pred,file="../output/Prediction.tif",overwrite=T)
+writeRaster(pred,file="output/Prediction.tif",overwrite=T)
 ```
 
 Plot the predictions

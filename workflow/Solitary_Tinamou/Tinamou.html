@@ -195,20 +195,6 @@ Illustration by Joseph Smit, 1895</p>
 <li>Predict across the landscape and write the results to disk as a geotif (for use in GIS, etc.)</li>
 </ol>
 
-<pre><code>## Loading required package: sp Checking rgeos availability: TRUE Loading
-## required package: lattice Loading required package: latticeExtra Loading
-## required package: RColorBrewer Loading required package: hexbin Loading
-## required package: grid rgeos version: 0.2-19, (SVN revision 394) GEOS
-## runtime version: 3.3.8-CAPI-1.7.8 Polygon checking: TRUE
-## 
-## rgdal: version: 0.8-10, (SVN revision 478) Geospatial Data Abstraction
-## Library extensions to R successfully loaded Loaded GDAL runtime: GDAL
-## 1.10.0, released 2013/04/24 Path to GDAL shared files:
-## /usr/share/gdal/1.10 Loaded PROJ.4 runtime: Rel. 4.8.0, 6 March 2012,
-## [PJ_VERSION: 480] Path to PROJ.4 shared files: (autodetected) Loading
-## required package: coda Linked to JAGS 3.4.0 Loaded modules: basemod,bugs
-</code></pre>
-
 <h2>Data processing</h2>
 
 <h3>Import Gridded Environmental Data</h3>
@@ -220,7 +206,7 @@ Illustration by Joseph Smit, 1895</p>
 
 <p>Read them in as a raster stack</p>
 
-<pre><code class="r">env = stack(list.files(path = &quot;../env/&quot;, pattern = &quot;*_clip.tif$&quot;, full.names = TRUE))
+<pre><code class="r">env = stack(list.files(path = &quot;data/&quot;, pattern = &quot;*_clip.tif$&quot;, full.names = TRUE))
 ## do some renaming for convenience
 names(env) = sub(&quot;_34&quot;, &quot;&quot;, names(env))
 names(env) = sub(&quot;_clip&quot;, &quot;&quot;, names(env))
@@ -236,27 +222,31 @@ env = stack(env, forest)
 names(env)
 </code></pre>
 
-<pre><code>##  [1] &quot;alt_clip&quot;                           
-##  [2] &quot;alt&quot;                                
-##  [3] &quot;bio13_clip&quot;                         
-##  [4] &quot;bio13&quot;                              
-##  [5] &quot;bio14_clip&quot;                         
-##  [6] &quot;bio14&quot;                              
-##  [7] &quot;bio5_clip&quot;                          
-##  [8] &quot;bio5&quot;                               
-##  [9] &quot;bio6_clip&quot;                          
-## [10] &quot;bio6&quot;                               
-## [11] &quot;consensus_1km_class_1_clip&quot;         
-## [12] &quot;consensus_1km_class_1&quot;              
-## [13] &quot;consensus_1km_class_2_clip&quot;         
-## [14] &quot;consensus_1km_class_2&quot;              
-## [15] &quot;consensus_1km_class_3_clip&quot;         
-## [16] &quot;consensus_1km_class_3&quot;              
-## [17] &quot;consensus_1km_class_4_clip&quot;         
-## [18] &quot;consensus_1km_class_4&quot;              
-## [19] &quot;MOD17A3_Science_NPP_mean_00_12_clip&quot;
-## [20] &quot;npp&quot;                                
-## [21] &quot;forest&quot;
+<pre><code>##  [1] &quot;alt_clip_clip&quot;                      
+##  [2] &quot;alt_clip&quot;                           
+##  [3] &quot;alt&quot;                                
+##  [4] &quot;bio13_clip_clip&quot;                    
+##  [5] &quot;bio13_clip&quot;                         
+##  [6] &quot;bio13&quot;                              
+##  [7] &quot;bio14_clip_clip&quot;                    
+##  [8] &quot;bio14_clip&quot;                         
+##  [9] &quot;bio14&quot;                              
+## [10] &quot;bio5_clip_clip&quot;                     
+## [11] &quot;bio5_clip&quot;                          
+## [12] &quot;bio5&quot;                               
+## [13] &quot;bio6_clip&quot;                          
+## [14] &quot;bio6&quot;                               
+## [15] &quot;consensus_1km_class_1_clip&quot;         
+## [16] &quot;consensus_1km_class_1&quot;              
+## [17] &quot;consensus_1km_class_2_clip&quot;         
+## [18] &quot;consensus_1km_class_2&quot;              
+## [19] &quot;consensus_1km_class_3_clip&quot;         
+## [20] &quot;consensus_1km_class_3&quot;              
+## [21] &quot;consensus_1km_class_4_clip&quot;         
+## [22] &quot;consensus_1km_class_4&quot;              
+## [23] &quot;MOD17A3_Science_NPP_mean_00_12_clip&quot;
+## [24] &quot;npp&quot;                                
+## [25] &quot;forest&quot;
 </code></pre>
 
 <h3>Import point observations</h3>
@@ -278,16 +268,16 @@ names(env)
 
 <p>Import the ebird points</p>
 
-<pre><code class="r">ebird = read.table(&quot;../pointdata/lat_long_ebd.txt&quot;, header = TRUE)
+<pre><code class="r">ebird = read.table(&quot;data/lat_long_ebd.txt&quot;, header = TRUE)
 </code></pre>
 
 <p>Import a presence-absence shapefile from park checklists.</p>
 
-<pre><code class="r">parks = readOGR(&quot;../shp/&quot;, &quot;protected_areas&quot;)
+<pre><code class="r">parks = readOGR(&quot;data/&quot;, &quot;protected_areas&quot;)
 </code></pre>
 
 <pre><code>## OGR data source with driver: ESRI Shapefile 
-## Source: &quot;../shp/&quot;, layer: &quot;protected_areas&quot;
+## Source: &quot;data/&quot;, layer: &quot;protected_areas&quot;
 ## with 46 features and 30 fields
 ## Feature type: wkbPolygon with 2 dimensions
 </code></pre>
@@ -302,11 +292,11 @@ nulls = coordinates(spsample(parks[parks$Presence == 0, ], 25, type = &quot;stra
 
 <p>Import IUCN expert range map</p>
 
-<pre><code class="r">tin_range = readOGR(&quot;../shp/&quot;, &quot;iucn_birds_proj&quot;)
+<pre><code class="r">tin_range = readOGR(&quot;data/&quot;, &quot;iucn_birds_proj&quot;)
 </code></pre>
 
 <pre><code>## OGR data source with driver: ESRI Shapefile 
-## Source: &quot;../shp/&quot;, layer: &quot;iucn_birds_proj&quot;
+## Source: &quot;data/&quot;, layer: &quot;iucn_birds_proj&quot;
 ## with 1 features and 1 fields
 ## Feature type: wkbPolygon with 2 dimensions
 </code></pre>
@@ -330,7 +320,7 @@ points$type = paste(points$src, points$obs, sep = &quot;_&quot;)
 
 <p>Import a world country boundary to ground the map</p>
 
-<pre><code class="r">World = readShapePoly(&quot;../shp/world_country_admin_boundary_shapefile_with_fips_codes.shp&quot;)
+<pre><code class="r">World = readShapePoly(&quot;data/world_country_admin_boundary_shapefile_with_fips_codes.shp&quot;)
 projection(World) = &quot;+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs&quot;
 </code></pre>
 
@@ -557,7 +547,7 @@ pred = calc(penv, function(x, niter = 30) {
 })
 names(pred) = c(&quot;Lower_CI_2.5&quot;, &quot;Median&quot;, &quot;Upper_CI_97.5&quot;)
 ## Write out the predictions
-writeRaster(pred, file = &quot;../output/Prediction.tif&quot;, overwrite = T)
+writeRaster(pred, file = &quot;output/Prediction.tif&quot;, overwrite = T)
 </code></pre>
 
 <pre><code>## class       : RasterBrick 
