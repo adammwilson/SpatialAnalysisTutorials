@@ -2,9 +2,6 @@
 
 ## Script to download data, unzip it, and clip to domain
 
-## go up one directory from master script
-cd ..
-
 ## Set some variables
 
 datasrc="dropbox"  #this term can be either 'dropbox' or 'worldclim' to download the data directly

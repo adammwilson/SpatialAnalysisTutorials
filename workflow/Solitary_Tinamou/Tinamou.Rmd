@@ -1,4 +1,4 @@
-`r opts_chunk$set(cache=T)`
+`r opts_chunk$set(cache=F)`
 # Simple species distribution model workflow
 
 In this session we will perform a simple species distribution model workflow for the Solitary Tinamou (Tinamus solitarius).  
@@ -37,7 +37,9 @@ setwd("/home/user/ost4sem/exercise/SpatialAnalysisTutorials/workflow/Solitary_Ti
 ### Import Gridded Environmental Data
 Import some evironmental data (Climate, NPP, & Forest) and align it to a common grid
 ```{r}
-#system("bash DataPrep.sh")
+# Check if data already exists
+if(!file.exists("data/bio14_34_clip.tif"))
+system("bash DataPrep.sh")
 ```
 
 Read them in as a raster stack
@@ -158,7 +160,7 @@ summary(m1)
 ```
 
 ## Simple Bayesian Distribution Model
-```{r, fitmodel,tidy=FALSE}
+```{r, fitmodel,tidy=FALSE} 
 ## create the data object 
 jags.data <- list(N.cells = nrow(pointsd2),
                   obs=points$obs,
@@ -202,7 +204,7 @@ jm <- jags.model("model.txt",
 
 The model has been defined and an initial adaptive run of 2000 iterations complete.  Let's take some samples.
 ```{r, samplemodel}
-jm.sample <- jags.samples(jm, variable.names = params, n.iter = 1000, thin = 1)
+jm.sample <- jags.samples(jm, variable.names = params, n.iter = 5000, thin = 5)
 ```
 
 Extract the posterior samples and convert to `mcmc.list` objects for plotting/summaries
@@ -252,7 +254,7 @@ pred=calc(penv,function(x,niter=30) {
 })
 names(pred)=c("Lower_CI_2.5","Median","Upper_CI_97.5")
 ## Write out the predictions
-writeRaster(pred,file="output/Prediction.tif",overwrite=T)
+writeRaster(pred,file="Prediction.tif",overwrite=T)
 ```
 
 Plot the predictions
