@@ -1,0 +1,22 @@
+
+    model
+{
+    # priors
+    for (l in 1:nBeta) {
+    beta[l] ~ dnorm(0,0.001)
+    }
+    
+    # likelihood
+    for(i in 1:N.cells)
+{
+    # The observation as the result of a bernoulli outcome
+    obs[i] ~ dbern(p[i])
+    # logit transformation
+    p[i]<-1/(1+exp(-lp.lim[i]))
+    # 'stabilize' the logit to prevent hitting size limits
+    lp.lim[i]<-min(999,max(-999,lp[i])) 
+    # The regression
+    lp[i] <- beta[1]+beta[2]*prec12[i]+beta[3]*npp[i]
+}
+}
+    
