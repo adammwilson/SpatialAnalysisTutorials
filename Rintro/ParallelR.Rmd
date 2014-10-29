@@ -1,0 +1,210 @@
+---
+title: "Introduction to Parallel Computing with R"
+author: "Adam M. Wilson"
+date: "November 5, 2013"
+output:
+  knitrBootstrap::bootstrap_document:
+    highlight: XCode
+    highlight.chooser: no
+    theme: cerulean
+    theme.chooser: no
+---
+
+Introduction to Parallel Computing with R
+====
+
+```{r echo=FALSE, message=F}
+library(latticeExtra)
+library(foreach)
+my.theme = trellis.par.get()
+my.theme$axis.text$cex=2
+my.theme$par.xlab.text$cex=2
+my.theme$par.ylab.text$cex=2
+trellis.par.set(my.theme)
+```
+
+# Introduction
+
+## _Embarrassingly parallel_ computation
+
+Single instruction -- multiple data (SIMD)
+
+  - same program on different subsets/datasets
+     - e.g. species or climate projections
+     - MCMC chains
+  - each job independent
+
+## Two methods:
+1. Parallel loops within an R script
+    * starts on single processor
+    * runs looped elements on multiple 'slave' processors
+    * returns results of all iterations to the original instance
+    * foreach, multicore, plyr, raster
+2. Run many instances of same R script in parallel
+    * need another operation to combine the results
+    * preferable for long, complex jobs
+
+## R Packages
+There are many R packages for parallelization, check out the CRAN Task View on [High-Performance and Parallel Computing](http://cran.r-project.org/web/views/HighPerformanceComputing.html) for an overview.  For example: 
+
+* [Rmpi](http://cran.r-project.org/web/packages/Rmpi/index.html): Built on MPI (Message Passing Interface), a de facto standard in parallel computing.
+* [snow](http://cran.r-project.org/web/packages/snow/index.html):  Simple Network of Workstations can use several standards (PVM, MPI, NWS)
+* [parallel](https://stat.ethz.ch/R-manual/R-devel/library/parallel/doc/parallel.pdf) Built in R package (since v2.14.0).
+
+
+# Foreach Package
+In this session we'll focus on the foreach package, which has numerous advantages including:
+  * intuitive for() loop-like syntax
+  * flexibility of choosing a parallel 'backend' for laptops through to supercomputers (using multicore, parallel, snow, Rmpi, etc.)
+  * nice options for combining output from parallelized jobs
+
+### simple for() loop
+```{r}
+x=vector()
+for(i in 1:3) x[i]=i^2
+x
+```
+
+
+
+### foreach{...} loop
+```{r}
+x <- foreach(i=1:3, .combine='c') %do% i^2
+x
+```
+
+
+
+
+Register the "parallel backend:"
+```{r,message=FALSE}
+## use the multicore library
+library(doMC)
+ProcCount <- 8
+# registers specified number of workers  or
+registerDoMC(ProcCount)
+# Or, reserve all all available cores 
+registerDoMC()		
+# check how many cores (workers) are registered
+getDoParWorkers() 	
+```
+
+
+```{r}
+## number of replicates
+trials <- 100
+
+Result <- foreach(1:trials,.combine = cbind) %dopar% 
+    {
+    	ind <- sample(150, 10, replace = TRUE)
+    	result1 <- lm(Petal.Length~Petal.Width,
+                    data=iris[ind,])
+    	coefficients(result1)
+    }
+
+# Result contains  output
+Result[,1:4]
+```
+
+```{r, fig.width = 12, fig.height = 5}
+xyplot(Petal.Length~Petal.Width,groups=Species,
+       data=iris)+
+layer(lapply(1:ncol(Result),function(i) 
+  panel.abline(a=Result[1,i],b=Result[2,i],
+               col="grey")),
+      under=T)
+```
+
+## Foreach Documentation
+ - [doMC](http://cran.r-project.org/web/packages/doMC/index.html) works great on multicore machines, but not all...
+### Other backends:
+ - [doMPI](http://cran.r-project.org/web/packages/doMPI/vignettes/doMPI.pdf): Interface to MPI (Message-Passing Interface)
+ - [doSNOW](http://cran.r-project.org/web/packages/doSNOW/doSNOW.pdf): Simple Network of Workstations
+
+### Documentation for foreach:
+ - [foreach](http://cran.r-project.org/web/packages/foreach/vignettes/foreach.pdf)
+ - [Nested Loops](http://cran.r-project.org/web/packages/foreach/vignettes/nested.pdf)
+
+
+# High Performance Computers 
+_aka_ *supercomputers* or *high performance computers* (HPC)
+
+## QSUB and R
+
+Need to edit R script to 'behave' like a normal #! (linux command line) script.  This is easy with [getopt](http://cran.r-project.org/web/packages/getopt/index.html) package. 
+```{r,eval=F}
+library(getopt)
+## get options
+opta <- getopt(matrix(c(
+                        'date', 'd', 1, 'character',
+                        'help', 'h', 0, 'logical'
+                        ), ncol=4, byrow=TRUE))
+if ( !is.null(opta$help) )
+  {
+       prg <- commandArgs()[1];
+          cat(paste("Usage: ", prg,  " --date | -d <file> :: The date to process\n", sep=""));
+          q(status=1);
+     }
+## extract value
+ date=opta$date 
+```
+
+```{R,eval=F}
+Rscript script.R --date 20131105 
+```
+
+## Driving cluster from R
+
+Possible to drive the cluster from within R via QSUB.  First, define the jobs:
+```{r,eval=FALSE}
+script="/path/to/Rscript.r"
+
+write.table(
+  paste(script,"--date",dates),                     
+  file="process.txt",
+  row.names=F,col.names=F,quote=F)
+
+### Set up submission script
+queue="devel"
+nodes=120
+walltime=24
+```
+
+## Write the QSUB script
+
+```{r,eval=F}
+### write qsub script to disk from R
+cat(paste("
+#PBS -S /bin/bash
+#PBS -l select=",nodes,":ncpus=8:mpiprocs=8
+#PBS -l walltime=",walltime,":00:00
+#PBS -q ",queue,"
+
+CORES=",nodes*8,"
+
+source $HDIR/etc/environ.sh
+IDIR=/nobackupp1/awilso10/mod35/
+WORKLIST=$IDIR/process.txt
+EXE=Rscript
+LOGSTDOUT=$IDIR/log/mod35_stdout
+LOGSTDERR=$IDIR/log/mod35_stderr
+          
+### use mpiexec to parallelize across days
+mpiexec -np $CORES pxargs -a $WORKLIST -p $EXE 1> $LOGSTDOUT 2> $LOGSTDERR
+",sep=""),file=paste("mod35_qsub",sep=""))
+
+## run it!
+system(paste("qsub mod35_qsub",sep=""))
+```
+
+# Choose your method
+1. Run from master process (e.g. foreach)
+     - easier to implement and collect results
+     - fragile (one failure can kill it)
+     - clumsy for *big* jobs
+2. Run as separate R processes via pxargs
+     - safer for big jobs: each job totally independent
+     - easy to re-run incomplete submissions
+     - compatible with qsub
+     - forces you to have a clean processing script
+ 
