@@ -13,6 +13,9 @@ output:
 Introduction to Parallel Computing with R
 ====
 
+This script is available [here](https://rawgit.com/adammwilson/SpatialAnalysisTutorials/master/ParallelR/ParallelR.html).  You can view a version of this script with commented text [here](https://rawgit.com/adammwilson/SpatialAnalysisTutorials/master/ParallelR/ParallelR.R).
+ 
+ 
 ```{r message=F,warning=FALSE}
 library(foreach)
 library(doParallel)
@@ -35,7 +38,7 @@ presentation_theme <- theme_grey()+theme(text = element_text(size = 25, colour =
 theme_set(presentation_theme)
 ```
 
-If you don't have the packages above, install them in the package manager or by running `install.packages("doParallel")`.  You can view a version of this script with commented text here.
+If you don't have the packages above, install them in the package manager or by running `install.packages("doParallel")`. 
 
 # Introduction
 
