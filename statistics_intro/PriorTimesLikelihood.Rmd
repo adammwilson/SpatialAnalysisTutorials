@@ -1,0 +1,60 @@
+Prior times Likelihood
+=============================================================================
+
+
+```{r, message=FALSE, warning=FALSE}
+library(rjags)
+library(latticeExtra)
+```
+
+
+  
+MCMC stands for Markov Chain Monte Carlo sampling. It can be used to estimate posterior distributions of model parameters (i.e. to "fit a model") in a Bayesian setting. The most common flavors of MCMC are Metropolis-Hastings algorithm and Gibbs sampling.
+I will use the MCMC sampler in [JAGS](http://mcmc-jags.sourceforge.net/) to fit the model, which in R is accessed conveniently through the ```rjags``` library:
+
+Now I will create the ```list``` data for JAGS:
+```{r}
+
+n=1
+mu=3
+sd=2
+tau=1/sd^2
+obs=rnorm(n,mean=mu,sd=sd)
+mu.pr=c(0,0.01)
+tau.pr=c(.001,.001)
+jags.data <- list(N=n,mu.pr=mu.pr,tau.pr=tau.pr,obs=obs)
+  cat("
+      model
+      {
+        # priors
+        mu ~ dnorm(mu.pr[1],mu.pr[2])
+        tau ~ dgamma(tau.pr[1],tau.pr[2])        
+        # likelihood
+        for(i in 1:N)
+        {
+          obs ~ dnorm(mu[i],tau[i])
+        } 
+      }
+  ", file="model.txt")
+  params <- c("mu", "tau")
+
+jm <- jags.model("model.txt",
+                   data = jags.data,
+                   n.chains = 3,
+                   n.adapt = 10000)
+  update(jm, n.iter = 10000)
+  jm.sample <- jags.samples(jm, variable.names = params, n.iter = 1000, thin = 1)
+
+
+mu.p=as.mcmc.list(jm.sample$mu)
+tau.p=as.mcmc.list(jm.sample$mu)
+
+
+densityplot(mu.p,ylim=c(0,0.5),xlim=c(-20,20),asp=.8,n=10000)+
+  layer(panel.curve(dnorm(x,mu.pr[1],1/sqrt(mu.pr[2])),n=10000))+
+  layer(panel.abline(v=mu))+
+  layer(panel.abline(v=obs,col="red"))
+
+
+```
+
