@@ -18,7 +18,11 @@ output:
 Introduction to Parallel Computing with R
 ====
 
-This script is available [here](https://rawgit.com/adammwilson/SpatialAnalysisTutorials/master/ParallelR/ParallelR.html).  You can view a version of this script with commented text [here](https://rawgit.com/adammwilson/SpatialAnalysisTutorials/master/ParallelR/ParallelR.R).
+This script is available:
+
+  * [SpatialAnalysisTutorials repository (https://github.com/adammwilson/SpatialAnalysisTutorials)](https://github.com/adammwilson/SpatialAnalysisTutorials)
+  * HTML format (with images/plots) at [http://goo.gl/V4ETTi](http://goo.gl/V4ETTi)
+  * Plain text (.R) with commented text at [http://goo.gl/0LxUS6](http://goo.gl/0LxUS6).
  
  
 ```{r message=F,warning=FALSE}
@@ -290,6 +294,12 @@ That will save the result of each subprocess to disk (be careful about duplicate
 list.files(td,pattern="results")
 ```
 
+### Other useful `foreach` parameters
+
+  * `.inorder` (true/false)  results combined in the same order that they were submitted?
+  * `.errorhandling` (stop/remove/pass)
+  * `.packages` packages to made available to sub-processes
+  * `.export` variables to export to sub-processes
 
 
 # Spatial example
@@ -320,6 +330,8 @@ simrast=function(nx=60,ny=60,theta=10,seed=1234){
       }
 
 ```
+
+## "Tile" the region
 
 To parallelize spatial data, you often need to _tile_ the data and process each tile separately. Here is a function that will take a bounding box, tile size and generate a tiling system.  If given an `overlap` term, it will also add buffers to the tiles to reduce/eliminate edge effects, though this depends on what algorithm/model you are using.
 
@@ -356,14 +368,23 @@ tilebuilder=function(raster,size=10,overlap=NULL){
 }
 ```
 
-Generate a raster and tiling system using these functions.
+## Generate the data
+Generate a raster using simrast.
 ```{r generateraster}
-r=simrast(nx=2000,ny=1000,theta = 100)
-jobs=tilebuilder(r,size=1000,overlap=80)
+r=simrast(nx=3000,ny=1000,theta = 100)
+r
 ```
 
+
+Generate a tiling system for that raster.  Here will use only three tiles
+```{r generatgrid}
+jobs=tilebuilder(r,size=1000,overlap=80)
+kable(jobs,row.names = F,digits = 2)
+```
+
+
 Plot the raster showing the grid.
-```{r plotraster,fig.height=4}
+```{r plotraster,fig.height=3}
 ggplot(jobs)+
   geom_raster(aes(x=coordinates(r)[,1],y=coordinates(r)[,2],fill = values(r)))+ 
   scale_fill_gradient(low = 'white', high = 'blue')+
@@ -375,7 +396,8 @@ ggplot(jobs)+
   coord_equal()+ylab("Y")+xlab("X")
 ```
 
-## Run the `focal` function from the raster package to calculate a 3x3 moving window mean.
+## Run a simple spatial analysis:  `focal` moving window
+Use the `focal` funciton from the raster package to calculate a 3x3 moving window mean over the raster.
 ```{r}
 stime2=system.time({
   r_focal1=focal(r,w=matrix(1,101,101),mean,pad=T)
@@ -389,12 +411,13 @@ gplot(r_focal1)+
   coord_equal()+ylab("Y")+xlab("X")
 ```
 
-That works great (and fast) for this little example, but as the data (or the size of the window) get larger, it can become prohibitive.  
+That works great (and pretty fast) for this little example, but as the data (or the size of the window) get larger, it can become prohibitive.  
 
 ## Repeat the analysis, but parallelize using the tile system.
 
+First write a function that breaks up the original raster, computes the focal mean, then puts it back together.  You could also put this directly in the `foreach()` loop.
+
 ````{r}
-## write a function that breaks up the original raster, computes the focal mean, then puts it back together
 focal_par=function(i,raster,jobs,w=matrix(1,101,101)){
   ## identify which row in jobs to process
   t_ext=jobs[i,]
@@ -404,12 +427,14 @@ focal_par=function(i,raster,jobs,w=matrix(1,101,101)){
   rf=focal(r2,w=w,mean,pad=T)
   ## crop to tile
   rf2=crop(rf,extent(t_ext$xmin,t_ext$xmax,t_ext$ymin,t_ext$ymax))
-  ## return the object
+  ## return the object - could also write the file to disk and aggregate later outside of foreach()
   return(rf2)
 }
+```
 
-
-registerDoParallel(2)  	
+Run the parallelized version.
+```{r}
+registerDoParallel(3)  	
 
 ptime2=system.time({
   r_focal=foreach(i=1:nrow(jobs),.combine=merge,.packages=c("raster")) %dopar% focal_par(i,r,jobs)
@@ -417,7 +442,7 @@ ptime2=system.time({
 
 ```
 
-Are they the same?
+Are the outputs the same?
 ```{r}
 identical(r_focal,r_focal1)
 ```
@@ -425,29 +450,25 @@ identical(r_focal,r_focal1)
 So we were able to process the data in `r ptime2[3]` seconds when using `r getDoParWorkers()` CPUs and `r stime2[3]` seconds on one CPU.  That's `r round(stime2[3]/ptime2[3],1)`X faster for this simple example.
 
 > R's Raster package can automatically parallelize some functions, check out [`clusterR`](http://www.inside-r.org/packages/cran/raster/docs/endCluster)
-
-
-## Other useful `foreach` parameters
-
-  * `.inorder` (true/false)  results combined in the same order that they were submitted?
-  * `.errorhandling` (stop/remove/pass)
-  * `.packages` packages to made available to sub-processes
-  * `.export` variables to export to sub-processes
   
+# Summary
+> Each task should involve computationally-intensive work.  If the tasks are very small, it can take _longer_ to run in parallel.
 
-# Choose your method
+
+
+## Choose your method
 1. Run from master process (e.g. `foreach`)
      - easier to implement and collect results
      - fragile (one failure can kill it and lose results)
      - clumsy for *big* jobs
 2. Run as separate R processes via pxargs
+     - see [`getopt`](http://cran.r-project.org/web/packages/getopt/index.html) library
      - safer for big jobs: each job totally independent
      - easy to re-run incomplete submissions
-     - compatible with qsub
+     - compatible with qsub / cluster computing
      - forces you to have a clean processing script
  
 
-> Each task should involve computationally-intensive work.  If the tasks are very small, it can take _longer_ to run in parallel.
 
 ## Further Reading
 
