@@ -163,9 +163,9 @@ x
 #' 
 ## ----,message=FALSE------------------------------------------------------
 # register specified number of workers
-registerDoParallel(8)
+registerDoParallel(3)
 # or, reserve all all available cores 
-registerDoParallel()		
+#registerDoParallel()		
 # check how many cores (workers) are registered
 getDoParWorkers() 	
 
@@ -208,11 +208,11 @@ kable(head(data),row.names = F,digits = 2)
 #' Now we will specify the number of chains and fit separate bayesian GLMs using [bayesglm](http://www.inside-r.org/packages/cran/arm/docs/bayesglm) in the [ARM](http://cran.r-project.org/web/packages/arm/index.html) package.
 #' 
 ## ----fitmodelp-----------------------------------------------------------
-nchains=4
+nchains=3
 
 ptime <- system.time({
   result <- foreach(i=1:nchains,.combine = rbind.data.frame,.packages=c("arm")) %dopar% {
-  M1=bayesglm (y ~ x1 + x2, data=data,family=binomial(link="logit"),n.iter=2e5)
+  M1=bayesglm (y ~ x1 + x2, data=data,family=binomial(link="logit"),n.iter=1e8)
   ## return parameter estimates
   cbind.data.frame(chain=i,t(coefficients(M1)))
     }
@@ -233,7 +233,7 @@ kable(result,digits = 2)
 ## ----fitmodel2-----------------------------------------------------------
 stime <- system.time({
   result <- foreach(i=1:nchains,.combine = rbind.data.frame,.packages=c("arm")) %do% {
-  M1=bayesglm (y ~ x1 + x2, data=data,family=binomial(link="logit"),n.iter=2e5)  
+  M1=bayesglm (y ~ x1 + x2, data=data,family=binomial(link="logit"),n.iter=1e8)  
   ## return mean estimates
   cbind.data.frame(chain=i,t(coefficients(M1)))
     }
@@ -251,8 +251,8 @@ stime
 #' 
 #' For example, let's extract all posteriors from the model above
 ## ----fitmodel------------------------------------------------------------
-nchains=4
-registerDoParallel()  	
+nchains=3
+registerDoParallel(3)  	
 
   chains <- foreach(i=1:nchains,.combine = 'mcmc.list',.packages = c("arm","coda"),.multicombine=TRUE) %dopar% {
   M1=bayesglm(y ~ x1 + x2, data=data,family=binomial(link="logit"),n.iter=1000)
@@ -409,7 +409,7 @@ focal_par=function(i,raster,jobs,w=matrix(1,101,101)){
 }
 
 
-registerDoParallel()  	
+registerDoParallel(2)  	
 
 ptime2=system.time({
   r_focal=foreach(i=1:nrow(jobs),.combine=merge,.packages=c("raster")) %dopar% focal_par(i,r,jobs)
@@ -427,10 +427,18 @@ identical(r_focal,r_focal1)
 #' > R's Raster package can automatically parallelize some functions, check out [`clusterR`](http://www.inside-r.org/packages/cran/raster/docs/endCluster)
 #' 
 #' 
+#' ## Other useful `foreach` parameters
+#' 
+#'   * `.inorder` (true/false)  results combined in the same order that they were submitted?
+#'   * `.errorhandling` (stop/remove/pass)
+#'   * `.packages` packages to made available to sub-processes
+#'   * `.export` variables to export to sub-processes
+#'   
+#' 
 #' # Choose your method
-#' 1. Run from master process (e.g. foreach)
+#' 1. Run from master process (e.g. `foreach`)
 #'      - easier to implement and collect results
-#'      - fragile (one failure can kill it)
+#'      - fragile (one failure can kill it and lose results)
 #'      - clumsy for *big* jobs
 #' 2. Run as separate R processes via pxargs
 #'      - safer for big jobs: each job totally independent
@@ -438,6 +446,8 @@ identical(r_focal,r_focal1)
 #'      - compatible with qsub
 #'      - forces you to have a clean processing script
 #'  
+#' 
+#' > Each task should involve computationally-intensive work.  If the tasks are very small, it can take _longer_ to run in parallel.
 #' 
 #' ## Further Reading
 #' 
