@@ -1,18 +1,26 @@
 #' ---
 #' title: "Introduction to Parallel Computing with R"
 #' author: "Adam M. Wilson"
-#' date: "November 5, 2013"
+#' date: "November 5, 2014"
 #' output:
 #'   knitrBootstrap::bootstrap_document:
 #'     highlight: Magula
 #'     highlight.chooser: no
 #'     theme: cerulean
 #'     theme.chooser: no
+#'   pdf_document:
+#'     toc: true
+#'     toc_depth: 2
+#'   md_document:
+#'     variant: markdown_github
 #' ---
 #' 
 #' Introduction to Parallel Computing with R
 #' ====
 #' 
+#' This script is available [here](https://rawgit.com/adammwilson/SpatialAnalysisTutorials/master/ParallelR/ParallelR.html).  You can view a version of this script with commented text [here](https://rawgit.com/adammwilson/SpatialAnalysisTutorials/master/ParallelR/ParallelR.R).
+#'  
+#'  
 ## ----message=F,warning=FALSE---------------------------------------------
 library(foreach)
 library(doParallel)
@@ -30,12 +38,13 @@ library(ggmcmc)
 ## ----echo=FALSE----------------------------------------------------------
 opts_chunk$set(cache=TRUE)
 # purl("ParallelR/ParallelR.Rmd","ParallelR/ParallelR.R",documentation=2)
+# rmarkdown::render("ParallelR/ParallelR.Rmd", "all")
 
 presentation_theme <- theme_grey()+theme(text = element_text(size = 25, colour = "black"))
 theme_set(presentation_theme)
 
 #' 
-#' If you don't have the packages above, install them in the package manager or by running `install.packages("doParallel")`.  You can view a `purl`d (commented text) version of this script here.
+#' If you don't have the packages above, install them in the package manager or by running `install.packages("doParallel")`. 
 #' 
 #' # Introduction
 #' 
@@ -202,7 +211,7 @@ kable(head(data),row.names = F,digits = 2)
 nchains=4
 
 ptime <- system.time({
-  result <- foreach(i=1:nchains,.combine = rbind.data.frame) %dopar% {
+  result <- foreach(i=1:nchains,.combine = rbind.data.frame,.packages=c("arm")) %dopar% {
   M1=bayesglm (y ~ x1 + x2, data=data,family=binomial(link="logit"),n.iter=2e5)
   ## return parameter estimates
   cbind.data.frame(chain=i,t(coefficients(M1)))
@@ -223,7 +232,7 @@ kable(result,digits = 2)
 #' 
 ## ----fitmodel2-----------------------------------------------------------
 stime <- system.time({
-  result <- foreach(i=1:nchains,.combine = rbind.data.frame) %do% {
+  result <- foreach(i=1:nchains,.combine = rbind.data.frame,.packages=c("arm")) %do% {
   M1=bayesglm (y ~ x1 + x2, data=data,family=binomial(link="logit"),n.iter=2e5)  
   ## return mean estimates
   cbind.data.frame(chain=i,t(coefficients(M1)))
@@ -245,8 +254,8 @@ stime
 nchains=4
 registerDoParallel()  	
 
-  chains <- foreach(i=1:nchains,.combine = 'mcmc.list', .multicombine=TRUE) %dopar% {
-  M1=bayesglm (y ~ x1 + x2, data=data,family=binomial(link="logit"),n.iter=1000)
+  chains <- foreach(i=1:nchains,.combine = 'mcmc.list',.packages = c("arm","coda"),.multicombine=TRUE) %dopar% {
+  M1=bayesglm(y ~ x1 + x2, data=data,family=binomial(link="logit"),n.iter=1000)
   ## extract posteriors and convert to mcmc object
   mcmc(sim(M1,500)@coef)
     }
@@ -262,12 +271,15 @@ ggs_traceplot(ggs(chains))
 #' For long-running processes, you may want to consider writing results to disk _as-you-go_ rather than waiting until the end in case of a problem (power failure, single job failure, etc.).
 #' 
 ## ----writedata-----------------------------------------------------------
-  result <- foreach(i=1:nchains,.combine = rbind.data.frame) %dopar% {
+## assign target directory
+td=tempdir()
+
+  result <- foreach(i=1:nchains,.combine = rbind.data.frame,.packages=c("arm")) %dopar% {
   M1=bayesglm (y ~ x1 + x2, data=data,family=binomial(link="logit"),n.iter=1000)  
   ## return mean estimates
   results=cbind.data.frame(chain=i,t(coefficients(M1)))
   ## write results to disk
-  file=paste0(tempdir(),"/results_",i,".csv")
+  file=paste0(td,"/results_",i,".csv")
   write.csv(results,file=file)
   return(NULL)
     }
@@ -275,7 +287,7 @@ ggs_traceplot(ggs(chains))
 #' 
 #' That will save the result of each subprocess to disk (be careful about duplicated file names!):
 ## ------------------------------------------------------------------------
-list.files(tempdir(),pattern="results")
+list.files(td,pattern="results")
 
 #' 
 #' 
@@ -400,7 +412,7 @@ focal_par=function(i,raster,jobs,w=matrix(1,101,101)){
 registerDoParallel()  	
 
 ptime2=system.time({
-  r_focal=foreach(i=1:nrow(jobs),.combine=merge) %dopar% focal_par(i,r,jobs)
+  r_focal=foreach(i=1:nrow(jobs),.combine=merge,.packages=c("raster")) %dopar% focal_par(i,r,jobs)
   })
 
 
