@@ -75,31 +75,38 @@ Parallel computing is the simultaneous use of multiple compute resources:
 
 
 ## Flynn's taxonomy
+A classification of computer architectures ([Flynn, 1972](http://dx.doi.org/10.1109/TC.1972.5009071))
 
 *  *Single Instruction, Single Data (SISD)*
     * No parallelization
 *  *Single Instruction, Multiple Data (SIMD)*
     * Run the same code/analysis on different datasets
-    * e.g. species or climate projections
-    * MCMC chains
-    * each job independent
+    * Examples: 
+         * different species in species distribution model
+         * same species under different climates
+         * different MCMC chains from a Bayesian Model
 * *Multiple Instruction, Single Data (MISD)*
     * Run different code/analyses on the same data
+    * Examples:
+        * One species, multiple models
 * *Multiple Instruction, Multiple Data streams (MIMD)*
     * Run different code/analyses on different data
+    * Examples:
+         * Different species & different models
     
 ![http://en.wikipedia.org/wiki/Flynn%27s_taxonomy](assets/SISD.png)
 <span style="color:grey; font-size:1em;">Figure from [here](http://en.wikipedia.org/wiki/Flynn%27s_taxonomy)</span>
 
 ## Our focus: *Single Instruction, Multiple Data (SIMD)*
-1. Parallel loops within an R script
+1. Parallel functions within an R script
     * starts on single processor
     * runs looped elements on multiple 'slave' processors
     * returns results of all iterations to the original instance
     * foreach, multicore, plyr, raster
-2. Run many instances of same R script in parallel
+2. Alternative: run many separate instances of R in parallel with `Rscript`
     * need another operation to combine the results
     * preferable for long, complex jobs
+    * NOT planning to discuss in this session
 
 ### R Packages
 There are many R packages for parallelization, check out the CRAN Task View on [High-Performance and Parallel Computing](http://cran.r-project.org/web/views/HighPerformanceComputing.html) for an overview.  For example: 
@@ -118,7 +125,8 @@ In this session we'll focus on the foreach package, which has numerous advantage
   * nice options for combining output from parallelized jobs
 
 ### Documentation for foreach:
- - [foreach](http://cran.r-project.org/web/packages/foreach/vignettes/foreach.pdf)
+ - [foreach manual](http://cran.r-project.org/web/packages/foreach/foreach.pdf)
+ - [foreach vignette](http://cran.r-project.org/web/packages/foreach/vignettes/foreach.pdf)
  - [Nested Loops](http://cran.r-project.org/web/packages/foreach/vignettes/nested.pdf)
 
 
@@ -206,6 +214,7 @@ data=cbind.data.frame(y=y,x1=x1,x2=x2)
 Let's look at the data:
 ```{r}
 kable(head(data),row.names = F,digits = 2)
+ 
 ```
 
 
@@ -253,7 +262,10 @@ So we were able to run `r nchains` independent chains in `r ptime[3]` seconds wh
 ### Organizing results with `.combine`
 Typical functions are `c` to make a vector of results, `cbind` or `cbind.data.frame` to make a table where columns correspond to different jobs, and `rbind` or `rbind.data.frame` to make a table where rows correspond to different jobs.  But you can use any function that will combine output.  
 
-For example, let's extract all posteriors from the model above
+For example, let's extract all posteriors from the model above as `mcmc` objects (from the `coda` library) and then use the `.combine` to put them in an `mcmc.list` ready for further analysis.  
+
+> The `.combine` function alone makes `foreach` a really useful function compared to standard R looping functions such as `lapply` or `by`.  You can write any `.combine` function you want to assemble the results.
+
 ```{r fitmodel}
 nchains=3
 registerDoParallel(3)  	
@@ -306,7 +318,8 @@ list.files(td,pattern="results")
 In this section we will:
 
 1. Generate some _spatial_ data
-2. Perform a moving window mean for the full area and introduce a tiling scheme
+2. Tile the region to facilitate processing the data in parallel.
+2. Perform a moving window mean for the full area
 3. Compare processing times for sequential vs. parallel execution
 
 ## Generate Spatial Data
@@ -330,6 +343,21 @@ simrast=function(nx=60,ny=60,theta=10,seed=1234){
       }
 
 ```
+
+Generate a raster using `simrast`.
+```{r generateraster}
+r=simrast(nx=3000,ny=1000,theta = 100)
+r
+```
+
+Plot the raster showing the grid.
+```{r plotraster1,fig.height=3}
+gplot(r)+
+  geom_raster(aes(fill = value))+ 
+  scale_fill_gradient(low = 'white', high = 'blue')+
+  coord_equal()+ylab("Y")+xlab("X")
+```
+
 
 ## "Tile" the region
 
@@ -368,15 +396,8 @@ tilebuilder=function(raster,size=10,overlap=NULL){
 }
 ```
 
-## Generate the data
-Generate a raster using simrast.
-```{r generateraster}
-r=simrast(nx=3000,ny=1000,theta = 100)
-r
-```
+Generate a tiling system for that raster.  Here will use only three tiles (feel free to play with this).
 
-
-Generate a tiling system for that raster.  Here will use only three tiles
 ```{r generatgrid}
 jobs=tilebuilder(r,size=1000,overlap=80)
 kable(jobs,row.names = F,digits = 2)
@@ -384,7 +405,7 @@ kable(jobs,row.names = F,digits = 2)
 
 
 Plot the raster showing the grid.
-```{r plotraster,fig.height=3}
+```{r plotraster2,fig.height=4,fig.width=9}
 ggplot(jobs)+
   geom_raster(aes(x=coordinates(r)[,1],y=coordinates(r)[,2],fill = values(r)))+ 
   scale_fill_gradient(low = 'white', high = 'blue')+
@@ -398,7 +419,7 @@ ggplot(jobs)+
 
 ## Run a simple spatial analysis:  `focal` moving window
 Use the `focal` funciton from the raster package to calculate a 3x3 moving window mean over the raster.
-```{r}
+```{r, fig.height=4,fig.width=9}
 stime2=system.time({
   r_focal1=focal(r,w=matrix(1,101,101),mean,pad=T)
   })
@@ -451,9 +472,108 @@ So we were able to process the data in `r ptime2[3]` seconds when using `r getDo
 
 > R's Raster package can automatically parallelize some functions, check out [`clusterR`](http://www.inside-r.org/packages/cran/raster/docs/endCluster)
   
+# High Performance Computers (HPC)
+_aka_ *supercomputers*, for example, check out the [Yale HPC](https://hpc.research.yale.edu/hpc_user_wiki/index.php/Yale_HPC_Wiki)
+
+Working on a cluster can be quite different from a laptop/workstation.  The most important difference is the existence of _scheduler_ that manages large numbers of individual tasks.
+
+## QSUB and R
+
+You typically don't run the script _interactively_, so you need to edit your script to 'behave' like a normal #! (linux command line) script.  This is easy with [getopt](http://cran.r-project.org/web/packages/getopt/index.html) package. 
+
+
+```{r}
+cat(paste("
+          
+          library(getopt)
+          ## get options
+          opta <- getopt(matrix(c(
+          'date', 'd', 1, 'character'
+          ), ncol=4, byrow=TRUE))
+          ## extract value
+          date=as.Date(opta$date) 
+          
+          ## Now your script using date as an input
+          
+          print(date+1)
+          q(\"no\")
+          "
+          ),file=paste("script.R",sep=""))
+```
+
+Then you can run this script from the command line like this:
+```{r,eval=F}
+Rscript script.R --date 2013-11-05
+```
+
+Or even from within R like this:
+```{r}
+system("Rscript script.R --date '2013-11-05'",intern=T)
+```
+
+### Driving cluster from R
+
+> CAVEAT: The following were developed for NASA's Pleiades and not tested on Yale's HPC.
+
+
+Possible to drive the cluster from within R via QSUB.  First, define the jobs and write that file to disk:
+```{r}
+script="path_to_script.R"
+dates=seq(as.Date("2000-01-01"),as.Date("2000-12-31"),by=60)
+pjobs=data.frame(jobs=paste(script,"--date",dates))
+
+write.table(pjobs,                     
+  file="process.txt",
+  row.names=F,col.names=F,quote=F)
+```
+
+This table has one row per task:
+```{r,results='markup'}
+
+pjobs
+```
+
+Now identify other parameters for QSUB.
+```{r,eval=FALSE}
+### Set up submission script
+queue="devel"
+nodes=120
+walltime=24
+```
+
+### Write the QSUB script
+
+```{r,eval=F}
+### write qsub script to disk from R
+
+cat(paste("
+#PBS -S /bin/bash
+#PBS -l select=",nodes,":ncpus=8:mpiprocs=8
+#PBS -l walltime=",walltime,":00:00
+#PBS -q ",queue,"
+
+CORES=",nodes*8,"
+
+IDIR=/path/to/working/dir
+WORKLIST=$IDIR/process.txt
+EXE=Rscript
+LOGSTDOUT=$IDIR/log/stdout
+LOGSTDERR=$IDIR/log/stderr
+          
+### use mpiexec to parallelize across lines in process.txt
+mpiexec -np $CORES pxargs -a $WORKLIST -p $EXE 1> $LOGSTDOUT 2> $LOGSTDERR
+",sep=""),file=paste("qsub_script.txt",sep=""))
+```
+
+Now we have a list of jobs and a qsub script that points at those jobs with the necessary PBS settings.
+```{r,eval=FALSE}
+## run it!
+system("qsub qsub_script.txt")
+```
+
+
 # Summary
 > Each task should involve computationally-intensive work.  If the tasks are very small, it can take _longer_ to run in parallel.
-
 
 
 ## Choose your method
@@ -463,7 +583,7 @@ So we were able to process the data in `r ptime2[3]` seconds when using `r getDo
      - clumsy for *big* jobs
 2. Run as separate R processes via pxargs
      - see [`getopt`](http://cran.r-project.org/web/packages/getopt/index.html) library
-     - safer for big jobs: each job totally independent
+     - safer for big jobs: each job completely independent
      - easy to re-run incomplete submissions
      - compatible with qsub / cluster computing
      - forces you to have a clean processing script
