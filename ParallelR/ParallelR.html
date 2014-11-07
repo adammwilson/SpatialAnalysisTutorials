@@ -871,7 +871,7 @@
 <div class="container">
 <div class="row row-offcanvas row-offcanvas-right">
 <div class="contents col-xs-12 col-md-10">
-<h1 id="introduction-to-parallel-computing-with-r">Introduction to Parallel Computing with R</h1>
+<h1>Introduction to Parallel Computing with R</h1>
 <p>This script is available:</p>
 <ul>
 <li><a href="https://github.com/adammwilson/SpatialAnalysisTutorials">SpatialAnalysisTutorials repository (https://github.com/adammwilson/SpatialAnalysisTutorials)</a></li>
@@ -894,15 +894,15 @@ library(ggplot2)
 library(ggmcmc)</code></pre>
 </div>
 <p>If you don't have the packages above, install them in the package manager or by running <code>install.packages(&quot;doParallel&quot;)</code>.</p>
-<h1 id="introduction">Introduction</h1>
-<h2 id="serial-computing">Serial Computing</h2>
+<h1>Introduction</h1>
+<h2>Serial Computing</h2>
 <p>Most (legacy) software is written for serial computation:</p>
 <ul>
 <li>Problem broken into discrete set of instructions</li>
 <li>Instructions executed sequentially on a single processor</li>
 </ul>
 <p><img src="assets/serialProblem.gif" alt="https://computing.llnl.gov/tutorials/parallel_comp/" /> <span style="color:grey; font-size:1em;">Figure from <a href="https://computing.llnl.gov/tutorials/parallel_comp/">here</a> </span></p>
-<h2 id="parallel-computation">Parallel computation</h2>
+<h2>Parallel computation</h2>
 <p>Parallel computing is the simultaneous use of multiple compute resources:</p>
 <ul>
 <li>Problem divided into discrete parts that can be solved concurrently</li>
@@ -910,7 +910,7 @@ library(ggmcmc)</code></pre>
 <li>An overall control/coordination mechanism is employed</li>
 </ul>
 <p><img src="assets/parallelProblem.gif" alt="https://computing.llnl.gov/tutorials/parallel_comp/" /> <span style="color:grey; font-size:1em;">Figure from <a href="https://computing.llnl.gov/tutorials/parallel_comp/">here</a> </span></p>
-<h2 id="flynns-taxonomy">Flynn's taxonomy</h2>
+<h2>Flynn's taxonomy</h2>
 <p>A classification of computer architectures (<a href="http://dx.doi.org/10.1109/TC.1972.5009071">Flynn, 1972</a>)</p>
 <ul>
 <li><em>Single Instruction, Single Data (SISD)</em>
@@ -945,7 +945,7 @@ library(ggmcmc)</code></pre>
 </ul></li>
 </ul>
 <p><img src="assets/SISD.png" alt="http://en.wikipedia.org/wiki/Flynn%27s_taxonomy" /> <span style="color:grey; font-size:1em;">Figure from <a href="http://en.wikipedia.org/wiki/Flynn%27s_taxonomy">here</a></span></p>
-<h2 id="our-focus-single-instruction-multiple-data-simd">Our focus: <em>Single Instruction, Multiple Data (SIMD)</em></h2>
+<h2>Our focus: <em>Single Instruction, Multiple Data (SIMD)</em></h2>
 <ol style="list-style-type: decimal">
 <li>Parallel functions within an R script
 <ul>
@@ -961,7 +961,7 @@ library(ggmcmc)</code></pre>
 <li>NOT planning to discuss in this session</li>
 </ul></li>
 </ol>
-<h3 id="r-packages">R Packages</h3>
+<h3>R Packages</h3>
 <p>There are many R packages for parallelization, check out the CRAN Task View on <a href="http://cran.r-project.org/web/views/HighPerformanceComputing.html">High-Performance and Parallel Computing</a> for an overview. For example:</p>
 <ul>
 <li><a href="http://cran.r-project.org/web/packages/Rmpi/index.html">Rmpi</a>: Built on MPI (Message Passing Interface), a de facto standard in parallel computing.</li>
@@ -969,27 +969,27 @@ library(ggmcmc)</code></pre>
 <li><a href="https://stat.ethz.ch/R-manual/R-devel/library/parallel/doc/parallel.pdf">parallel</a> Built in R package (since v2.14.0).</li>
 </ul>
 <hr />
-<h2 id="foreach-package">Foreach Package</h2>
+<h2>Foreach Package</h2>
 <p>In this session we'll focus on the foreach package, which has numerous advantages including:</p>
 <ul>
 <li>intuitive <code>for()</code> loop-like syntax</li>
 <li>flexibility of choosing a parallel 'backend' for laptops through to supercomputers (using multicore, parallel, snow, Rmpi, etc.)</li>
 <li>nice options for combining output from parallelized jobs</li>
 </ul>
-<h3 id="documentation-for-foreach">Documentation for foreach:</h3>
+<h3>Documentation for foreach:</h3>
 <ul>
 <li><a href="http://cran.r-project.org/web/packages/foreach/foreach.pdf">foreach manual</a></li>
 <li><a href="http://cran.r-project.org/web/packages/foreach/vignettes/foreach.pdf">foreach vignette</a></li>
 <li><a href="http://cran.r-project.org/web/packages/foreach/vignettes/nested.pdf">Nested Loops</a></li>
 </ul>
-<h3 id="foreach-backends">Foreach <em>backends</em></h3>
+<h3>Foreach <em>backends</em></h3>
 <ul>
 <li><a href="http://cran.r-project.org/web/packages/doParallel/index.html">doParallel</a> best for use on multicore machines (uses <code>fork</code> on linux/mac and <code>snow</code> on windows).</li>
 <li><a href="http://cran.r-project.org/web/packages/doMPI/vignettes/doMPI.pdf">doMPI</a>: Interface to MPI (Message-Passing Interface)</li>
 <li><a href="http://cran.r-project.org/web/packages/doSNOW/doSNOW.pdf">doSNOW</a>: Simple Network of Workstations</li>
 </ul>
-<h1 id="simple-examples">Simple examples</h1>
-<h2 id="sequential-for-loop"><em>Sequential</em> <code>for()</code> loop</h2>
+<h1>Simple examples</h1>
+<h2><em>Sequential</em> <code>for()</code> loop</h2>
 <div class="row">
 <button class="source R toggle btn btn-xs btn-primary">
 <span class="glyphicon glyphicon-chevron-down"></span> R source
@@ -1000,7 +1000,7 @@ x</code></pre><button class="output R toggle btn btn-xs btn-success">
 </button><pre style=""><code class="output r">## [1] 1 4 9
 </code></pre>
 </div>
-<h2 id="sequential-foreach-loop"><em>Sequential</em> <code>foreach()</code> loop</h2>
+<h2><em>Sequential</em> <code>foreach()</code> loop</h2>
 <div class="row">
 <button class="source R toggle btn btn-xs btn-primary">
 <span class="glyphicon glyphicon-chevron-down"></span> R source
@@ -1018,7 +1018,7 @@ x</code></pre><button class="output R toggle btn btn-xs btn-success">
 </code></pre>
 </div>
 <p>Note that <code>x</code> is a list with one element for each iterator variable (<code>i</code>). You can also specify a function to use to combine the outputs with <code>.combine</code>. Let's concatenate the results into a vector with <code>c</code>.</p>
-<h2 id="sequential-foreach-loop-with-.combine"><em>Sequential</em> <code>foreach()</code> loop with <code>.combine</code></h2>
+<h2><em>Sequential</em> <code>foreach()</code> loop with <code>.combine</code></h2>
 <div class="row">
 <button class="source R toggle btn btn-xs btn-primary">
 <span class="glyphicon glyphicon-chevron-down"></span> R source
@@ -1028,7 +1028,7 @@ x</code></pre><button class="output R toggle btn btn-xs btn-success">
 </button><pre style=""><code class="output r">## [1] 1 4 9
 </code></pre>
 </div>
-<h2 id="sequential-foreach-loop-with-.combine-1"><em>Sequential</em> <code>foreach()</code> loop with <code>.combine</code></h2>
+<h2><em>Sequential</em> <code>foreach()</code> loop with <code>.combine</code></h2>
 <div class="row">
 <button class="source R toggle btn btn-xs btn-primary">
 <span class="glyphicon glyphicon-chevron-down"></span> R source
@@ -1042,7 +1042,7 @@ x</code></pre><button class="output R toggle btn btn-xs btn-success">
 </code></pre>
 </div>
 <p>So far we've only used <code>%do%</code> which only uses a single processor.</p>
-<h2 id="parallel-foreach-loop"><em>Parallel</em> <code>foreach()</code> loop</h2>
+<h2><em>Parallel</em> <code>foreach()</code> loop</h2>
 <p>Before running <code>foreach()</code> in parallel, you have to register a <em>parallel backend</em> with one of the <code>do</code> functions such as <code>doParallel()</code>. On most multicore systems, the easiest backend is typically <code>doParallel()</code>. On linux and mac, it uses <code>fork</code> system call and on Windows machines it uses <code>snow</code> backend. The nice thing is it chooses automatically for the system.</p>
 <div class="row">
 <button class="source R toggle btn btn-xs btn-primary">
@@ -1070,7 +1070,7 @@ x</code></pre><button class="output R toggle btn btn-xs btn-success">
 </button><pre style=""><code class="output r">## [1] 1 4 9
 </code></pre>
 </div>
-<h2 id="a-slightly-more-complicated-example">A slightly more complicated example</h2>
+<h2>A slightly more complicated example</h2>
 <p>In this section we will:</p>
 <ol style="list-style-type: decimal">
 <li>Generate data with known parameters</li>
@@ -1220,9 +1220,9 @@ stime</code></pre><button class="output R toggle btn btn-xs btn-success">
 ##   8.312   1.318  10.557
 </code></pre>
 </div>
-<p>So we were able to run 3 independent chains in 10.4 seconds when using 1 CPUs and 10.557 seconds on one CPU. That's 1X faster for this simple example.</p>
-<h2 id="things-to-consider">Things to consider</h2>
-<h3 id="organizing-results-with-.combine">Organizing results with <code>.combine</code></h3>
+<p>So we were able to run 3 independent chains in 10.4 seconds when using 2 CPUs and 10.557 seconds on one CPU. That's 1X faster for this simple example.</p>
+<h2>Things to consider</h2>
+<h3>Organizing results with <code>.combine</code></h3>
 <p>Typical functions are <code>c</code> to make a vector of results, <code>cbind</code> or <code>cbind.data.frame</code> to make a table where columns correspond to different jobs, and <code>rbind</code> or <code>rbind.data.frame</code> to make a table where rows correspond to different jobs. But you can use any function that will combine output.</p>
 <p>For example, let's extract all posteriors from the model above as <code>mcmc</code> objects (from the <code>coda</code> library) and then use the <code>.combine</code> to put them in an <code>mcmc.list</code> ready for further analysis.</p>
 <blockquote>
@@ -1251,7 +1251,7 @@ That makes is relatively easy to parallelize across chains and combine the resul
 </div>
 </div>
 </div>
-<h3 id="writing-data-to-disk">Writing data to disk</h3>
+<h3>Writing data to disk</h3>
 <p>For long-running processes, you may want to consider writing results to disk <em>as-you-go</em> rather than waiting until the end in case of a problem (power failure, single job failure, etc.).</p>
 <div class="row">
 <button class="source R toggle btn btn-xs btn-primary">
@@ -1278,14 +1278,14 @@ That will save the result of each subprocess to disk (be careful about duplicate
 </button><pre style=""><code class="output r">## [1] "results_1.csv" "results_2.csv" "results_3.csv"
 </code></pre>
 </div>
-<h3 id="other-useful-foreach-parameters">Other useful <code>foreach</code> parameters</h3>
+<h3>Other useful <code>foreach</code> parameters</h3>
 <ul>
 <li><code>.inorder</code> (true/false) results combined in the same order that they were submitted?</li>
 <li><code>.errorhandling</code> (stop/remove/pass)</li>
 <li><code>.packages</code> packages to made available to sub-processes</li>
 <li><code>.export</code> variables to export to sub-processes</li>
 </ul>
-<h1 id="spatial-example">Spatial example</h1>
+<h1>Spatial example</h1>
 <p>In this section we will:</p>
 <ol style="list-style-type: decimal">
 <li>Generate some <em>spatial</em> data</li>
@@ -1293,7 +1293,7 @@ That will save the result of each subprocess to disk (be careful about duplicate
 <li>Perform a moving window mean for the full area</li>
 <li>Compare processing times for sequential vs. parallel execution</li>
 </ol>
-<h2 id="generate-spatial-data">Generate Spatial Data</h2>
+<h2>Generate Spatial Data</h2>
 A function to generate <code>raster</code> object with spatial autocorrelation.
 <div class="row">
 <button class="source R toggle btn btn-xs btn-primary">
@@ -1345,7 +1345,7 @@ Plot the raster showing the grid.
 </div>
 </div>
 </div>
-<h2 id="tile-the-region">&quot;Tile&quot; the region</h2>
+<h2>&quot;Tile&quot; the region</h2>
 <p>To parallelize spatial data, you often need to <em>tile</em> the data and process each tile separately. Here is a function that will take a bounding box, tile size and generate a tiling system. If given an <code>overlap</code> term, it will also add buffers to the tiles to reduce/eliminate edge effects, though this depends on what algorithm/model you are using.</p>
 <div class="row">
 <button class="source R toggle btn btn-xs btn-primary">
@@ -1468,7 +1468,7 @@ Plot the raster showing the grid.
 </div>
 </div>
 </div>
-<h2 id="run-a-simple-spatial-analysis-focal-moving-window">Run a simple spatial analysis: <code>focal</code> moving window</h2>
+<h2>Run a simple spatial analysis: <code>focal</code> moving window</h2>
 Use the <code>focal</code> funciton from the raster package to calculate a 3x3 moving window mean over the raster.
 <div class="row">
 <button class="source R toggle btn btn-xs btn-primary">
@@ -1494,7 +1494,7 @@ gplot(r_focal1)+
 </div>
 </div>
 <p>That works great (and pretty fast) for this little example, but as the data (or the size of the window) get larger, it can become prohibitive.</p>
-<h2 id="repeat-the-analysis-but-parallelize-using-the-tile-system.">Repeat the analysis, but parallelize using the tile system.</h2>
+<h2>Repeat the analysis, but parallelize using the tile system.</h2>
 <p>First write a function that breaks up the original raster, computes the focal mean, then puts it back together. You could also put this directly in the <code>foreach()</code> loop.</p>
 <div class="row">
 <button class="source R toggle btn btn-xs btn-primary">
@@ -1531,14 +1531,14 @@ Are the outputs the same?
 </button><pre style=""><code class="output r">## [1] TRUE
 </code></pre>
 </div>
-<p>So we were able to process the data in 34.85 seconds when using 1 CPUs and 36.851 seconds on one CPU. That's 1.1X faster for this simple example.</p>
+<p>So we were able to process the data in 34.85 seconds when using 2 CPUs and 36.851 seconds on one CPU. That's 1.1X faster for this simple example.</p>
 <blockquote>
 <p>R's Raster package can automatically parallelize some functions, check out <a href="http://www.inside-r.org/packages/cran/raster/docs/endCluster"><code>clusterR</code></a></p>
 </blockquote>
-<h1 id="high-performance-computers-hpc">High Performance Computers (HPC)</h1>
+<h1>High Performance Computers (HPC)</h1>
 <p><em>aka</em> <em>supercomputers</em>, for example, check out the <a href="https://hpc.research.yale.edu/hpc_user_wiki/index.php/Yale_HPC_Wiki">Yale HPC</a></p>
 <p>Working on a cluster can be quite different from a laptop/workstation. The most important difference is the existence of <em>scheduler</em> that manages large numbers of individual tasks.</p>
-<h2 id="qsub-and-r">QSUB and R</h2>
+<h2>QSUB and R</h2>
 <p>You typically don't run the script <em>interactively</em>, so you need to edit your script to 'behave' like a normal #! (linux command line) script. This is easy with <a href="http://cran.r-project.org/web/packages/getopt/index.html">getopt</a> package.</p>
 <div class="row">
 <button class="source R toggle btn btn-xs btn-primary">
@@ -1575,7 +1575,7 @@ Or even from within R like this:
 </button><pre style=""><code class="output r">## [1] "[1] \"2013-11-06\""
 </code></pre>
 </div>
-<h3 id="driving-cluster-from-r">Driving cluster from R</h3>
+<h3>Driving cluster from R</h3>
 <blockquote>
 <p>CAVEAT: The following were developed for NASA's Pleiades and not tested on Yale's HPC.</p>
 </blockquote>
@@ -1616,7 +1616,7 @@ queue="devel"
 nodes=120
 walltime=24</code></pre>
 </div>
-<h3 id="write-the-qsub-script">Write the QSUB script</h3>
+<h3>Write the QSUB script</h3>
 <div class="row">
 <button class="source R toggle btn btn-xs btn-primary">
 <span class="glyphicon glyphicon-chevron-down"></span> R source
@@ -1647,11 +1647,11 @@ Now we have a list of jobs and a qsub script that points at those jobs with the 
 </button><pre style=""><code class="source r">## run it!
 system("qsub qsub_script.txt")</code></pre>
 </div>
-<h1 id="summary">Summary</h1>
+<h1>Summary</h1>
 <blockquote>
 <p>Each task should involve computationally-intensive work. If the tasks are very small, it can take <em>longer</em> to run in parallel.</p>
 </blockquote>
-<h2 id="choose-your-method">Choose your method</h2>
+<h2>Choose your method</h2>
 <ol style="list-style-type: decimal">
 <li>Run from master process (e.g. <code>foreach</code>)
 <ul>
@@ -1668,7 +1668,7 @@ system("qsub qsub_script.txt")</code></pre>
 <li>forces you to have a clean processing script</li>
 </ul></li>
 </ol>
-<h2 id="further-reading">Further Reading</h2>
+<h2>Further Reading</h2>
 <ul>
 <li><a href="http://cran.r-project.org/web/views/HighPerformanceComputing.html">CRAN Task View: High-Performance and Parallel Computing with R</a></li>
 <li><a href="www.stat.uiowa.edu/~luke/talks/uiowa03.pdf">Simple Parallel Statistical Computing in R</a></li>
@@ -1698,17 +1698,8 @@ Languages
 <li >
 <a href="#" type="all-source" class="toggle-global">All</a>
 </li></ul></li>
-<li class="dropup">
-<a href="#" class="dropdown-toggle" data-toggle="dropdown">Output <b class="caret"></b></a>
-<ul class="dropdown-menu"><li class="dropdown-header">
-Type
 </li>
-<li class="active">
-<a href="#" class="toggle-global output" type="output">output</a>
-</li>
-<li >
-<a href="#" type="all-output" class="toggle-global">All</a>
-</li></ul></li>
+</ul>
 <li class="active">
 <a href="#" type="figure" class="toggle-global">Figures</a>
 </li></ul>
@@ -1716,7 +1707,6 @@ Type
 </div>
 </div>
 </div>
-
 <div id="push">
 
 </div>
@@ -1729,9 +1719,5 @@ Styled with <a href="https://github.com/jimhester/knitrBootstrap">knitrBootstrap
 </div>
 <link rel="stylesheet" id="theme" href="https://netdna.bootstrapcdn.com/bootswatch/3.0.0/cerulean/bootstrap.min.css" media="screen"></link><link rel="stylesheet" id="highlight" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/magula.min.css" media="screen"></link>
 </div>
-
-
-</li>
-</ul>
 </body>
 </html>
