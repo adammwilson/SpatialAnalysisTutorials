@@ -3,24 +3,27 @@ title: "Introduction to R"
 author: "Adam M. Wilson"
 date: "February 11, 2015"
 output: 
-  md_document:
-    variant: markdown_github  
+  html_document:
+    toc: true
+    number_sections: true
+    keep_md: true
 ---
+
 
 ```{r, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
 ## This chunk automatically generates a text .R version of this script when running within knitr.  You do not need to run this...
 input  = knitr::current_input()  # filename of input document
 output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
 knitr::purl(input,output,documentation=2,quiet=T)
-repo="http://github.com/adammwilson/SpatialAnalysisTutorials/blob/master/R_Introduction"
+repo="adammwilson/SpatialAnalysisTutorials/blob/master/R_Introduction"
 ```
 
 
 #  Introduction
 This script is available:
 
-  * [SpatialAnalysisTutorials repository](`r repo`)
-  * Plain text (.R) with commented text [here](`r paste0(repo,"/",output)`)
+  * [SpatialAnalysisTutorials repository](`r paste0("http://github.com/",repo)`)
+  * Plain text (.R) with commented text [here](`r paste0("http://raw.githubusercontent.com/",repo,"/",output)`)
  
 
 ## Vectors
@@ -65,8 +68,7 @@ library(raster)
 
 
 ```{r, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
-input=tools::file_path_sans_ext(input)
-#file.rename(paste(input, 'md', sep = '.'),"README.md")
+#input=tools::file_path_sans_ext(input)
 ```
 
 
