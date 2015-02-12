@@ -3,7 +3,6 @@
 ## Ignore Tutorial-specific output
 climate/RCM/*.nc
 *_cache
-*_files
 =======
 .Rproj.user
 =======

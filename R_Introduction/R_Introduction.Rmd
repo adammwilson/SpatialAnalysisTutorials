@@ -56,7 +56,9 @@ Or use a function to summarize:
 mean(x)
 ```
 
-> Calculate the standard deviation of `x`
+<span style="color:red">
+Calculate the standard deviation of `x`
+</span>
 
 ## Matrices
 You can also store matrices:

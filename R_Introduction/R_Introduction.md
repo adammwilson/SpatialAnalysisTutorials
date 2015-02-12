@@ -70,7 +70,9 @@ mean(x)
 ## [1] 5.5
 ```
 
-> Calculate the standard deviation of `x`
+<span style="color:red">
+Calculate the standard deviation of `x`
+</span>
 
 ## Matrices
 You can also store matrices:

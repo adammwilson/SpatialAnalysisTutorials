@@ -49,7 +49,9 @@ x+2
 mean(x)
 
 #' 
-#' > Calculate the standard deviation of `x`
+#' <span style="color:red">
+#' Calculate the standard deviation of `x`
+#' </span>
 #' 
 #' ## Matrices
 #' You can also store matrices:
