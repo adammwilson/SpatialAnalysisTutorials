@@ -2,23 +2,19 @@
 title: "Introduction to R"
 author: "Adam M. Wilson"
 date: "February 11, 2015"
-output:
+output: 
   md_document:
     variant: markdown_github
-    toc: true
-    toc_depth: 2
 ---
 
-Introduction to R
-====
-
 ```{r, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
+## This chunk automatically generates a text .R version of this script when running within knitr.  You do not need to run this...
 input  = knitr::current_input()  # filename of input document
 output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
 knitr::purl(input,output,documentation=2,quiet=T)
 repo="http://github.com/adammwilson/SpatialAnalysisTutorials/blob/master/R_Introduction"
-
 ```
+
 
 #  Introduction
 This script is available:
@@ -29,6 +25,9 @@ This script is available:
 ```{r message=F,warning=FALSE}
 library(knitr)
 library(ggplot2)
+
+presentation_theme <- theme_grey()+
+  theme(text = element_text(size = 25, colour = "black"))
 
 ```
 
@@ -58,5 +57,8 @@ library(raster)
 
 ```{r, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
 input=tools::file_path_sans_ext(input)
-file.rename(paste(input, 'md', sep = '.'),"README")
+file.rename(paste(input, 'md', sep = '.'),"README.md")
 ```
+
+
+

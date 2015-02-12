@@ -2,17 +2,13 @@
 #' title: "Introduction to R"
 #' author: "Adam M. Wilson"
 #' date: "February 11, 2015"
-#' output:
+#' output: 
 #'   md_document:
 #'     variant: markdown_github
-#'     toc: true
-#'     toc_depth: 2
 #' ---
 #' 
-#' Introduction to R
-#' ====
-#' 
 
+#' 
 #' 
 #' #  Introduction
 #' This script is available:
@@ -23,6 +19,9 @@
 ## ----message=F,warning=FALSE---------------------------------------------
 library(knitr)
 library(ggplot2)
+
+presentation_theme <- theme_grey()+
+  theme(text = element_text(size = 25, colour = "black"))
 
 
 #' 
@@ -51,3 +50,6 @@ library(raster)
 #' 
 #' 
 
+#' 
+#' 
+#' 

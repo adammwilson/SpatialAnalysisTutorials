@@ -1,13 +1,3 @@
--   Introduction to R
--   Introduction
-    -   Vectors
-    -   Matrices
-    -   Working with Raster Data
--   Coda
-
-Introduction to R
-=================
-
 Introduction
 ============
 
@@ -19,6 +9,9 @@ This script is available:
 ``` {.r}
 library(knitr)
 library(ggplot2)
+
+presentation_theme <- theme_grey()+
+  theme(text = element_text(size = 25, colour = "black"))
 ```
 
 If you don't have the packages above, install them in the package manager or by running `install.packages("ggplot2")`.
@@ -42,7 +35,3 @@ library(raster)
 
 Coda
 ====
-
-    ## Warning in file.rename(paste(input, "md", sep = "."), "README"): cannot
-    ## rename file 'R_Introduction.md' to 'README', reason 'No such file or
-    ## directory'
