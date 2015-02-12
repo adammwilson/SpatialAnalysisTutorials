@@ -16,6 +16,7 @@ input  = knitr::current_input()  # filename of input document
 output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
 knitr::purl(input,output,documentation=2,quiet=T)
 repo="adammwilson/SpatialAnalysisTutorials/blob/master/R_Introduction"
+knitr::opts_chunk$set(cache=TRUE)
 ```
 
 
@@ -32,10 +33,51 @@ This script is available:
 1:10
 ````
 
+We can also assign values to variables:
+```{r}
+x=1:10
+x
+```
+
+Subset the vector using `x[ ]` notation
+```{r}
+x[5]
+x[1:5]
+```
+
+
+And do simple arithmetic:
+```{r}
+x+2
+```
+
+Or use a function to summarize:
+```{r}
+mean(x)
+```
+
+> Calculate the standard deviation of `x`
 
 ## Matrices
+You can also store matrices:
+```{r}
+y=matrix(1:30,ncol=5)
+y
+```
+
+Which behave much like vectors:
+```{r}
+y+2
+```
 
 
+## Plotting
+Plotting in R can be as simple as typing `plot(x)`:
+```{r}
+plot(x)
+```
+
+But of course that's not such a meaningful plot (it's just a sequence of numbers and is rather dull).  Fortunately, though, R has some really flexible graphics packages such as `ggplot2`.  
 
 ## Loading Packages
 
@@ -45,10 +87,6 @@ To load a package, you can simply type `library(package)` where `package` is the
 
 
 ```{r message=F,warning=FALSE}
-library(ggplot2)
-
-presentation_theme <- theme_grey()+
-  theme(text = element_text(size = 25, colour = "black"))
 
 ```
 

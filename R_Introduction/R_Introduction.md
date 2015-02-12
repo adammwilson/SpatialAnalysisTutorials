@@ -20,10 +20,103 @@ This script is available:
 ##  [1]  1  2  3  4  5  6  7  8  9 10
 ```
 
+We can also assign values to variables:
+
+```r
+x=1:10
+x
+```
+
+```
+##  [1]  1  2  3  4  5  6  7  8  9 10
+```
+
+Subset the vector using `x[ ]` notation
+
+```r
+x[5]
+```
+
+```
+## [1] 5
+```
+
+```r
+x[1:5]
+```
+
+```
+## [1] 1 2 3 4 5
+```
+
+
+And do simple arithmetic:
+
+```r
+x+2
+```
+
+```
+##  [1]  3  4  5  6  7  8  9 10 11 12
+```
+
+Or use a function to summarize:
+
+```r
+mean(x)
+```
+
+```
+## [1] 5.5
+```
+
+> Calculate the standard deviation of `x`
 
 ## Matrices
+You can also store matrices:
+
+```r
+y=matrix(1:30,ncol=5)
+y
+```
+
+```
+##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    1    7   13   19   25
+## [2,]    2    8   14   20   26
+## [3,]    3    9   15   21   27
+## [4,]    4   10   16   22   28
+## [5,]    5   11   17   23   29
+## [6,]    6   12   18   24   30
+```
+
+Which behave much like vectors:
+
+```r
+y+2
+```
+
+```
+##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    3    9   15   21   27
+## [2,]    4   10   16   22   28
+## [3,]    5   11   17   23   29
+## [4,]    6   12   18   24   30
+## [5,]    7   13   19   25   31
+## [6,]    8   14   20   26   32
+```
 
 
+## Plotting
+Plotting in R can be as simple as typing `plot(x)`:
+
+```r
+plot(x)
+```
+
+![](R_Introduction_files/figure-html/unnamed-chunk-9-1.png) 
+
+But of course that's not such a meaningful plot (it's just a sequence of numbers and is rather dull).  Fortunately, though, R has some really flexible graphics packages such as `ggplot2`.  
 
 ## Loading Packages
 
@@ -33,12 +126,6 @@ To load a package, you can simply type `library(package)` where `package` is the
 
 
 
-```r
-library(ggplot2)
-
-presentation_theme <- theme_grey()+
-  theme(text = element_text(size = 25, colour = "black"))
-```
 
 
 If you don't have the packages above, install them in the package manager or by running `install.packages("ggplot2")`. 
@@ -48,10 +135,6 @@ If you don't have the packages above, install them in the package manager or by 
 
 ```r
 library(raster)
-```
-
-```
-## Loading required package: sp
 ```
 
 

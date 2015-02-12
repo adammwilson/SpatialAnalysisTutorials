@@ -26,10 +26,51 @@
 1:10
 
 #' 
+#' We can also assign values to variables:
+## ------------------------------------------------------------------------
+x=1:10
+x
+
+#' 
+#' Subset the vector using `x[ ]` notation
+## ------------------------------------------------------------------------
+x[5]
+x[1:5]
+
+#' 
+#' 
+#' And do simple arithmetic:
+## ------------------------------------------------------------------------
+x+2
+
+#' 
+#' Or use a function to summarize:
+## ------------------------------------------------------------------------
+mean(x)
+
+#' 
+#' > Calculate the standard deviation of `x`
 #' 
 #' ## Matrices
+#' You can also store matrices:
+## ------------------------------------------------------------------------
+y=matrix(1:30,ncol=5)
+y
+
+#' 
+#' Which behave much like vectors:
+## ------------------------------------------------------------------------
+y+2
+
 #' 
 #' 
+#' ## Plotting
+#' Plotting in R can be as simple as typing `plot(x)`:
+## ------------------------------------------------------------------------
+plot(x)
+
+#' 
+#' But of course that's not such a meaningful plot (it's just a sequence of numbers and is rather dull).  Fortunately, though, R has some really flexible graphics packages such as `ggplot2`.  
 #' 
 #' ## Loading Packages
 #' 
@@ -39,10 +80,6 @@
 #' 
 #' 
 ## ----message=F,warning=FALSE---------------------------------------------
-library(ggplot2)
-
-presentation_theme <- theme_grey()+
-  theme(text = element_text(size = 25, colour = "black"))
 
 
 #' 
