@@ -54,3 +54,9 @@ library(raster)
 
 # Coda
 
+
+
+```{r, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
+input=tools::file_path_sans_ext(input)
+file.rename(paste(input, 'md', sep = '.'),"README")
+```

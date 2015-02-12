@@ -42,7 +42,3 @@ library(raster)
 
 Coda
 ====
-
-    ## Warning in file.rename(paste(input, "md", sep = "."), "README"): cannot
-    ## rename file 'R_Introduction.md' to 'README', reason 'No such file or
-    ## directory'
