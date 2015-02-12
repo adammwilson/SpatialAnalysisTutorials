@@ -27,7 +27,7 @@ library(ggplot2)
 
 #' 
 #' 
-#' If you don't have the packages above, install them in the package manager or by running `install.packages("doParallel")`. 
+#' If you don't have the packages above, install them in the package manager or by running `install.packages("ggplot2")`. 
 #' 
 #' ## Vectors
 #' 
