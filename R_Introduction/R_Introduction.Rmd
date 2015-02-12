@@ -1,0 +1,39 @@
+---
+title: "Introduction to R"
+author: "Adam M. Wilson"
+date: "February 11, 2015"
+output:
+  md_document:
+    variant: markdown_github
+---
+
+Introduction to R
+====
+
+```{r, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
+input  = knitr::current_input()  # filename of input document
+output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
+knitr::purl(input,output,documentation=2,quiet=T)
+repo="http://github.com/adammwilson/SpatialAnalysisTutorials/R_Introduction"
+```
+
+This script is available:
+
+  * [SpatialAnalysisTutorials repository](`r repo`)
+  * Plain text (.R) with commented text [here](`r paste0(repo,"/",output)`)
+ 
+```{r message=F,warning=FALSE}
+library(knitr)
+library(ggplot2)
+
+```
+
+
+If you don't have the packages above, install them in the package manager or by running `install.packages("doParallel")`. 
+
+# Introduction
+
+
+```{r echo=FALSE}
+1:10
+````
