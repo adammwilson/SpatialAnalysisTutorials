@@ -5,13 +5,11 @@
 #' output: 
 #'   html_document:
 #'     toc: true
-#'     number_sections: true
 #'     keep_md: true
 #' ---
 #' 
 #' 
 
-#' 
 #' 
 #' #  Introduction
 #' This script is available:
@@ -20,15 +18,17 @@
 #'   * Plain text (.R) with commented text [here](`r paste0("http://raw.githubusercontent.com/",repo,"/",output)`)
 #'  
 #' 
-#' ## Vectors
+#' 
+#' ## Variables
 #' 
 ## ----echo=FALSE----------------------------------------------------------
-1:10
+x=1
+x
 
 #' 
-#' We can also assign values to variables:
+#' We can also assign a vector to a variable:
 ## ------------------------------------------------------------------------
-x=1:10
+x=c(5,8,14,91,3,36,14,30)
 x
 
 #' 
@@ -44,17 +44,38 @@ x[1:5]
 x+2
 
 #' 
-#' Or use a function to summarize:
+#' To calculate the mean, you could do it _manually_ like this
+#' 
+## ------------------------------------------------------------------------
+(5+8+14+91+3+36+14+30)/8
+
+#' 
+#' Or use a function:
 ## ------------------------------------------------------------------------
 mean(x)
 
 #' 
-#' <span style="color:red">
-#' Calculate the standard deviation of `x`
-#' </span>
+#' Type `?functionname` to learn more about a function, e.g. `?mean`.  In RStudio, you can also search in the help panel.  There are other arguments too: `mean(x, trim = 0, na.rm = FALSE, ...)`
+#' 
+#' If you press `TAB` after a function name (such as `mean(`), it will show function arguments.
+#' 
+#' > Try to calculate the mean of `c(3,6,12,89)`.    
+#' 
+#' 
+#' There are many ways to generate data in R such as sequences:
+## ------------------------------------------------------------------------
+seq(from=0, to=1, by=0.25)
+
+#' and random numbers that follow a statistical distribution (such as the normal):
+#' 
+## ------------------------------------------------------------------------
+a=rnorm(100,mean=0,sd=10)
+hist(a)
+
+#' 
 #' 
 #' ## Matrices
-#' You can also store matrices:
+#' You can also use matrices (2-dimensional arrays of numbers):
 ## ------------------------------------------------------------------------
 y=matrix(1:30,ncol=5)
 y
@@ -63,6 +84,11 @@ y
 #' Which behave much like vectors:
 ## ------------------------------------------------------------------------
 y+2
+
+#' 
+#' and have 2-dimensional indexing:
+## ------------------------------------------------------------------------
+y[2,3]
 
 #' 
 #' 
@@ -78,20 +104,17 @@ plot(x)
 #' 
 #' To load a package, you can simply type `library(package)` where `package` is the name of the package you want to load.  However, this only works for packages that you already have installed on your system.  To install new packages, you can use `install.packages()` or use the package manager. 
 #' 
-#' > R may ask you to choose a CRAN mirror. CRAN is the distributed network of servers that provides access to R's software.  It doesn't really matter which you chose, but closer ones are likely to be faster.  From RStudio, you can select the mirror under Tools→Options.
-#' 
-#' 
 ## ----message=F,warning=FALSE---------------------------------------------
+library(raster)
 
-
+#' 
+#' > R may ask you to choose a CRAN mirror. CRAN is the distributed network of servers that provides access to R's software.  It doesn't really matter which you chose, but closer ones are likely to be faster.  From RStudio, you can select the mirror under Tools→Options or just wait until it asks you.
 #' 
 #' 
-#' If you don't have the packages above, install them in the package manager or by running `install.packages("ggplot2")`. 
-#' 
+#' If you don't have the packages above, install them in the package manager or by running `install.packages("raster")` (or use the package manager). 
 #' 
 #' ## Working with Raster Data
 ## ------------------------------------------------------------------------
-library(raster)
 
 #' 
 #' 
