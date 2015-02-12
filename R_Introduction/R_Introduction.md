@@ -3,8 +3,8 @@ Introduction to R
 
 This script is available:
 
--   [SpatialAnalysisTutorials repository](http://github.com/adammwilson/SpatialAnalysisTutorials/R_Introduction)
--   Plain text (.R) with commented text [here](http://github.com/adammwilson/SpatialAnalysisTutorials/R_Introduction/R_Introduction.R)
+-   [SpatialAnalysisTutorials repository](http://github.com/adammwilson/SpatialAnalysisTutorials/blob/master/R_Introduction)
+-   Plain text (.R) with commented text [here](http://github.com/adammwilson/SpatialAnalysisTutorials/blob/master/R_Introduction/R_Introduction.R)
 
 ``` {.r}
 library(knitr)

@@ -14,7 +14,8 @@ Introduction to R
 input  = knitr::current_input()  # filename of input document
 output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
 knitr::purl(input,output,documentation=2,quiet=T)
-repo="http://github.com/adammwilson/SpatialAnalysisTutorials/R_Introduction"
+repo="http://github.com/adammwilson/SpatialAnalysisTutorials/blob/master/R_Introduction"
+
 ```
 
 This script is available:
