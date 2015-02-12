@@ -5,6 +5,7 @@ date: "February 11, 2015"
 output:
   md_document:
     variant: markdown_github
+    output: 'README.md'
 ---
 
 Introduction to R
