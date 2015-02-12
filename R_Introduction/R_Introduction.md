@@ -1,5 +1,15 @@
+-   Introduction to R
+-   Introduction
+    -   Vectors
+    -   Matrices
+    -   Working with Raster Data
+-   Coda
+
 Introduction to R
 =================
+
+Introduction
+============
 
 This script is available:
 
@@ -13,7 +23,22 @@ library(ggplot2)
 
 If you don't have the packages above, install them in the package manager or by running `install.packages("doParallel")`.
 
-Introduction
-============
+Vectors
+-------
 
     ##  [1]  1  2  3  4  5  6  7  8  9 10
+
+Matrices
+--------
+
+Working with Raster Data
+------------------------
+
+``` {.r}
+library(raster)
+```
+
+    ## Loading required package: sp
+
+Coda
+====

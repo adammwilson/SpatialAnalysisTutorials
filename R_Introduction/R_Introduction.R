@@ -5,6 +5,8 @@
 #' output:
 #'   md_document:
 #'     variant: markdown_github
+#'     toc: true
+#'     toc_depth: 2
 #' ---
 #' 
 #' Introduction to R
@@ -12,6 +14,7 @@
 #' 
 
 #' 
+#' #  Introduction
 #' This script is available:
 #' 
 #'   * [SpatialAnalysisTutorials repository](`r repo`)
@@ -26,9 +29,22 @@ library(ggplot2)
 #' 
 #' If you don't have the packages above, install them in the package manager or by running `install.packages("doParallel")`. 
 #' 
-#' # Introduction
-#' 
+#' ## Vectors
 #' 
 ## ----echo=FALSE----------------------------------------------------------
 1:10
 
+#' 
+#' 
+#' ## Matrices
+#' 
+#' 
+#' ## Working with Raster Data
+## ------------------------------------------------------------------------
+library(raster)
+
+#' 
+#' 
+#' 
+#' # Coda
+#' 
