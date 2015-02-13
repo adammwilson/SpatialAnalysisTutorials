@@ -33,17 +33,26 @@ x=c(5,8,14,91,3,36,14,30)
 x
 
 #' 
+#' And do simple arithmetic:
+## ------------------------------------------------------------------------
+x+2
+
+#' 
+#' Note that `R` is case sensitive, if you as for `X` instead of `x`, you will get an error
+## ----,eval=FALSE---------------------------------------------------------
+## X
+
+#' 
+#' `Error: object 'X' not found`
+#' 
+#' ### Subsetting
 #' Subset the vector using `x[ ]` notation
 ## ------------------------------------------------------------------------
 x[5]
 x[1:5]
 
 #' 
-#' 
-#' And do simple arithmetic:
-## ------------------------------------------------------------------------
-x+2
-
+#' ### Using Functions
 #' 
 #' To calculate the mean, you could do it _manually_ like this
 #' 
@@ -62,6 +71,29 @@ mean(x)
 #' 
 #' > Try to calculate the mean of `c(3,6,12,89)`.    
 #' 
+#' ### Logical values
+#' 
+#' R also has standard conditional tests to generate `TRUE` or `FALSE` values.  These are often useful for filtering data (e.g. identify all values greater than 5).  The logical operators are `<`, `<=`, `>`, `>=`, `==` for exact equality and `!=` for inequality.
+#' 
+## ------------------------------------------------------------------------
+  x = 50
+  x > 75
+ 
+  x == 40
+ 
+  x >   15
+ 
+
+#' 
+#' And of course you can save the results as variables:
+## ------------------------------------------------------------------------
+result =  x >  3
+result
+
+#' 
+#' 
+#' 
+#' ### Generating Data
 #' 
 #' There are many ways to generate data in R such as sequences:
 ## ------------------------------------------------------------------------
@@ -94,7 +126,7 @@ y[2,3]
 
 #' 
 #' ## Data Frames
-#' Data frames are similar to matrices, but more flexible.  Matrices must be all the same type (e.g. all numbers), while a data frame can include multiple data types (e.g. text, factors, numbers).  
+#' Data frames are similar to matrices, but more flexible.  Matrices must be all the same type (e.g. all numbers), while a data frame can include multiple data types (e.g. text, factors, numbers). Dataframes are commonly used when doing statistical modeling in R.  
 #' 
 ## ------------------------------------------------------------------------
 data = data.frame( x = c(11,12,14),
@@ -111,6 +143,7 @@ mean(data[,3])
 #' 
 #' ## Loading Packages
 #' 
+#' One of the best things about 
 #' To load a package, you can simply type `library(package)` where `package` is the name of the package you want to load.  However, this only works for packages that you already have installed on your system.  To install new packages, you can use `install.packages()` or use the package manager. 
 #' 
 ## ----message=F,warning=FALSE---------------------------------------------

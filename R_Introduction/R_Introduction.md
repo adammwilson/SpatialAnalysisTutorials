@@ -32,25 +32,6 @@ x
 ## [1]  5  8 14 91  3 36 14 30
 ```
 
-Subset the vector using `x[ ]` notation
-
-```r
-x[5]
-```
-
-```
-## [1] 5
-```
-
-```r
-x[1:5]
-```
-
-```
-## [1] 1 2 3 4 5
-```
-
-
 And do simple arithmetic:
 
 ```r
@@ -58,8 +39,37 @@ x+2
 ```
 
 ```
-##  [1]  3  4  5  6  7  8  9 10 11 12
+## [1]  7 10 16 93  5 38 16 32
 ```
+
+Note that `R` is case sensitive, if you as for `X` instead of `x`, you will get an error
+
+```r
+X
+```
+
+`Error: object 'X' not found`
+
+### Subsetting
+Subset the vector using `x[ ]` notation
+
+```r
+x[5]
+```
+
+```
+## [1] 3
+```
+
+```r
+x[1:5]
+```
+
+```
+## [1]  5  8 14 91  3
+```
+
+### Using Functions
 
 To calculate the mean, you could do it _manually_ like this
 
@@ -79,7 +89,7 @@ mean(x)
 ```
 
 ```
-## [1] 5.5
+## [1] 25.125
 ```
 
 Type `?functionname` to learn more about a function, e.g. `?mean`.  In RStudio, you can also search in the help panel.  There are other arguments too: `mean(x, trim = 0, na.rm = FALSE, ...)`
@@ -88,6 +98,50 @@ If you press `TAB` after a function name (such as `mean(`), it will show functio
 
 > Try to calculate the mean of `c(3,6,12,89)`.    
 
+### Logical values
+
+R also has standard conditional tests to generate `TRUE` or `FALSE` values.  These are often useful for filtering data (e.g. identify all values greater than 5).  The logical operators are `<`, `<=`, `>`, `>=`, `==` for exact equality and `!=` for inequality.
+
+
+```r
+  x = 50
+  x > 75
+```
+
+```
+## [1] FALSE
+```
+
+```r
+  x == 40
+```
+
+```
+## [1] FALSE
+```
+
+```r
+  x >   15
+```
+
+```
+## [1] TRUE
+```
+
+And of course you can save the results as variables:
+
+```r
+result =  x >  3
+result
+```
+
+```
+## [1] TRUE
+```
+
+
+
+### Generating Data
 
 There are many ways to generate data in R such as sequences:
 
@@ -107,7 +161,7 @@ a=rnorm(100,mean=0,sd=10)
 hist(a)
 ```
 
-![](R_Introduction_files/figure-html/unnamed-chunk-9-1.png) 
+![](R_Introduction_files/figure-html/unnamed-chunk-12-1.png) 
 
 
 ## Matrices
@@ -155,7 +209,7 @@ y[2,3]
 ```
 
 ## Data Frames
-Data frames are similar to matrices, but more flexible.  Matrices must be all the same type (e.g. all numbers), while a data frame can include multiple data types (e.g. text, factors, numbers).  
+Data frames are similar to matrices, but more flexible.  Matrices must be all the same type (e.g. all numbers), while a data frame can include multiple data types (e.g. text, factors, numbers). Dataframes are commonly used when doing statistical modeling in R.  
 
 
 ```r
@@ -198,6 +252,7 @@ mean(data[,3])
 
 ## Loading Packages
 
+One of the best things about 
 To load a package, you can simply type `library(package)` where `package` is the name of the package you want to load.  However, this only works for packages that you already have installed on your system.  To install new packages, you can use `install.packages()` or use the package manager. 
 
 
