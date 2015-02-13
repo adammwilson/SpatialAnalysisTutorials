@@ -15,7 +15,8 @@
 #' This script is available:
 #' 
 #'   * [SpatialAnalysisTutorials repository](`r paste0("http://github.com/",repo)`)
-#'   * Plain text (.R) with commented text [here](`r paste0("http://raw.githubusercontent.com/",repo,"/",output)`)
+#'   * Plain text (.R) with commented text 
+#'   [here](`r paste0("https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/R_Introduction/",output)`)
 #'  
 #' 
 #' 
@@ -70,6 +71,7 @@ seq(from=0, to=1, by=0.25)
 #' 
 ## ------------------------------------------------------------------------
 a=rnorm(100,mean=0,sd=10)
+## illustrate with a histogram
 hist(a)
 
 #' 
@@ -91,14 +93,21 @@ y+2
 y[2,3]
 
 #' 
+#' ## Data Frames
+#' Data frames are similar to matrices, but more flexible.  Matrices must be all the same type (e.g. all numbers), while a data frame can include multiple data types (e.g. text, factors, numbers).  
 #' 
-#' ## Plotting
-#' Plotting in R can be as simple as typing `plot(x)`:
 ## ------------------------------------------------------------------------
-plot(x)
+data = data.frame( x = c(11,12,14),
+                   y = c(19,20,21),
+                   z = c(10,9,7))
+data
 
-#' 
-#' But of course that's not such a meaningful plot (it's just a sequence of numbers and is rather dull).  Fortunately, though, R has some really flexible graphics packages such as `ggplot2`.  
+mean(data$z)
+
+mean(data[["z"]])
+
+mean(data[,3])
+
 #' 
 #' ## Loading Packages
 #' 
@@ -115,6 +124,7 @@ library(raster)
 #' 
 #' ## Working with Raster Data
 ## ------------------------------------------------------------------------
+
 
 #' 
 #' 

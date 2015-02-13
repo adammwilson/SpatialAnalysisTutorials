@@ -9,7 +9,8 @@ February 11, 2015
 This script is available:
 
   * [SpatialAnalysisTutorials repository](http://github.com/adammwilson/SpatialAnalysisTutorials/blob/master/R_Introduction)
-  * Plain text (.R) with commented text [here](http://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/blob/master/R_Introduction/R_Introduction.R)
+  * Plain text (.R) with commented text 
+  [here](https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/R_Introduction/R_Introduction.R)
  
 
 
@@ -102,6 +103,7 @@ and random numbers that follow a statistical distribution (such as the normal):
 
 ```r
 a=rnorm(100,mean=0,sd=10)
+## illustrate with a histogram
 hist(a)
 ```
 
@@ -152,17 +154,47 @@ y[2,3]
 ## [1] 14
 ```
 
+## Data Frames
+Data frames are similar to matrices, but more flexible.  Matrices must be all the same type (e.g. all numbers), while a data frame can include multiple data types (e.g. text, factors, numbers).  
 
-## Plotting
-Plotting in R can be as simple as typing `plot(x)`:
 
 ```r
-plot(x)
+data = data.frame( x = c(11,12,14),
+                   y = c(19,20,21),
+                   z = c(10,9,7))
+data
 ```
 
-![](R_Introduction_files/figure-html/unnamed-chunk-13-1.png) 
+```
+##    x  y  z
+## 1 11 19 10
+## 2 12 20  9
+## 3 14 21  7
+```
 
-But of course that's not such a meaningful plot (it's just a sequence of numbers and is rather dull).  Fortunately, though, R has some really flexible graphics packages such as `ggplot2`.  
+```r
+mean(data$z)
+```
+
+```
+## [1] 8.666667
+```
+
+```r
+mean(data[["z"]])
+```
+
+```
+## [1] 8.666667
+```
+
+```r
+mean(data[,3])
+```
+
+```
+## [1] 8.666667
+```
 
 ## Loading Packages
 
