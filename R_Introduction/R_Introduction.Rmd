@@ -1,7 +1,7 @@
 ---
 title: "Introduction to R"
 author: "Adam M. Wilson"
-date: "February 11, 2015"
+date: "February 17, 2015"
 output: 
   html_document:
     toc: true
@@ -18,7 +18,8 @@ repo="adammwilson/SpatialAnalysisTutorials/blob/master/R_Introduction"
 knitr::opts_chunk$set(cache=TRUE)
 ```
 
-#  Introduction
+----
+
 This script is available:
 
   * [SpatialAnalysisTutorials repository](`r paste0("http://github.com/",repo)`)
@@ -29,7 +30,7 @@ This script is available:
 
 ## Variables
 
-```{r echo=FALSE}
+```{r}
 x=1
 x
 ````
@@ -45,7 +46,7 @@ And do simple arithmetic:
 x+2
 ```
 
-Note that `R` is case sensitive, if you as for `X` instead of `x`, you will get an error
+Note that `R` is case sensitive, if you ask for `X` instead of `x`, you will get an error
 ```{r,eval=FALSE}
 X
 ```
@@ -93,7 +94,12 @@ mean(x)
 
 Type `?functionname` to learn more about a function, e.g. `?mean`.  In RStudio, you can also search in the help panel.  There are other arguments too: `mean(x, trim = 0, na.rm = FALSE, ...)`
 
-If you press `TAB` after a function name (such as `mean( `), it will show function arguments.
+In RStudio, if you press `TAB` after a function name (such as `mean( `), it will show function arguments.
+
+![Autocomplete screenshot][pic1]
+
+[pic1]: img/autocomplete.png "Autocomplete Screenshot"
+
 
 > Try to calculate the mean of `c(3,6,12,89)`.    
 

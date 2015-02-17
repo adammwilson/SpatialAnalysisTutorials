@@ -1,11 +1,12 @@
 # Introduction to R
 Adam M. Wilson  
-February 11, 2015  
+February 17, 2015  
 
 
 
 
-#  Introduction
+----
+
 This script is available:
 
   * [SpatialAnalysisTutorials repository](http://github.com/adammwilson/SpatialAnalysisTutorials/blob/master/R_Introduction)
@@ -16,6 +17,11 @@ This script is available:
 
 ## Variables
 
+
+```r
+x=1
+x
+```
 
 ```
 ## [1] 1
@@ -42,7 +48,7 @@ x+2
 ## [1]  7 10 16 93  5 38 16 32
 ```
 
-Note that `R` is case sensitive, if you as for `X` instead of `x`, you will get an error
+Note that `R` is case sensitive, if you ask for `X` instead of `x`, you will get an error
 
 ```r
 X
@@ -116,7 +122,12 @@ mean(x)
 
 Type `?functionname` to learn more about a function, e.g. `?mean`.  In RStudio, you can also search in the help panel.  There are other arguments too: `mean(x, trim = 0, na.rm = FALSE, ...)`
 
-If you press `TAB` after a function name (such as `mean( `), it will show function arguments.
+In RStudio, if you press `TAB` after a function name (such as `mean( `), it will show function arguments.
+
+![Autocomplete screenshot][pic1]
+
+[pic1]: img/autocomplete.png "Autocomplete Screenshot"
+
 
 > Try to calculate the mean of `c(3,6,12,89)`.    
 
