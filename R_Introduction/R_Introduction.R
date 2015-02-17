@@ -96,7 +96,7 @@ mean(x)
 #' 
 #' > Try to calculate the mean of `c(3,6,12,89)`.    
 #' 
-#' Writing functions in R is pretty easy.  First think about how to break it down into parts:
+#' Writing functions in R is pretty easy.  Let's create one to calculate the mean of vector by getting the sum and length.  First think about how to break it down into parts:
 ## ------------------------------------------------------------------------
 x1= sum(x)
 x2=length(x)

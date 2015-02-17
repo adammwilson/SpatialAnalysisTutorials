@@ -131,7 +131,7 @@ In RStudio, if you press `TAB` after a function name (such as `mean( `), it will
 
 > Try to calculate the mean of `c(3,6,12,89)`.    
 
-Writing functions in R is pretty easy.  First think about how to break it down into parts:
+Writing functions in R is pretty easy.  Let's create one to calculate the mean of vector by getting the sum and length.  First think about how to break it down into parts:
 
 ```r
 x1= sum(x)
