@@ -116,18 +116,30 @@ mean(x)
 
 Type `?functionname` to learn more about a function, e.g. `?mean`.  In RStudio, you can also search in the help panel.  There are other arguments too: `mean(x, trim = 0, na.rm = FALSE, ...)`
 
-If you press `TAB` after a function name (such as `mean(`), it will show function arguments.
+If you press `TAB` after a function name (such as `mean( `), it will show function arguments.
 
 > Try to calculate the mean of `c(3,6,12,89)`.    
 
-Writing functions in R is pretty easy:
+Writing functions in R is pretty easy.  First think about how to break it down into parts:
+
+```r
+x1= sum(x)
+x2=length(x)
+x1/x2
+```
+
+```
+## [1] 25.125
+```
+
+Then put it all back together and create a new function called `mymean`:
 
 ```r
 mymean=function(f){
   sum(f)/length(f)
 }
 
-mymean(x)
+mymean(f=x)
 ```
 
 ```
@@ -139,10 +151,10 @@ But, that simple function would be vulnerable to potential problems (such as mis
 
 
 ```r
-x2=c(5,8,NA,91,3,NA,14,30)
+x3=c(5,8,NA,91,3,NA,14,30,100)
 
 ## Calculate the mean using the new function
-mymean(x2)
+mymean(x3)
 ```
 
 ```
@@ -151,7 +163,7 @@ mymean(x2)
 
 ```r
 ## Use the built-in function (with and without na.rm=T)
-mean(x2)
+mean(x3)
 ```
 
 ```
@@ -159,55 +171,63 @@ mean(x2)
 ```
 
 ```r
-mean(x2,na.rm=T)
+mean(x3,na.rm=T)
 ```
 
 ```
-## [1] 25.16667
+## [1] 35.85714
 ```
+Writing simple functions is easy, writing robust, reliable functions can be hard...
 
 ### Logical values
 
-R also has standard conditional tests to generate `TRUE` or `FALSE` values.  These are often useful for filtering data (e.g. identify all values greater than 5).  The logical operators are `<`, `<=`, `>`, `>=`, `==` for exact equality and `!=` for inequality.
+R also has standard conditional tests to generate `TRUE` or `FALSE` values (which also behave as `0`s and `1`s.  These are often useful for filtering data (e.g. identify all values greater than 5).  The logical operators are `<`, `<=`, `>`, `>=`, `==` for exact equality and `!=` for inequality.
 
 
 ```r
-  x = 50
-  x > 75
+  x3 > 75
 ```
 
 ```
-## [1] FALSE
-```
-
-```r
-  x == 40
-```
-
-```
-## [1] FALSE
+## [1] FALSE FALSE    NA  TRUE FALSE    NA FALSE FALSE  TRUE
 ```
 
 ```r
-  x >   15
+  x3 == 40
 ```
 
 ```
-## [1] TRUE
+## [1] FALSE FALSE    NA FALSE FALSE    NA FALSE FALSE FALSE
+```
+
+```r
+  x3 >   15
+```
+
+```
+## [1] FALSE FALSE    NA  TRUE FALSE    NA FALSE  TRUE  TRUE
+```
+
+```r
+sum(x3>15,na.rm=T)
+```
+
+```
+## [1] 3
 ```
 
 And of course you can save the results as variables:
 
 ```r
-result =  x >  3
+result =  x3 >  3
 result
 ```
 
 ```
-## [1] TRUE
+## [1]  TRUE  TRUE    NA  TRUE FALSE    NA  TRUE  TRUE  TRUE
 ```
 
-
+> Try this:  define a function that counts how many values in a vector are less than or equal to 12
 
 ### Generating Data
 
@@ -229,7 +249,7 @@ a=rnorm(100,mean=0,sd=10)
 hist(a)
 ```
 
-![](R_Introduction_files/figure-html/unnamed-chunk-16-1.png) 
+![](R_Introduction_files/figure-html/unnamed-chunk-17-1.png) 
 
 
 ## Matrices
