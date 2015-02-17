@@ -50,6 +50,15 @@ X
 
 `Error: object 'X' not found`
 
+### Variable naming conventions
+Naming your variables is your business, but there are [5 conventions](http://www.r-bloggers.com/consistent-naming-conventions-in-r/) to be aware of:
+
+* alllowercase: _e.g._ `adjustcolor`
+* period.separated: _e.g._ `plot.new`
+* underscore_separated: _e.g._ `numeric_version`
+* lowerCamelCase: _e.g._ `addTaskCallback`
+* UpperCamelCase: _e.g._ `SignatureMethod`
+
 ### Subsetting
 Subset the vector using `x[ ]` notation
 
@@ -61,6 +70,18 @@ x[5]
 ## [1] 3
 ```
 
+You can use a `:` to quickly generate a sequence:
+
+```r
+1:5
+```
+
+```
+## [1] 1 2 3 4 5
+```
+
+and use that to subset as well:
+
 ```r
 x[1:5]
 ```
@@ -68,6 +89,7 @@ x[1:5]
 ```
 ## [1]  5  8 14 91  3
 ```
+
 
 ### Using Functions
 
@@ -97,6 +119,52 @@ Type `?functionname` to learn more about a function, e.g. `?mean`.  In RStudio, 
 If you press `TAB` after a function name (such as `mean(`), it will show function arguments.
 
 > Try to calculate the mean of `c(3,6,12,89)`.    
+
+Writing functions in R is pretty easy:
+
+```r
+mymean=function(f){
+  sum(f)/length(f)
+}
+
+mymean(x)
+```
+
+```
+## [1] 25.125
+```
+
+### Missing data:  dealing with `NA` values
+But, that simple function would be vulnerable to potential problems (such as missing data).  
+
+
+```r
+x2=c(5,8,NA,91,3,NA,14,30)
+
+## Calculate the mean using the new function
+mymean(x2)
+```
+
+```
+## [1] NA
+```
+
+```r
+## Use the built-in function (with and without na.rm=T)
+mean(x2)
+```
+
+```
+## [1] NA
+```
+
+```r
+mean(x2,na.rm=T)
+```
+
+```
+## [1] 25.16667
+```
 
 ### Logical values
 
@@ -161,7 +229,7 @@ a=rnorm(100,mean=0,sd=10)
 hist(a)
 ```
 
-![](R_Introduction_files/figure-html/unnamed-chunk-12-1.png) 
+![](R_Introduction_files/figure-html/unnamed-chunk-16-1.png) 
 
 
 ## Matrices
@@ -264,17 +332,4 @@ library(raster)
 
 
 If you don't have the packages above, install them in the package manager or by running `install.packages("raster")` (or use the package manager). 
-
-## Working with Raster Data
-
-
-
-
-# Coda
-
-
-
-
-
-
 
