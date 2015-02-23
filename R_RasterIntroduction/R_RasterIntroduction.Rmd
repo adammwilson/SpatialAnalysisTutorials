@@ -1,0 +1,128 @@
+---
+title: "Introduction to Raster Package"
+author: "Adam M. Wilson"
+date: "February 23, 2015"
+output: 
+  html_document:
+    toc: true
+    keep_md: true
+---
+
+
+```{r, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
+## This chunk automatically generates a text .R version of this script when running within knitr.  You do not need to run this...
+input  = knitr::current_input()  # filename of input document
+output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
+knitr::purl(input,output,documentation=2,quiet=T)
+repo="adammwilson/SpatialAnalysisTutorials/blob/master/R_RasterIntroduction"
+knitr::opts_chunk$set(cache=TRUE)
+```
+
+----
+
+This script is available:
+
+  * [SpatialAnalysisTutorials repository](`r paste0("http://github.com/",repo)`)
+  * Plain text (.R) with commented text 
+  [here](`r paste0("https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/R_RasterIntroduction/",output)`)
+ 
+
+## Loading Packages
+
+On the cluster, it's a little more complicated because the system is set up to host many different versions of software simutaneously and thus you need to load the correct `modules` before starting the software.  
+
+```{r,eval=F}
+module load Apps/R/3.0.2     
+module load Rpkgs/RGDAL
+module load Rpkgs/GGPLOT2/1.0.0
+```
+
+And sometimes the package you want is not currently available.  However, this only works for packages that you already have installed on your system.  To install new packages, you can use `install.packages()` (or use the package manager if you are working in RStudio). 
+
+> R may ask you to choose a CRAN mirror. CRAN is the distributed network of servers that provides access to R's software.  It doesn't really matter which you chose, but closer ones are likely to be faster.  From RStudio, you can select the mirror under Tools→Options or just wait until it asks you.
+
+
+If you run `install.packages(...)` on Omega, you will probably see something like this:
+
+```{r, eval=FALSE}
+install.packages("raster")
+Installing package into ‘/lustre/home/client/apps/fas/Rpkgs/GGPLOT2/1.0.0/3.0’
+(as ‘lib’ is unspecified)
+Warning in install.packages("raster") :
+  'lib = "/lustre/home/client/apps/fas/Rpkgs/GGPLOT2/1.0.0/3.0"' is not writable
+Would you like to use a personal library instead?  (y/n) y
+Would you like to create a personal library
+~/R/x86_64-unknown-linux-gnu-library/3.0
+to install packages into?  (y/n) y
+--- Please select a CRAN mirror for use in this session ---
+```
+
+Which is fine, you can install a personal copy of a library.  Once the package is installed, you can simply type `library(package)` where `package` is the name of the package you want to load.  
+
+```{r message=F,warning=FALSE}
+library(raster)
+```
+
+
+Alternatively, you can point to my personal library to avoid this extra step:
+
+```{r,eval=FALSE}
+library(raster,lib.loc="/lustre/scratch/client/fas/geodata/aw524/R/")
+```
+
+Below we'll run though several of the examples from the excellant [Raster vignette](http://cran.r-project.org/web/packages/raster/vignettes/Raster.pdf) by Robert J. Hijmans.
+
+```{r}
+x <- raster()
+x
+```
+
+```{r}
+x <- raster(ncol=36, nrow=18, xmn=-1000, xmx=1000, ymn=-100, ymx=900)
+res(x)
+res(x) <- 100
+res(x)
+ncol(x)
+```
+
+
+
+```{r}
+# change the numer of columns (affects resolution)
+ncol(x) <- 18
+ncol(x)
+res(x)
+```
+
+## Spatial Projections
+Raster package uses the standard [coordinate reference system (CRS)](http://www.spatialreference.org).  For example, see the projection format for the [_standard_ WGS84](http://www.spatialreference.org/ref/epsg/4326/).
+``{r}
+projection(x) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs "
+x
+```
+
+
+```{r}
+r <- raster(ncol=10, nrow=10)
+ncell(r)
+hasValues(r)
+```
+
+
+Use the 'values' function > # e.g.,
+```{r}
+values(r) <- 1:ncell(r)
+hasValues(r)
+inMemory(r)
+values(r)[1:10]
+
+plot(r, main='Raster with 100 cells')
+```
+
+## Work with climate data
+
+```{r}
+tmean=raster("scratch/data/worldclim/bio_1.bil")
+tmean
+```
+

@@ -1,0 +1,103 @@
+---
+title: "Non-parametric Tests"
+author: "Adam M. Wilson"
+date: "November 12, 2014"
+output: ioslides_presentation
+runtime: shiny
+---
+```{r, echo=FALSE, warning=FALSE}
+library(knitr)
+library(ggplot2)
+```
+## Shiny Presentation
+
+This R Markdown presentation is made interactive using Shiny. The viewers of the presentation can change the assumptions underlying what's presented and see the results immediately. 
+
+To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html).
+
+## Distributional assumptions
+```{r}
+mu=5
+sigma=2.5
+
+x=seq(-20,20,len=1000)
+y=dnorm(x,mu,sigma)
+d=cbind.data.frame(x,y)
+
+ggplot(d,aes(x=x,y=y))+geom_line()+
+  geom_segment(aes(x=mu,xend=mu,y=0,yend=dnorm(0.5,mean=mu,sd=sigma)),col="red")
+
+n=1000
+d=data.frame(x=c(rnorm(n,5,3),rnorm(n,20,5)))
+
+curve(dnorm(x,0.37,1),-2,2)
+
+ggplot(d,aes(x=x))+geom_histogram()#+stat_bin(100)
+
+
+```
+
+
+
+## 2-group Mann-Whitney U Test 
+```{r}
+gs=function(n){
+  A=sample(c("A","B"),n,replace=T)
+  y=rnorm(n)
+  cbind.data.frame(A=A,y=y)}
+
+#wilcox.test(y~A) 
+```
+where y is numeric and A is A binary factor
+
+## Slide with Interactive Plot
+
+```{r, echo=FALSE}
+inputPanel(
+  selectInput("n", label = "Number of samples:",
+              choices = c(10, 20, 35, 50), selected = 20),
+  
+  sliderInput("beta", label = "Slope:",
+              min = -2, max = 2, value = 1, step = 0.2)
+)
+
+renderPlot({
+  data=gs(as.numeric(input$n))
+  hist(data$y)
+  
+#  dens <- density(faithful$eruptions, adjust = input$bw_adjust)
+#  lines(dens, col = "blue")
+})
+```
+
+## Immer data
+```{r,warning=FALSE}
+library(MASS)         # load the MASS package 
+kable(head(immer)) 
+```
+
+
+## Plot
+```{r}
+plot(immer$Y1, immer$Y2) 
+abline(0,1)
+```
+
+## test
+```{r}
+wilcox.test(immer$Y1, immer$Y2, paired=TRUE) 
+```
+
+## Slide with Bullets
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+## Slide with R Code and Output
+
+```{r}
+summary(cars)
+```
+
+
