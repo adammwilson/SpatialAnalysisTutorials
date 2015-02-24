@@ -61,7 +61,7 @@
 #' 
 #' R may ask you to choose a CRAN mirror. CRAN is the distributed network of servers that provides access to R's software.  It doesn't really matter which you chose, but closer ones are likely to be faster.  From RStudio, you can select the mirror under Tools→Options or just wait until it asks you.
 #' 
-#' If you run `install.packages(...)` on Omega, you will probably see something like this:
+#' If you run `install.packages(raster)` on Omega, you will probably see something like this:
 #' 
 ## ----, eval=FALSE--------------------------------------------------------
 ## install.packages("raster")
