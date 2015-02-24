@@ -14,9 +14,9 @@ This script is available:
   [here](https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/R_RasterIntroduction/R_RasterIntroduction.R)
  
 
-## Starting R
+## Starting R on Omega
 
-On the cluster, it's a little more complicated because the system is set up to host many different versions of software simutaneously and thus you need to load the correct `modules` before starting the software.  If the following lines are not in your .bashrc file, you'll need to run them before starting R.   
+On the cluster, using software can be a little more complicated because the system is set up to host many different versions of software simutaneously and thus you need to load the correct `modules` before starting the software.  If the following lines are not in your .bashrc file, you'll need to run them before starting R.   
 
 
 ```r
@@ -151,11 +151,20 @@ res(x)
 ## [1] 111.1111 100.0000
 ```
 
-## Spatial Projections
+## Spatial Projections and data storage
 Raster package uses the standard [coordinate reference system (CRS)](http://www.spatialreference.org).  For example, see the projection format for the [_standard_ WGS84](http://www.spatialreference.org/ref/epsg/4326/).
-``{r}
+
+```r
 projection(x) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs "
 x
+```
+
+```
+## class       : RasterLayer 
+## dimensions  : 10, 18, 180  (nrow, ncol, ncell)
+## resolution  : 111.1111, 100  (x, y)
+## extent      : -1000, 1000, -100, 900  (xmin, xmax, ymin, ymax)
+## coord. ref. : +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0
 ```
 
 
@@ -209,7 +218,7 @@ values(r)[1:10]
 plot(r, main='Raster with 100 cells')
 ```
 
-![](R_RasterIntroduction_files/figure-html/unnamed-chunk-11-1.png) 
+![](R_RasterIntroduction_files/figure-html/unnamed-chunk-12-1.png) 
 
 > You can change the memory options using the `maxmemory` option in `rasterOptions()` 
 
@@ -219,8 +228,8 @@ First set the path to the data directory.  You'll need to uncomment the line set
 
 
 ```r
-#datadir="data/"
-datadir="/lustre/scratch/client/fas/geodata/aw524/data/"
+datadir="data/"
+#datadir="/lustre/scratch/client/fas/geodata/aw524/data/"
 ```
 
 
@@ -252,14 +261,14 @@ tmean
 ## values      : -290, 320  (min, max)
 ```
 
-Note the min/max of the raster.  What are the units?  It's always important to read over the documentation for any dataset to be sure you are using it correctly.  In this case, the WorldClim temperature dataset has a `gain` of 0.01, meaning that to work in degrees Celsius, you need to multiply by 0.01.  You can do this in the raster package with `gain()` 
+Note the min/max of the raster.  What are the units?  It's always important to read over the documentation for any dataset to be sure you are using it correctly.  In this case, the [WorldClim temperature dataset](http://www.worldclim.org/formats) has a `gain` of 0.1, meaning that to convert back to degrees Celsius, you need to multiply by 0.1.  You can do this in the raster package with `gain()` 
 
 ```r
-gain(tmean)=0.01
+gain(tmean)=0.1
 plot(tmean)
 ```
 
-![](R_RasterIntroduction_files/figure-html/unnamed-chunk-14-1.png) 
+![](R_RasterIntroduction_files/figure-html/unnamed-chunk-15-1.png) 
 
 Let's dig a little deeper into the data object:
 
@@ -376,7 +385,7 @@ r1
 plot(r1)
 ```
 
-![](R_RasterIntroduction_files/figure-html/unnamed-chunk-16-1.png) 
+![](R_RasterIntroduction_files/figure-html/unnamed-chunk-17-1.png) 
 
 ## Spatial aggregation
 
@@ -386,7 +395,8 @@ ra <- aggregate(r1, 20, fun=mean)
 plot(ra)
 ```
 
-![](R_RasterIntroduction_files/figure-html/unnamed-chunk-17-1.png) 
+![](R_RasterIntroduction_files/figure-html/unnamed-chunk-18-1.png) 
+
 > Now try to aggregate to the minimum (`min`) value with each 10 pixel window
 
 ## Focal ("moving window") operation
@@ -397,7 +407,7 @@ rf <- focal(r1, w=matrix(1,11,11), fun=mean)
 plot(rf)
 ```
 
-![](R_RasterIntroduction_files/figure-html/unnamed-chunk-18-1.png) 
+![](R_RasterIntroduction_files/figure-html/unnamed-chunk-19-1.png) 
 
 
 ```r
@@ -411,7 +421,7 @@ rf_range2 <- focal(r1, w=matrix(1,11,11), fun=range)
 plot(rf_range2)
 ```
 
-![](R_RasterIntroduction_files/figure-html/unnamed-chunk-19-1.png) 
+![](R_RasterIntroduction_files/figure-html/unnamed-chunk-20-1.png) 
 
 
 ## Raster calculations
@@ -472,7 +482,7 @@ cellStats(r,range)
 plot(r)
 ```
 
-![](R_RasterIntroduction_files/figure-html/unnamed-chunk-20-1.png) 
+![](R_RasterIntroduction_files/figure-html/unnamed-chunk-21-1.png) 
 
 ```r
 # multiply s time r and add 5
