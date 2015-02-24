@@ -152,7 +152,7 @@ First set the path to the data directory.  You'll need to uncomment the line set
 
 ```{r}
 #datadir="data/"
-datadir="/lustre/home/client/fas/geodata/aw524/scratch/data/"
+datadir="/lustre/scratch/client/fas/geodata/aw524/data/"
 ```
 
 

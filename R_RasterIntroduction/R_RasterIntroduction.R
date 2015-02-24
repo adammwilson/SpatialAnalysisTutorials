@@ -145,7 +145,7 @@ plot(r, main='Raster with 100 cells')
 #' 
 ## ------------------------------------------------------------------------
 #datadir="data/"
-datadir="/lustre/home/client/fas/geodata/aw524/scratch/data/"
+datadir="/lustre/scratch/client/fas/geodata/aw524/data/"
 
 #' 
 #' 
