@@ -324,7 +324,7 @@ str(tmean)
 ##   ..@ data    :Formal class '.SingleLayerData' [package "raster"] with 13 slots
 ##   .. .. ..@ values    : logi(0) 
 ##   .. .. ..@ offset    : num 0
-##   .. .. ..@ gain      : num 0.01
+##   .. .. ..@ gain      : num 0.1
 ##   .. .. ..@ inmemory  : logi FALSE
 ##   .. .. ..@ fromdisk  : logi TRUE
 ##   .. .. ..@ isfactor  : logi FALSE
@@ -378,7 +378,7 @@ r1
 ## coord. ref. : +proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs 
 ## data source : in memory
 ## names       : bio_1 
-## values      : 0.6, 2.78  (min, max)
+## values      : 6, 27.8  (min, max)
 ```
 
 ```r
