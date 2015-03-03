@@ -160,7 +160,7 @@ system(cmd)</code></pre>
     paste0(&quot;gdal_translate -projwin -77 7 -74.5 6 &quot;,file, &quot; &quot;,outputdir,&quot;/cropped.tif&quot;)
     )
   )</code></pre>
-<p>The <code>crop</code> command took 0.095 seconds, while <code>gdal_translate</code> took 0.021. That’s a 77.9X speedup! And, actually, that’s not quite fair to <code>gdal_translate</code> because <code>crop</code> is keeping the result in RAM (and not writing to disk). Whether this matters to you depends on the scale of your project.</p>
+<p>The <code>crop</code> command took 0.095 seconds, while <code>gdal_translate</code> took 0.022. That’s a 76.8X speedup! And, actually, that’s not quite fair to <code>gdal_translate</code> because <code>crop</code> is keeping the result in RAM (and not writing to disk). Whether this matters to you depends on the scale of your project.</p>
 </div>
 </div>
 <div id="another-example-gdalwarp" class="section level2">
