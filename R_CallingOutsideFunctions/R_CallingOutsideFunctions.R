@@ -33,15 +33,19 @@ library(raster)  # OR,
 library(raster,lib.loc="/lustre/scratch/client/fas/geodata/aw524/R/")
 
 #' 
-#' ## Work with climate data
+#' ## Load climate data
 #' 
 #' First set the path to the data directory.  You'll need to uncomment the line setting the directory to `lustre/...`.
 #' 
 ## ------------------------------------------------------------------------
 datadir="~/Downloads/bio1-9_30s_bil"
-#datadir="/lustre/scratch/client/fas/geodata/aw524/data/"
+#datadir="/lustre/scratch/client/fas/geodata/aw524/data/worldclim"
 
-outputdir="~/scratch/data"
+#' 
+#' And create an output directory `outputdir` to hold the outputs.  It's a good idea to define these as variables so it's easy to change them later if you move to a different machine.  
+## ------------------------------------------------------------------------
+outputdir="~/scratch/data/tmp"
+## check that the directory exists, and if it doesn't then create it.
 if(!file.exists(outputdir)) dir.create(outputdir,recursive=T)
 
 #' 
@@ -55,7 +59,7 @@ data
 
 #' 
 #' 
-#' ## Calling outside functions
+#' ## Calling outside functions from within R
 #' R can do almost anything, but it isn't always the fastest at it...  For example, let's compare cropping a tif file using the `raster` package and `gdal_translate`:
 #' 
 #' First let's do it using the `crop` function:
@@ -84,17 +88,14 @@ system(paste0("gdal_translate -projwin -77 7 -74.5 6 ",file, " ",outputdir,"/cro
 #' 
 #' ### Processing speed
 #' 
-#' To compare processing speed, let's use the `system.time` function to record how long the operation takes.  To make it fair, we'll write the output tif to disk (rather than keeping it in RAM).  
-#' 
+#' To compare processing speed, let's use the `system.time` function to record how long the operation takes.  
 ## ------------------------------------------------------------------------
 t1=system.time(
-  r1 <<- crop(data,
-              extent(-77,-74.5,6,7),
-              file=paste0(outputdir,"/cropped.tif"),
-              overwrite=T))
+        crop(data,
+            extent(-77,-74.5,6,7)))
 
 #' 
-#' And let's run it one more time and time it to compare:
+#' And let's run `gdal_translate` and time it to compare:
 ## ------------------------------------------------------------------------
 t2=system.time(
   system(
@@ -103,16 +104,56 @@ t2=system.time(
   )
 
 #' 
-#' 
-#' 
-#' The `crop` command took `r t1[[3]]` seconds, while `gdal_translate` took `r t2[[3]]`.  That's a `r round(100*(t1[[3]]-t2[[3]])/t1[[3]],1)`X speedup!  Whether this matters to you depends on the scale of your project.
+#' The `crop` command took `r t1[[3]]` seconds, while `gdal_translate` took `r t2[[3]]`.  That's a `r round(100*(t1[[3]]-t2[[3]])/t1[[3]],1)`X speedup!  And, actually, that's not quite fair to `gdal_translate` because `crop` is keeping the result in RAM (and not writing to disk).  Whether this matters to you depends on the scale of your project.
 #' 
 #' 
 #' ## Another example: gdalwarp
-#' But there are programs that go beyond the existing functionality of R, so `system()` can be a useful way to keep your entire workflow in R and call other programs as needed.  For example, it's common to aquire data in different spatial _projections_ that need to be reprojected to a common format prior to analysis.  A great tool for this is `gdalwarp`, which can also mosaic and perform some simple mosaicing procedures (such as taking the mean of multiple layers).
+#' But there are programs that go beyond the existing functionality of R, so `system()` can be a useful way to keep your entire workflow in R and call other programs as needed.  
 #' 
+#' For example, it's common to aquire data in different spatial _projections_ that need to be reprojected to a common format prior to analysis.
+#' 
+#' ![Projection Figure](projection.png) [Figure from ESRI](http://webhelp.esri.com/arcgisexplorer/2012/en/map_projections.htm)
+#' 
+#' A great tool for this is [`gdalwarp`](http://www.gdal.org/gdalwarp.html), which can also mosaic multiple images and perform simple resampling procedures (such as taking the mean of multiple overlapping images).
+#' 
+#' Let's use it to project the cropped image from WGS84 (latitude-longitude) to an equal area projection that may be more suitable for modeling.  Since the cropped region is from South America, let's use the [South America albers equal area conic](http://spatialreference.org/ref/esri/south-america-albers-equal-area-conic/).  
+#' 
+#' First define the projection parameters [from here](http://spatialreference.org/ref/esri/south-america-albers-equal-area-conic/):
 ## ------------------------------------------------------------------------
-command=paste0("gdalwarp -r cubic -t_srs '+proj=utm +zone=11 +datum=WGS84' ",outputdir,"/cropped.tif", " ",outputdir,"/reprojected.tif ")
+tsrs="+proj=aea +lat_1=-5 +lat_2=-42 +lat_0=-32 +lon_0=-60 +x_0=0 +y_0=0 +ellps=aust_SA +units=m +no_defs"
+
+#' 
+#' Then use `paste0` to build the text string:
+## ------------------------------------------------------------------------
+command=paste0("gdalwarp -r cubic -t_srs '",tsrs,"' ",outputdir,"/cropped.tif", " ",outputdir,"/reprojected.tif ")
+
+#' 
+#' And run it:
+## ------------------------------------------------------------------------
 system(command)
 
 #' 
+#' 
+#' ## Try this:
+#' > Write a `system` command to call `pkfilter` ([from pktools](http://pktools.nongnu.org/html/md_pkfilter.html)) from R to calculate the standard deviation within a 3x3 circular moving window. 
+#' 
+#' Here's a hint:
+#' 
+#' ```
+#' pkfilter -i input.tif -o filter.tif -dx 3 -dy 3 -f stdev -c
+#' ```
+#' 
+## ----, eval=FALSE,echo=FALSE---------------------------------------------
+## system(paste0("pkfilter -dx 3 -dy 3 -f stdev -c -i ",outputdir,"/cropped.tif -o ",outputdir,"/filter.tif"))
+## rsd=raster(paste0(outputdir,"/filter.tif"))
+## plot(rsd)
+
+#' 
+#' 
+#' ## Other example applications of calling external functions from within R:
+#' 
+#' * MaxEnt species distribution modelling package
+#' * Climate data processing with [CDO](https://code.zmaw.de/projects/cdo) and [NCO](http://nco.sourceforge.net)
+#' * [Circuitscape](http://www.circuitscape.org)
+#' 
+#' R can call virtually any program that can be run from the command line!
