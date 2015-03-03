@@ -39,7 +39,7 @@
 #' ```
 #' 
 #' And load the raster package (either from your own privaite library or from mine).
-## ------------------------------------------------------------------------
+## ----,results='hide',message=FALSE---------------------------------------
 library(raster)  # OR, 
 library(raster,lib.loc="/lustre/scratch/client/fas/geodata/aw524/R/")
 
@@ -61,7 +61,7 @@ if(!file.exists(outputdir)) dir.create(outputdir,recursive=T)
 
 #' 
 #' This time, let's look at BIO9, which is the [Mean Temperature of Driest Quarter](http://www.worldclim.org/bioclim):
-## ------------------------------------------------------------------------
+## ----,message=FALSE------------------------------------------------------
 ## first define the path to the data:
 file=paste0(datadir,"/bio_9.bil") 
 ## now use that to load the raster dataset:

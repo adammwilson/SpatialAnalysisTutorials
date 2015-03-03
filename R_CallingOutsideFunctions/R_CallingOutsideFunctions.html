@@ -141,7 +141,7 @@ r1</code></pre>
 ## values      : 58, 281  (min, max)</code></pre>
 <p>To call functions using the <code>system</code> command, you first need to <em>assemble</em> the text string equivalent to what you would run on the command line outside of R. For example:</p>
 <pre class="r"><code>paste0(&quot;gdal_translate -projwin -77 7 -74.5 6 &quot;,file, &quot; &quot;,outputdir,&quot;/cropped.tif&quot;)</code></pre>
-<pre><code>## [1] &quot;gdal_translate -projwin -77 7 -74.5 6 ~/Downloads/bio1-9_30s_bil/bio_9.bil ~/scratch/data/cropped.tif&quot;</code></pre>
+<pre><code>## [1] &quot;gdal_translate -projwin -77 7 -74.5 6 ~/Downloads/bio1-9_30s_bil/bio_9.bil ~/scratch/data/tmp/cropped.tif&quot;</code></pre>
 <p>We can save that as an object and <em>wrap</em> it in with a <code>system()</code> call to actually run it:</p>
 <pre class="r"><code>cmd=paste0(&quot;gdal_translate -projwin -77 7 -74.5 6 &quot;,file, &quot; &quot;,outputdir,&quot;/cropped.tif&quot;)
 system(cmd)</code></pre>
@@ -159,7 +159,7 @@ system(cmd)</code></pre>
     paste0(&quot;gdal_translate -projwin -77 7 -74.5 6 &quot;,file, &quot; &quot;,outputdir,&quot;/cropped.tif&quot;)
     )
   )</code></pre>
-<p>The <code>crop</code> command took 0.141 seconds, while <code>gdal_translate</code> took 0.021. That’s a 85.1X speedup! And, actually, that’s not quite fair to <code>gdal_translate</code> because <code>crop</code> is keeping the result in RAM (and not writing to disk). Whether this matters to you depends on the scale of your project.</p>
+<p>The <code>crop</code> command took 0.09 seconds, while <code>gdal_translate</code> took 0.02. That’s a 77.8X speedup! And, actually, that’s not quite fair to <code>gdal_translate</code> because <code>crop</code> is keeping the result in RAM (and not writing to disk). Whether this matters to you depends on the scale of your project.</p>
 </div>
 </div>
 <div id="another-example-gdalwarp" class="section level2">

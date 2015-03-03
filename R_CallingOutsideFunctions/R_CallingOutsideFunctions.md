@@ -108,7 +108,7 @@ paste0("gdal_translate -projwin -77 7 -74.5 6 ",file, " ",outputdir,"/cropped.ti
 ```
 
 ```
-## [1] "gdal_translate -projwin -77 7 -74.5 6 ~/Downloads/bio1-9_30s_bil/bio_9.bil ~/scratch/data/cropped.tif"
+## [1] "gdal_translate -projwin -77 7 -74.5 6 ~/Downloads/bio1-9_30s_bil/bio_9.bil ~/scratch/data/tmp/cropped.tif"
 ```
 
 We can save that as an object and _wrap_ it in with a `system()` call to actually run it:
@@ -145,7 +145,7 @@ t2=system.time(
   )
 ```
 
-The `crop` command took 0.141 seconds, while `gdal_translate` took 0.021.  That's a 85.1X speedup!  And, actually, that's not quite fair to `gdal_translate` because `crop` is keeping the result in RAM (and not writing to disk).  Whether this matters to you depends on the scale of your project.
+The `crop` command took 0.09 seconds, while `gdal_translate` took 0.02.  That's a 77.8X speedup!  And, actually, that's not quite fair to `gdal_translate` because `crop` is keeping the result in RAM (and not writing to disk).  Whether this matters to you depends on the scale of your project.
 
 
 ## Another example: gdalwarp

@@ -15,7 +15,7 @@ input  = knitr::current_input()  # filename of input document
 output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
 knitr::purl(input,output,documentation=2,quiet=T)
 repo="adammwilson/SpatialAnalysisTutorials/blob/master/R_RasterIntroduction"
-knitr::opts_chunk$set(cache=T)
+knitr::opts_chunk$set(cache=F)
 
 Sys.setenv(PATH="/Library/Frameworks/GDAL.framework/Programs/:/Library/Frameworks/Python.framework/Versions/2.7/bin:/Applications/:${PATH}")
 ```
@@ -29,7 +29,7 @@ This script is available:
   [here](`r paste0("https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/R_RasterIntroduction/",output)`)
 
 ## Language/software integration
-![Workflow Figure](Workflow.png)
+![Workflow Figure](workflow.png)
 With scripting languages it is possible to link together various software and create unified workflows.
 
 ### Various options for _primary_ language of a script
@@ -48,7 +48,7 @@ source .bashrc
 ```
 
 And load the raster package (either from your own privaite library or from mine).
-```{r}
+```{r,results='hide',message=FALSE}
 library(raster)  # OR, 
 library(raster,lib.loc="/lustre/scratch/client/fas/geodata/aw524/R/")
 ```
@@ -70,7 +70,7 @@ if(!file.exists(outputdir)) dir.create(outputdir,recursive=T)
 ```
 
 This time, let's look at BIO9, which is the [Mean Temperature of Driest Quarter](http://www.worldclim.org/bioclim):
-```{r}
+```{r,message=FALSE}
 ## first define the path to the data:
 file=paste0(datadir,"/bio_9.bil") 
 ## now use that to load the raster dataset:
