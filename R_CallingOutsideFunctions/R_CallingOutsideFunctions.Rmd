@@ -29,7 +29,7 @@ This script is available:
   [here](`r paste0("https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/R_RasterIntroduction/",output)`)
 
 ## Language/software integration
-![Workflow Figure](workflow.png)
+![Workflow Figure](Workflow.png)
 With scripting languages it is possible to link together various software and create unified workflows.
 
 ### Various options for _primary_ language of a script
