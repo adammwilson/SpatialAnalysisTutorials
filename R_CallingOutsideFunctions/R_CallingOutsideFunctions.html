@@ -62,7 +62,10 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <ul>
 <li><a href="#starting-r-on-omega">Starting R on Omega</a></li>
 <li><a href="#work-with-climate-data">Work with climate data</a></li>
-<li><a href="#calling-outside-functions">Calling outside functions</a></li>
+<li><a href="#calling-outside-functions">Calling outside functions</a><ul>
+<li><a href="#processing-speed">Processing speed</a></li>
+</ul></li>
+<li><a href="#another-example-gdalwarp">Another example: gdalwarp</a></li>
 </ul>
 </div>
 
@@ -74,31 +77,79 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 </ul>
 <div id="starting-r-on-omega" class="section level2">
 <h2>Starting R on Omega</h2>
-<p>Remember to <code>source</code> the .bashrc file:</p>
+<p>Remember to <code>source</code> the .bashrc file at the <code>$</code> prompt:</p>
 <pre><code>source .bashrc</code></pre>
-<pre class="r"><code>library(raster)</code></pre>
-<pre><code>## Loading required package: sp</code></pre>
-<pre class="r"><code>library(raster,lib.loc=&quot;/lustre/scratch/client/fas/geodata/aw524/R/&quot;)</code></pre>
+<p>And load the raster package (either from your own privaite library or from mine).</p>
+<pre class="r"><code>library(raster)  # OR, 
+library(raster,lib.loc=&quot;/lustre/scratch/client/fas/geodata/aw524/R/&quot;)</code></pre>
 </div>
 <div id="work-with-climate-data" class="section level2">
 <h2>Work with climate data</h2>
 <p>First set the path to the data directory. You’ll need to uncomment the line setting the directory to <code>lustre/...</code>.</p>
 <pre class="r"><code>datadir=&quot;~/Downloads/bio1-9_30s_bil&quot;
-#datadir=&quot;/lustre/scratch/client/fas/geodata/aw524/data/&quot;</code></pre>
-<pre class="r"><code>file=paste0(datadir,&quot;/bio_9.bil&quot;)
+#datadir=&quot;/lustre/scratch/client/fas/geodata/aw524/data/&quot;
+
+outputdir=&quot;~/scratch/data&quot;
+if(!file.exists(outputdir)) dir.create(outputdir,recursive=T)</code></pre>
+<p>This time, let’s look at BIO9, which is the <a href="http://www.worldclim.org/bioclim">Mean Temperature of Driest Quarter</a>:</p>
+<pre class="r"><code>## first define the path to the data:
+file=paste0(datadir,&quot;/bio_9.bil&quot;) 
 ## now use that to load the raster dataset:
-tmean=raster(file)</code></pre>
-<pre><code>## rgdal: version: 0.8-16, (SVN revision 498)
-## Geospatial Data Abstraction Library extensions to R successfully loaded
-## Loaded GDAL runtime: GDAL 1.11.0, released 2014/04/16
-## Path to GDAL shared files: /Library/Frameworks/R.framework/Versions/3.1/Resources/library/rgdal/gdal
-## Loaded PROJ.4 runtime: Rel. 4.8.0, 6 March 2012, [PJ_VERSION: 480]
-## Path to PROJ.4 shared files: /Library/Frameworks/R.framework/Versions/3.1/Resources/library/rgdal/proj</code></pre>
+data=raster(file)
+data</code></pre>
+<pre><code>## class       : RasterLayer 
+## dimensions  : 18000, 43200, 777600000  (nrow, ncol, ncell)
+## resolution  : 0.008333333, 0.008333333  (x, y)
+## extent      : -180, 180, -60, 90  (xmin, xmax, ymin, ymax)
+## coord. ref. : +proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs 
+## data source : /Users/adamw/Downloads/bio1-9_30s_bil/bio_9.bil 
+## names       : bio_9 
+## values      : -521, 366  (min, max)</code></pre>
 </div>
 <div id="calling-outside-functions" class="section level2">
 <h2>Calling outside functions</h2>
 <p>R can do almost anything, but it isn’t always the fastest at it… For example, let’s compare cropping a tif file using the <code>raster</code> package and <code>gdal_translate</code>:</p>
-<p>`</p>
+<p>First let’s do it using the <code>crop</code> function:</p>
+<pre class="r"><code>r1 = crop(data, extent(-77,-74.5,6,7))
+r1</code></pre>
+<pre><code>## class       : RasterLayer 
+## dimensions  : 120, 300, 36000  (nrow, ncol, ncell)
+## resolution  : 0.008333333, 0.008333333  (x, y)
+## extent      : -77, -74.5, 6, 7  (xmin, xmax, ymin, ymax)
+## coord. ref. : +proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs 
+## data source : in memory
+## names       : bio_9 
+## values      : 58, 281  (min, max)</code></pre>
+<p>To call functions using the <code>system</code> command, you first need to <em>assemble</em> the text string equivalent to what you would run on the command line outside of R. For example:</p>
+<pre class="r"><code>paste0(&quot;gdal_translate -projwin -77 7 -74.5 6 &quot;,file, &quot; &quot;,outputdir,&quot;/cropped.tif&quot;)</code></pre>
+<pre><code>## [1] &quot;gdal_translate -projwin -77 7 -74.5 6 ~/Downloads/bio1-9_30s_bil/bio_9.bil ~/scratch/data/cropped.tif&quot;</code></pre>
+<p>We can save that as an object and <em>wrap</em> it in with a <code>system()</code> call to actually run it:</p>
+<pre class="r"><code>cmd=paste0(&quot;gdal_translate -projwin -77 7 -74.5 6 &quot;,file, &quot; &quot;,outputdir,&quot;/cropped.tif&quot;)
+system(cmd)</code></pre>
+<p>Or even do it all at once. The depth of nested commands is a matter of personal taste (being consise vs. being clear).</p>
+<pre class="r"><code>system(paste0(&quot;gdal_translate -projwin -77 7 -74.5 6 &quot;,file, &quot; &quot;,outputdir,&quot;/cropped.tif&quot;))</code></pre>
+<div id="processing-speed" class="section level3">
+<h3>Processing speed</h3>
+<p>To compare processing speed, let’s use the <code>system.time</code> function to record how long the operation takes. To make it fair, we’ll write the output tif to disk (rather than keeping it in RAM).</p>
+<pre class="r"><code>t1=system.time(
+  r1 &lt;&lt;- crop(data,
+              extent(-77,-74.5,6,7),
+              file=paste0(outputdir,&quot;/cropped.tif&quot;),
+              overwrite=T))</code></pre>
+<p>And let’s run it one more time and time it to compare:</p>
+<pre class="r"><code>t2=system.time(
+  system(
+    paste0(&quot;gdal_translate -projwin -77 7 -74.5 6 &quot;,file, &quot; &quot;,outputdir,&quot;/cropped.tif&quot;)
+    )
+  )</code></pre>
+<p>The <code>crop</code> command took 0.15 seconds, while <code>gdal_translate</code> took 0.019. That’s a 87.3X speedup! Whether this matters to you depends on the scale of your project.</p>
+</div>
+</div>
+<div id="another-example-gdalwarp" class="section level2">
+<h2>Another example: gdalwarp</h2>
+<p>But there are programs that go beyond the existing functionality of R, so <code>system()</code> can be a useful way to keep your entire workflow in R and call other programs as needed. For example, it’s common to aquire data in different spatial <em>projections</em> that need to be reprojected to a common format prior to analysis. A great tool for this is <code>gdalwarp</code>, which can also mosaic and perform some simple mosaicing procedures (such as taking the mean of multiple layers).</p>
+<pre class="r"><code>command=paste0(&quot;gdalwarp -r cubic -t_srs '+proj=utm +zone=11 +datum=WGS84' &quot;,outputdir,&quot;/cropped.tif&quot;, &quot; &quot;,outputdir,&quot;/reprojected.tif &quot;)
+system(command)</code></pre>
 </div>
 
 
