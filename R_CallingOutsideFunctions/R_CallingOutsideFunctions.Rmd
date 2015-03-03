@@ -1,5 +1,5 @@
 ---
-title: "Introduction to Raster Package"
+title: "Language/software integration"
 author: "Adam M. Wilson"
 date: "March 3, 2015"
 output: 
