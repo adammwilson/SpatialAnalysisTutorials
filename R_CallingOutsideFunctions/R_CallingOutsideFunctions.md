@@ -14,7 +14,7 @@ This script is available:
   [here](https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/R_RasterIntroduction/R_CallingOutsideFunctions.R)
 
 ## Language/software integration
-![Workflow Figure](workflow.png)
+![Workflow Figure](Workflow.png)
 With scripting languages it is possible to link together various software and create unified workflows.
 
 ### Various options for _primary_ language of a script
@@ -145,7 +145,7 @@ t2=system.time(
   )
 ```
 
-The `crop` command took 0.09 seconds, while `gdal_translate` took 0.02.  That's a 77.8X speedup!  And, actually, that's not quite fair to `gdal_translate` because `crop` is keeping the result in RAM (and not writing to disk).  Whether this matters to you depends on the scale of your project.
+The `crop` command took 0.094 seconds, while `gdal_translate` took 0.022.  That's a 76.6X speedup!  And, actually, that's not quite fair to `gdal_translate` because `crop` is keeping the result in RAM (and not writing to disk).  Whether this matters to you depends on the scale of your project.
 
 
 ## Another example: gdalwarp
