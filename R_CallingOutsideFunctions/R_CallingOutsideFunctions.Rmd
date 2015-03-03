@@ -27,7 +27,18 @@ This script is available:
   * [SpatialAnalysisTutorials repository](`r paste0("http://github.com/",repo)`)
   * Plain text (.R) with commented text 
   [here](`r paste0("https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/R_RasterIntroduction/",output)`)
- 
+
+## Language/software integration
+![Workflow Figure](workflow.png)
+With scripting languages it is possible to link together various software and create unified workflows.
+
+### Various options for _primary_ language of a script
+
+* BASH as primary language, call others (R, Python, etc.) as needed
+* R as primary, call others (BASH, Python, etc.) as needed
+* Python as primary, etc.
+
+Which is best depends on your priorities:  processing speed, interoperability, ease of coding, code content...
 
 ## Starting R on Omega
 
