@@ -1,6 +1,6 @@
 # Introduction to Raster Package
 Adam M. Wilson  
-February 23, 2015  
+March 3, 2015  
 
 
 
@@ -146,7 +146,7 @@ t2=system.time(
   )
 ```
 
-The `crop` command took 0.095 seconds, while `gdal_translate` took 0.022.  That's a 76.8X speedup!  And, actually, that's not quite fair to `gdal_translate` because `crop` is keeping the result in RAM (and not writing to disk).  Whether this matters to you depends on the scale of your project.
+The `crop` command took 0.09 seconds, while `gdal_translate` took 0.021.  That's a 76.7X speedup!  And, actually, that's not quite fair to `gdal_translate` because `crop` is keeping the result in RAM (and not writing to disk).  Whether this matters to you depends on the scale of your project.
 
 
 ## Another example: gdalwarp

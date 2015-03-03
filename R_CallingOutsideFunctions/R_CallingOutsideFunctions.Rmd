@@ -1,7 +1,7 @@
 ---
 title: "Introduction to Raster Package"
 author: "Adam M. Wilson"
-date: "February 23, 2015"
+date: "March 3, 2015"
 output: 
   html_document:
     toc: true
