@@ -27,9 +27,10 @@ Which is best depends on your priorities:  processing speed, interoperability, e
 
 ## Starting R on Omega
 
-Remember to `source` the .bashrc file at the `$` prompt:
+Remember to `source` the .bashrc file at the `$` prompt and then start `R`.
 ```{}
 source .bashrc
+R
 ```
 
 And load the raster package (either from your own privaite library or from mine).
@@ -145,7 +146,7 @@ t2=system.time(
   )
 ```
 
-The `crop` command took 0.094 seconds, while `gdal_translate` took 0.022.  That's a 76.6X speedup!  And, actually, that's not quite fair to `gdal_translate` because `crop` is keeping the result in RAM (and not writing to disk).  Whether this matters to you depends on the scale of your project.
+The `crop` command took 0.095 seconds, while `gdal_translate` took 0.021.  That's a 77.9X speedup!  And, actually, that's not quite fair to `gdal_translate` because `crop` is keeping the result in RAM (and not writing to disk).  Whether this matters to you depends on the scale of your project.
 
 
 ## Another example: gdalwarp
@@ -159,7 +160,7 @@ A great tool for this is [`gdalwarp`](http://www.gdal.org/gdalwarp.html), which 
 
 Let's use it to project the cropped image from WGS84 (latitude-longitude) to an equal area projection that may be more suitable for modeling.  Since the cropped region is from South America, let's use the [South America albers equal area conic](http://spatialreference.org/ref/esri/south-america-albers-equal-area-conic/).  
 
-First define the projection parameters [from here](http://spatialreference.org/ref/esri/south-america-albers-equal-area-conic/):
+First, define the projection parameters in [proj4](http://trac.osgeo.org/proj/) format [from here](http://spatialreference.org/ref/esri/south-america-albers-equal-area-conic/):
 
 ```r
 tsrs="+proj=aea +lat_1=-5 +lat_2=-42 +lat_0=-32 +lon_0=-60 +x_0=0 +y_0=0 +ellps=aust_SA +units=m +no_defs"
@@ -168,7 +169,13 @@ tsrs="+proj=aea +lat_1=-5 +lat_2=-42 +lat_0=-32 +lon_0=-60 +x_0=0 +y_0=0 +ellps=
 Then use `paste0` to build the text string:
 
 ```r
-command=paste0("gdalwarp -r cubic -t_srs '",tsrs,"' ",outputdir,"/cropped.tif", " ",outputdir,"/reprojected.tif ")
+command=paste0("gdalwarp -r cubic -t_srs '",tsrs,"' ",
+               outputdir,"/cropped.tif", " ",outputdir,"/reprojected.tif ")
+command
+```
+
+```
+## [1] "gdalwarp -r cubic -t_srs '+proj=aea +lat_1=-5 +lat_2=-42 +lat_0=-32 +lon_0=-60 +x_0=0 +y_0=0 +ellps=aust_SA +units=m +no_defs' ~/scratch/data/tmp/cropped.tif ~/scratch/data/tmp/reprojected.tif "
 ```
 
 And run it:
@@ -177,6 +184,7 @@ And run it:
 system(command)
 ```
 
+If you had many files to process, you could also  _wrap_ that system call in a [`foreach` loop](http://trac.osgeo.org/proj/) to use multiple processors simutaneously.  
 
 ## Try this:
 > Write a `system` command to call `pkfilter` ([from pktools](http://pktools.nongnu.org/html/md_pkfilter.html)) from R to calculate the standard deviation within a 3x3 circular moving window. 
@@ -195,5 +203,6 @@ pkfilter -i input.tif -o filter.tif -dx 3 -dy 3 -f stdev -c
 * MaxEnt species distribution modelling package
 * Climate data processing with [CDO](https://code.zmaw.de/projects/cdo) and [NCO](http://nco.sourceforge.net)
 * [Circuitscape](http://www.circuitscape.org)
+* [GRASS GIS](http://grass.osgeo.org)
 
 R can call virtually any program that can be run from the command line!

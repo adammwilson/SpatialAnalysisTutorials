@@ -33,9 +33,10 @@
 #' 
 #' ## Starting R on Omega
 #' 
-#' Remember to `source` the .bashrc file at the `$` prompt:
+#' Remember to `source` the .bashrc file at the `$` prompt and then start `R`.
 #' ```{}
 #' source .bashrc
+#' R
 #' ```
 #' 
 #' And load the raster package (either from your own privaite library or from mine).
@@ -129,14 +130,16 @@ t2=system.time(
 #' 
 #' Let's use it to project the cropped image from WGS84 (latitude-longitude) to an equal area projection that may be more suitable for modeling.  Since the cropped region is from South America, let's use the [South America albers equal area conic](http://spatialreference.org/ref/esri/south-america-albers-equal-area-conic/).  
 #' 
-#' First define the projection parameters [from here](http://spatialreference.org/ref/esri/south-america-albers-equal-area-conic/):
+#' First, define the projection parameters in [proj4](http://trac.osgeo.org/proj/) format [from here](http://spatialreference.org/ref/esri/south-america-albers-equal-area-conic/):
 ## ------------------------------------------------------------------------
 tsrs="+proj=aea +lat_1=-5 +lat_2=-42 +lat_0=-32 +lon_0=-60 +x_0=0 +y_0=0 +ellps=aust_SA +units=m +no_defs"
 
 #' 
 #' Then use `paste0` to build the text string:
 ## ------------------------------------------------------------------------
-command=paste0("gdalwarp -r cubic -t_srs '",tsrs,"' ",outputdir,"/cropped.tif", " ",outputdir,"/reprojected.tif ")
+command=paste0("gdalwarp -r cubic -t_srs '",tsrs,"' ",
+               outputdir,"/cropped.tif", " ",outputdir,"/reprojected.tif ")
+command
 
 #' 
 #' And run it:
@@ -144,6 +147,7 @@ command=paste0("gdalwarp -r cubic -t_srs '",tsrs,"' ",outputdir,"/cropped.tif", 
 system(command)
 
 #' 
+#' If you had many files to process, you could also  _wrap_ that system call in a [`foreach` loop](http://trac.osgeo.org/proj/) to use multiple processors simutaneously.  
 #' 
 #' ## Try this:
 #' > Write a `system` command to call `pkfilter` ([from pktools](http://pktools.nongnu.org/html/md_pkfilter.html)) from R to calculate the standard deviation within a 3x3 circular moving window. 
@@ -166,5 +170,6 @@ system(command)
 #' * MaxEnt species distribution modelling package
 #' * Climate data processing with [CDO](https://code.zmaw.de/projects/cdo) and [NCO](http://nco.sourceforge.net)
 #' * [Circuitscape](http://www.circuitscape.org)
+#' * [GRASS GIS](http://grass.osgeo.org)
 #' 
 #' R can call virtually any program that can be run from the command line!
