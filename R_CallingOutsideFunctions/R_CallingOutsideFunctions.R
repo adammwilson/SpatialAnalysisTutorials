@@ -158,7 +158,7 @@ system(command)
 #' pkfilter -i input.tif -o filter.tif -dx 3 -dy 3 -f stdev -c
 #' ```
 #' 
-## ----, eval=FALSE,echo=FALSE---------------------------------------------
+## ----, eval=FALSE,echo=TRUE----------------------------------------------
 ## system(paste0("pkfilter -dx 3 -dy 3 -f stdev -c -i ",outputdir,"/cropped.tif -o ",outputdir,"/filter.tif"))
 ## rsd=raster(paste0(outputdir,"/filter.tif"))
 ## plot(rsd)

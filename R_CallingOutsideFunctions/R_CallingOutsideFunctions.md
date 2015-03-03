@@ -146,7 +146,7 @@ t2=system.time(
   )
 ```
 
-The `crop` command took 0.096 seconds, while `gdal_translate` took 0.02.  That's a 79.2X speedup!  And, actually, that's not quite fair to `gdal_translate` because `crop` is keeping the result in RAM (and not writing to disk).  Whether this matters to you depends on the scale of your project.
+The `crop` command took 0.089 seconds, while `gdal_translate` took 0.02.  That's a 77.5X speedup!  And, actually, that's not quite fair to `gdal_translate` because `crop` is keeping the result in RAM (and not writing to disk).  Whether this matters to you depends on the scale of your project.
 
 
 ## Another example: gdalwarp
@@ -196,6 +196,11 @@ pkfilter -i input.tif -o filter.tif -dx 3 -dy 3 -f stdev -c
 ```
 
 
+```r
+system(paste0("pkfilter -dx 3 -dy 3 -f stdev -c -i ",outputdir,"/cropped.tif -o ",outputdir,"/filter.tif"))
+rsd=raster(paste0(outputdir,"/filter.tif"))
+plot(rsd)
+```
 
 
 ## Other example applications of calling external functions from within R:
