@@ -158,7 +158,7 @@ system(command)
 
 If you had many files to process, you could also  _wrap_ that system call in a [`foreach` loop](http://trac.osgeo.org/proj/) to use multiple processors simutaneously.  
 
-## Try this:
+## pktools Example
 > Write a `system` command to call `pkfilter` ([from pktools](http://pktools.nongnu.org/html/md_pkfilter.html)) from R to calculate the standard deviation within a 3x3 circular moving window. 
 
 Here's a hint:
@@ -167,6 +167,8 @@ Here's a hint:
 pkfilter -i input.tif -o filter.tif -dx 3 -dy 3 -f stdev -c
 ```
 
+
+The solution:
 ```{r, eval=FALSE,echo=TRUE}
 system(paste0("pkfilter -dx 3 -dy 3 -f stdev -c -i ",outputdir,"/cropped.tif -o ",outputdir,"/filter.tif"))
 rsd=raster(paste0(outputdir,"/filter.tif"))

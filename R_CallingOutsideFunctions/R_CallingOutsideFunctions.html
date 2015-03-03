@@ -68,7 +68,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <li><a href="#processing-speed">Processing speed</a></li>
 </ul></li>
 <li><a href="#another-example-gdalwarp">Another example: gdalwarp</a></li>
-<li><a href="#try-this">Try this:</a></li>
+<li><a href="#pktools-example">pktools Example</a></li>
 <li><a href="#other-example-applications-of-calling-external-functions-from-within-r">Other example applications of calling external functions from within R:</a></li>
 </ul>
 </div>
@@ -159,7 +159,7 @@ system(cmd)</code></pre>
     paste0(&quot;gdal_translate -projwin -77 7 -74.5 6 &quot;,file, &quot; &quot;,outputdir,&quot;/cropped.tif&quot;)
     )
   )</code></pre>
-<p>The <code>crop</code> command took 0.089 seconds, while <code>gdal_translate</code> took 0.02. That’s a 77.5X speedup! And, actually, that’s not quite fair to <code>gdal_translate</code> because <code>crop</code> is keeping the result in RAM (and not writing to disk). Whether this matters to you depends on the scale of your project.</p>
+<p>The <code>crop</code> command took 0.089 seconds, while <code>gdal_translate</code> took 0.022. That’s a 75.3X speedup! And, actually, that’s not quite fair to <code>gdal_translate</code> because <code>crop</code> is keeping the result in RAM (and not writing to disk). Whether this matters to you depends on the scale of your project.</p>
 </div>
 </div>
 <div id="another-example-gdalwarp" class="section level2">
@@ -180,13 +180,14 @@ command</code></pre>
 <pre class="r"><code>system(command)</code></pre>
 <p>If you had many files to process, you could also <em>wrap</em> that system call in a <a href="http://trac.osgeo.org/proj/"><code>foreach</code> loop</a> to use multiple processors simutaneously.</p>
 </div>
-<div id="try-this" class="section level2">
-<h2>Try this:</h2>
+<div id="pktools-example" class="section level2">
+<h2>pktools Example</h2>
 <blockquote>
 <p>Write a <code>system</code> command to call <code>pkfilter</code> (<a href="http://pktools.nongnu.org/html/md_pkfilter.html">from pktools</a>) from R to calculate the standard deviation within a 3x3 circular moving window.</p>
 </blockquote>
 <p>Here’s a hint:</p>
 <pre><code>pkfilter -i input.tif -o filter.tif -dx 3 -dy 3 -f stdev -c</code></pre>
+<p>The solution:</p>
 <pre class="r"><code>system(paste0(&quot;pkfilter -dx 3 -dy 3 -f stdev -c -i &quot;,outputdir,&quot;/cropped.tif -o &quot;,outputdir,&quot;/filter.tif&quot;))
 rsd=raster(paste0(outputdir,&quot;/filter.tif&quot;))
 plot(rsd)</code></pre>

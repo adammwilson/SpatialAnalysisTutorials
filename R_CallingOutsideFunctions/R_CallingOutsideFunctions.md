@@ -146,7 +146,7 @@ t2=system.time(
   )
 ```
 
-The `crop` command took 0.089 seconds, while `gdal_translate` took 0.02.  That's a 77.5X speedup!  And, actually, that's not quite fair to `gdal_translate` because `crop` is keeping the result in RAM (and not writing to disk).  Whether this matters to you depends on the scale of your project.
+The `crop` command took 0.089 seconds, while `gdal_translate` took 0.022.  That's a 75.3X speedup!  And, actually, that's not quite fair to `gdal_translate` because `crop` is keeping the result in RAM (and not writing to disk).  Whether this matters to you depends on the scale of your project.
 
 
 ## Another example: gdalwarp
@@ -186,7 +186,7 @@ system(command)
 
 If you had many files to process, you could also  _wrap_ that system call in a [`foreach` loop](http://trac.osgeo.org/proj/) to use multiple processors simutaneously.  
 
-## Try this:
+## pktools Example
 > Write a `system` command to call `pkfilter` ([from pktools](http://pktools.nongnu.org/html/md_pkfilter.html)) from R to calculate the standard deviation within a 3x3 circular moving window. 
 
 Here's a hint:
@@ -195,6 +195,8 @@ Here's a hint:
 pkfilter -i input.tif -o filter.tif -dx 3 -dy 3 -f stdev -c
 ```
 
+
+The solution:
 
 ```r
 system(paste0("pkfilter -dx 3 -dy 3 -f stdev -c -i ",outputdir,"/cropped.tif -o ",outputdir,"/filter.tif"))
