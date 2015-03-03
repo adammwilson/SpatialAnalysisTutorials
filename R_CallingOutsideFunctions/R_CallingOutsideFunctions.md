@@ -1,6 +1,12 @@
-# Introduction to Raster Package
-Adam M. Wilson  
-February 23, 2015  
+---
+title: "Introduction to Raster Package"
+author: "Adam M. Wilson"
+date: "February 23, 2015"
+output: 
+  html_document:
+    toc: true
+    keep_md: true
+---
 
 
 
@@ -28,11 +34,15 @@ library(raster)
 ```
 
 ```
-## Loading required package: sp
+## Error in library(raster): there is no package called 'raster'
 ```
 
 ```r
 library(raster,lib.loc="/lustre/scratch/client/fas/geodata/aw524/R/")
+```
+
+```
+## Loading required package: sp
 ```
 
 ## Work with climate data
@@ -43,28 +53,61 @@ First set the path to the data directory.  You'll need to uncomment the line set
 ```r
 datadir="~/Downloads/bio1-9_30s_bil"
 #datadir="/lustre/scratch/client/fas/geodata/aw524/data/"
+
+outputdir="~/scratch/data"
+if(!file.exists(outputdir)) dir.create(outputdir,recursive=T)
 ```
 
 
 
 ```r
-file=paste0(datadir,"/bio_9.bil")
+file=paste0(datadir,"/bio_9.bil") 
 ## now use that to load the raster dataset:
 tmean=raster(file)
 ```
 
 ```
-## rgdal: version: 0.8-16, (SVN revision 498)
-## Geospatial Data Abstraction Library extensions to R successfully loaded
-## Loaded GDAL runtime: GDAL 1.11.0, released 2014/04/16
-## Path to GDAL shared files: /Library/Frameworks/R.framework/Versions/3.1/Resources/library/rgdal/gdal
-## Loaded PROJ.4 runtime: Rel. 4.8.0, 6 March 2012, [PJ_VERSION: 480]
-## Path to PROJ.4 shared files: /Library/Frameworks/R.framework/Versions/3.1/Resources/library/rgdal/proj
+## Loading required namespace: rgdal
+```
+
+```
+## Error in .rasterObjectFromFile(x, band = band, objecttype = "RasterLayer", : Cannot create a RasterLayer object from this file. (file does not exist)
 ```
 
 
 ## Calling outside functions
 R can do almost anything, but it isn't always the fastest at it...  For example, let's compare cropping a tif file using the `raster` package and `gdal_translate`:
 
-`
 
+```r
+system.time(r1 <<- crop(tmean, extent(-77,-74.5,6,7)))
+```
+
+```
+## Error in crop(tmean, extent(-77, -74.5, 6, 7)): error in evaluating the argument 'x' in selecting a method for function 'crop': Error: object 'tmean' not found
+```
+
+```
+## Timing stopped at: 0.001 0 0.001
+```
+
+```r
+system.time(system(paste0("gdal_translate -projwin -77 7 -74.5 6 ",file, " ",outputdir,"/cropped.tif")))
+```
+
+```
+##    user  system elapsed 
+##   0.001   0.009   0.011
+```
+
+
+But there are programs that go beyond the existing functionality of R, so `system()` can be a useful way to keep your entire workflow in R and call other programs as needed.  For example, pkfilter 
+
+```r
+system.time(system(paste0("pkfilter -i ",file," -o test.tif -f stdev")))
+```
+
+```
+##    user  system elapsed 
+##   0.002   0.007   0.010
+```
