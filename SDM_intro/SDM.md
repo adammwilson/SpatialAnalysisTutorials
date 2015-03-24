@@ -427,6 +427,7 @@ htmlreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)
 1.  In this example we treated eBird _non-detections_ as _absences_ when the probability of detection given presence can be much less than zero. What are the chances that an observer would see a species in a 1km grid cell if it were present there?  
 2. We ignored the spatial autocorrelation in species presences and treated each observation as an independent sample.  How can we account for this in SDMs?
 
+Walter will provide some additional readings on the opportunities and challenges of Species Distribution Modeling.  The vignette from the [`dismo` package is also a great resource.](http://cran.r-project.org/web/packages/dismo/vignettes/sdm.pdf)
 
 # Summary
 
