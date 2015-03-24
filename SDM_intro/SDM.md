@@ -318,7 +318,7 @@ In general, it is a good idea to use k-fold data partitioning instead of using t
 Summarize model output.
 
 ```r
-htmlreg(list(m1,m2),digits = 7,star.symbol="\\*",doctype=FALSE,align.center=TRUE)
+htmlreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)
 ```
 
 
@@ -331,8 +331,8 @@ htmlreg(list(m1,m2),digits = 7,star.symbol="\\*",doctype=FALSE,align.center=TRUE
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;">(Intercept)</td>
-    <td style="padding-right: 12px; border: none;">-19.3409971<sup style="vertical-align: 4px;">\*\*\*</sup></td>
-    <td style="padding-right: 12px; border: none;">-20.8260992<sup style="vertical-align: 4px;">\*\*\*</sup></td>
+    <td style="padding-right: 12px; border: none;">-19.3409971<sup style="vertical-align: 4px;">***</sup></td>
+    <td style="padding-right: 12px; border: none;">-20.8260992<sup style="vertical-align: 4px;">***</sup></td>
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;"></td>
@@ -341,8 +341,8 @@ htmlreg(list(m1,m2),digits = 7,star.symbol="\\*",doctype=FALSE,align.center=TRUE
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;">cld</td>
-    <td style="padding-right: 12px; border: none;">0.0020602<sup style="vertical-align: 4px;">\*\*\*</sup></td>
-    <td style="padding-right: 12px; border: none;">0.0009779<sup style="vertical-align: 4px;">\*\*\*</sup></td>
+    <td style="padding-right: 12px; border: none;">0.0020602<sup style="vertical-align: 4px;">***</sup></td>
+    <td style="padding-right: 12px; border: none;">0.0009779<sup style="vertical-align: 4px;">***</sup></td>
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;"></td>
@@ -352,7 +352,7 @@ htmlreg(list(m1,m2),digits = 7,star.symbol="\\*",doctype=FALSE,align.center=TRUE
   <tr>
     <td style="padding-right: 12px; border: none;">elev</td>
     <td style="padding-right: 12px; border: none;">-0.0000277</td>
-    <td style="padding-right: 12px; border: none;">0.0105170<sup style="vertical-align: 4px;">\*\*\*</sup></td>
+    <td style="padding-right: 12px; border: none;">0.0105170<sup style="vertical-align: 4px;">***</sup></td>
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;"></td>
@@ -372,7 +372,7 @@ htmlreg(list(m1,m2),digits = 7,star.symbol="\\*",doctype=FALSE,align.center=TRUE
   <tr>
     <td style="padding-right: 12px; border: none;">I(elev^2)</td>
     <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">-0.0000036<sup style="vertical-align: 4px;">\*\*\*</sup></td>
+    <td style="padding-right: 12px; border: none;">-0.0000036<sup style="vertical-align: 4px;">***</sup></td>
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;"></td>
@@ -382,7 +382,7 @@ htmlreg(list(m1,m2),digits = 7,star.symbol="\\*",doctype=FALSE,align.center=TRUE
   <tr>
     <td style="padding-right: 12px; border: none;">forest</td>
     <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">0.0003555<sup style="vertical-align: 4px;">\*\*\*</sup></td>
+    <td style="padding-right: 12px; border: none;">0.0003555<sup style="vertical-align: 4px;">***</sup></td>
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;"></td>
@@ -392,7 +392,7 @@ htmlreg(list(m1,m2),digits = 7,star.symbol="\\*",doctype=FALSE,align.center=TRUE
   <tr>
     <td style="padding-right: 12px; border: none;">elev:I(elev^2)</td>
     <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">0.0000000<sup style="vertical-align: 4px;">\*\*\*</sup></td>
+    <td style="padding-right: 12px; border: none;">0.0000000<sup style="vertical-align: 4px;">***</sup></td>
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;"></td>
@@ -425,7 +425,7 @@ htmlreg(list(m1,m2),digits = 7,star.symbol="\\*",doctype=FALSE,align.center=TRUE
     <td style="border-bottom: 2px solid black;">16356</td>
   </tr>
   <tr>
-    <td style="padding-right: 12px; border: none;" colspan="3"><span style="font-size:0.8em"><sup style="vertical-align: 4px;">\*\*\*</sup>p &lt; 0.001, <sup style="vertical-align: 4px;">\*\*</sup>p &lt; 0.01, <sup style="vertical-align: 4px;">\*</sup>p &lt; 0.05</span></td>
+    <td style="padding-right: 12px; border: none;" colspan="3"><span style="font-size:0.8em"><sup style="vertical-align: 4px;">***</sup>p &lt; 0.001, <sup style="vertical-align: 4px;">**</sup>p &lt; 0.01, <sup style="vertical-align: 4px;">*</sup>p &lt; 0.05</span></td>
   </tr>
 </table>
 

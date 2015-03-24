@@ -369,7 +369,7 @@ p=stack(p1,p2); names(p)=c(&quot;Model 1&quot;,&quot;Model 2&quot;)</code></pre>
 <h2>Model Evaluation</h2>
 <p>In general, it is a good idea to use k-fold data partitioning instead of using the data used for fitting. There is a function in the <code>dismo</code> package called <code>kfold</code> that makes this convenient. But for now, we’ll just evaluate on the same data used for fitting.</p>
 <p>Summarize model output.</p>
-<pre class="r"><code>htmlreg(list(m1,m2),digits = 7,star.symbol=&quot;\\*&quot;,doctype=FALSE,align.center=TRUE)</code></pre>
+<pre class="r"><code>htmlreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)</code></pre>
 <table cellspacing="0" align="center" style="border: none;">
   <caption align="bottom" style="margin-top:0.3em;">
 Statistical models
@@ -564,7 +564,7 @@ Num. obs.
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;" colspan="3">
-<span style="font-size:0.8em"><sup style="vertical-align: 4px;">***</sup>p &lt; 0.001, <sup style="vertical-align: 4px;">**</sup>p &lt; 0.01, <sup style="vertical-align: 4px;">*</sup>p &lt; 0.05</span>
+<span style="font-size:0.8em"><sup style="vertical-align: 4px;"><em><strong></sup>p &lt; 0.001, <sup style="vertical-align: 4px;"></strong></sup>p &lt; 0.01, <sup style="vertical-align: 4px;"></em></sup>p &lt; 0.05</span>
 </td>
   </tr>
 </table>
