@@ -322,11 +322,10 @@ In general, it is a good idea to use k-fold data partitioning instead of using t
 Summarize model output.
 
 ```r
-htmlreg(list(m1,m2),digits = 7)
+htmlreg(list(m1,m2),digits = 7,star.symbol="\\*",doctype=FALSE,align.center=TRUE)
 ```
 
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <table cellspacing="0" align="center" style="border: none;">
   <caption align="bottom" style="margin-top:0.3em;">Statistical models</caption>
   <tr>
@@ -336,8 +335,8 @@ htmlreg(list(m1,m2),digits = 7)
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;">(Intercept)</td>
-    <td style="padding-right: 12px; border: none;">-19.3409971<sup style="vertical-align: 4px;">***</sup></td>
-    <td style="padding-right: 12px; border: none;">-20.8260992<sup style="vertical-align: 4px;">***</sup></td>
+    <td style="padding-right: 12px; border: none;">-19.3409971<sup style="vertical-align: 4px;">\*\*\*</sup></td>
+    <td style="padding-right: 12px; border: none;">-20.8260992<sup style="vertical-align: 4px;">\*\*\*</sup></td>
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;"></td>
@@ -346,8 +345,8 @@ htmlreg(list(m1,m2),digits = 7)
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;">cld</td>
-    <td style="padding-right: 12px; border: none;">0.0020602<sup style="vertical-align: 4px;">***</sup></td>
-    <td style="padding-right: 12px; border: none;">0.0009779<sup style="vertical-align: 4px;">***</sup></td>
+    <td style="padding-right: 12px; border: none;">0.0020602<sup style="vertical-align: 4px;">\*\*\*</sup></td>
+    <td style="padding-right: 12px; border: none;">0.0009779<sup style="vertical-align: 4px;">\*\*\*</sup></td>
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;"></td>
@@ -357,7 +356,7 @@ htmlreg(list(m1,m2),digits = 7)
   <tr>
     <td style="padding-right: 12px; border: none;">elev</td>
     <td style="padding-right: 12px; border: none;">-0.0000277</td>
-    <td style="padding-right: 12px; border: none;">0.0105170<sup style="vertical-align: 4px;">***</sup></td>
+    <td style="padding-right: 12px; border: none;">0.0105170<sup style="vertical-align: 4px;">\*\*\*</sup></td>
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;"></td>
@@ -377,7 +376,7 @@ htmlreg(list(m1,m2),digits = 7)
   <tr>
     <td style="padding-right: 12px; border: none;">I(elev^2)</td>
     <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">-0.0000036<sup style="vertical-align: 4px;">***</sup></td>
+    <td style="padding-right: 12px; border: none;">-0.0000036<sup style="vertical-align: 4px;">\*\*\*</sup></td>
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;"></td>
@@ -387,7 +386,7 @@ htmlreg(list(m1,m2),digits = 7)
   <tr>
     <td style="padding-right: 12px; border: none;">forest</td>
     <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">0.0003555<sup style="vertical-align: 4px;">***</sup></td>
+    <td style="padding-right: 12px; border: none;">0.0003555<sup style="vertical-align: 4px;">\*\*\*</sup></td>
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;"></td>
@@ -397,7 +396,7 @@ htmlreg(list(m1,m2),digits = 7)
   <tr>
     <td style="padding-right: 12px; border: none;">elev:I(elev^2)</td>
     <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">0.0000000<sup style="vertical-align: 4px;">***</sup></td>
+    <td style="padding-right: 12px; border: none;">0.0000000<sup style="vertical-align: 4px;">\*\*\*</sup></td>
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;"></td>
@@ -430,38 +429,9 @@ htmlreg(list(m1,m2),digits = 7)
     <td style="border-bottom: 2px solid black;">16356</td>
   </tr>
   <tr>
-    <td style="padding-right: 12px; border: none;" colspan="3"><span style="font-size:0.8em"><sup style="vertical-align: 4px;">***</sup>p &lt; 0.001, <sup style="vertical-align: 4px;">**</sup>p &lt; 0.01, <sup style="vertical-align: 4px;">*</sup>p &lt; 0.05</span></td>
+    <td style="padding-right: 12px; border: none;" colspan="3"><span style="font-size:0.8em"><sup style="vertical-align: 4px;">\*\*\*</sup>p &lt; 0.001, <sup style="vertical-align: 4px;">\*\*</sup>p &lt; 0.01, <sup style="vertical-align: 4px;">\*</sup>p &lt; 0.05</span></td>
   </tr>
 </table>
-
-There is also the `evaluate` function in the `dismo` package that does some useful summaries.
-
-
-```r
-evaluate(points,samplingp,m1,senv)
-```
-
-```
-## class          : ModelEvaluation 
-## n presences    : 3426 
-## n absences     : 12930 
-## AUC            : 0.8985967 
-## cor            : 0.4580749 
-## max TPR+TNR at : -0.7654234
-```
-
-```r
-evaluate(points,samplingp,m2,senv)
-```
-
-```
-## class          : ModelEvaluation 
-## n presences    : 3426 
-## n absences     : 12930 
-## AUC            : 0.9457265 
-## cor            : 0.5643068 
-## max TPR+TNR at : -1.432249
-```
 
 ## Caveats
 

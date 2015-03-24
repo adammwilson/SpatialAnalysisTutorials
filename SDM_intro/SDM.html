@@ -370,8 +370,7 @@ p=stack(p1,p2); names(p)=c(&quot;Model 1&quot;,&quot;Model 2&quot;)</code></pre>
 <h2>Model Evaluation</h2>
 <p>In general, it is a good idea to use k-fold data partitioning instead of using the data used for fitting. There is a function in the <code>dismo</code> package called <code>kfold</code> that makes this convenient. But for now, we’ll just evaluate on the same data used for fitting.</p>
 <p>Summarize model output.</p>
-<pre class="r"><code>htmlreg(list(m1,m2),digits = 7)</code></pre>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<pre class="r"><code>htmlreg(list(m1,m2),digits = 7,star.symbol=&quot;\\*&quot;,doctype=FALSE,align.center=TRUE)</code></pre>
 <table cellspacing="0" align="center" style="border: none;">
   <caption align="bottom" style="margin-top:0.3em;">
 Statistical models
@@ -566,26 +565,11 @@ Num. obs.
   </tr>
   <tr>
     <td style="padding-right: 12px; border: none;" colspan="3">
-<span style="font-size:0.8em"><sup style="vertical-align: 4px;"><em><strong></sup>p &lt; 0.001, <sup style="vertical-align: 4px;"></strong></sup>p &lt; 0.01, <sup style="vertical-align: 4px;"></em></sup>p &lt; 0.05</span>
+<span style="font-size:0.8em"><sup style="vertical-align: 4px;">***</sup>p &lt; 0.001, <sup style="vertical-align: 4px;">**</sup>p &lt; 0.01, <sup style="vertical-align: 4px;">*</sup>p &lt; 0.05</span>
 </td>
   </tr>
 </table>
 
-<p>There is also the <code>evaluate</code> function in the <code>dismo</code> package that does some useful summaries.</p>
-<pre class="r"><code>evaluate(points,samplingp,m1,senv)</code></pre>
-<pre><code>## class          : ModelEvaluation 
-## n presences    : 3426 
-## n absences     : 12930 
-## AUC            : 0.8985967 
-## cor            : 0.4580749 
-## max TPR+TNR at : -0.7654234</code></pre>
-<pre class="r"><code>evaluate(points,samplingp,m2,senv)</code></pre>
-<pre><code>## class          : ModelEvaluation 
-## n presences    : 3426 
-## n absences     : 12930 
-## AUC            : 0.9457265 
-## cor            : 0.5643068 
-## max TPR+TNR at : -1.432249</code></pre>
 </div>
 <div id="caveats" class="section level2">
 <h2>Caveats</h2>
