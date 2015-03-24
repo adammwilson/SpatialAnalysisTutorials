@@ -50,8 +50,8 @@ First set the path to the data directory.  You'll need to uncomment the line set
 
 
 ```r
-datadir="~/work/env/"
-#datadir="/lustre/scratch/client/fas/geodata/aw524/data"
+#datadir="~/work/env/"
+datadir="/lustre/scratch/client/fas/geodata/aw524/data"
 ```
 
 And create an output directory `outputdir` to hold the outputs.  It's a good idea to define these as variables so it's easy to change them later if you move to a different machine.  
