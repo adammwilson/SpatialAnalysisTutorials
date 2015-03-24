@@ -46,6 +46,7 @@ needpackages=packages[!packages%in%rownames(installed.packages())]
 lapply(needpackages,install.packages)
 lapply(packages, require, character.only=T,quietly=T)
 
+rasterOptions(chunksize=1000,maxmemory=1000)
 
 #' 
 #' ## Load climate data
@@ -53,8 +54,8 @@ lapply(packages, require, character.only=T,quietly=T)
 #' First set the path to the data directory.  You'll need to uncomment the line setting the directory to `lustre/...`.
 #' 
 ## ------------------------------------------------------------------------
-#datadir="~/work/env/"
-datadir="/lustre/scratch/client/fas/geodata/aw524/data"
+datadir="~/work/env/"
+#datadir="/lustre/scratch/client/fas/geodata/aw524/data"
 
 #' 
 #' And create an output directory `outputdir` to hold the outputs.  It's a good idea to define these as variables so it's easy to change them later if you move to a different machine.  
@@ -164,10 +165,10 @@ plot(env)
 vars=c("cld","cld_intra","elev","forest")
 
 #' 
-#' Scaling and centering the environmental variables to zero mean and variance of 1, using the ```scale``` function is typically a good idea.  However, with so many people using this node at the same time, we'll skip this memory intensive step and use the unstandardized variables:
-## ----, scaledata---------------------------------------------------------
+#' Scaling and centering the environmental variables to zero mean and variance of 1, using the ```scale``` function is typically a good idea.  However, with so many people using this node at the same time, we'll skip this memory intensive step and use the unstandardized variables.  The downside of this is the regression coefficients are more difficult to interpret.  
+## ----scaledata-----------------------------------------------------------
 #senv=scale(env[[vars]])
-senv=env
+senv=env[[vars]]
 
 #' 
 #' 
@@ -203,10 +204,14 @@ summary(m1)
 #' ### Prediction
 #' 
 #' ## Calculate estimates of p(occurrence) for each cell.  
-#' We can use the `predict` function in the `raster` package to make the predictions across the full raster grid.
+#' We can use the `predict` function in the `raster` package to make the predictions across the full raster grid and save the output.
 #' 
 ## ------------------------------------------------------------------------
-p1=raster::predict(senv,m1,type="response")
+p1=raster::predict(senv,m1,type="response",file=file.path(outputdir,"prediction.grd"),overwrite=T)
+
+#' 
+#' Plot the results as a map:
+## ------------------------------------------------------------------------
 gplot(p1,max=1e5)+geom_tile(aes(fill=value))+
   scale_fill_gradientn(colours=c("blue","green","yellow","orange","red"),na.value = "transparent")+
   geom_polygon(aes(x=long,y=lat,group=group),
@@ -215,11 +220,6 @@ gplot(p1,max=1e5)+geom_tile(aes(fill=value))+
   coord_equal()
 
 #' 
-#' ## Save results
-#' Save the results to a geotif for storage and/or use in another GIS.
-## ------------------------------------------------------------------------
-writeRaster(p1,file=file.path(outputdir,"prediction.grd"),overwrite=T)
-
 #' 
 #' # Summary
 #' 
@@ -228,5 +228,5 @@ writeRaster(p1,file=file.path(outputdir,"prediction.grd"),overwrite=T)
 #'  1. Extracting species data from an online database
 #'  2. Pre-processing large spatial datasets for analysis
 #'  3. Running a (simple) logistic GLM Species Distribution Model to make a prediction of p(occurrence|environment)
-#'  4. Writing results to disk as a geotif (for use in GIS, etc.)
+#'  4. Writing results to disk
 #'  

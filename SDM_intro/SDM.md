@@ -41,6 +41,8 @@ packages=c("raster","dismo","maptools","sp","maps","rgeos","doParallel","rMOL","
 needpackages=packages[!packages%in%rownames(installed.packages())]
 lapply(needpackages,install.packages)
 lapply(packages, require, character.only=T,quietly=T)
+
+rasterOptions(progress="text",chunksize=1000,maxmemory=1000)
 ```
 
 ## Load climate data
@@ -49,8 +51,8 @@ First set the path to the data directory.  You'll need to uncomment the line set
 
 
 ```r
-#datadir="~/work/env/"
-datadir="/lustre/scratch/client/fas/geodata/aw524/data"
+datadir="~/work/env/"
+#datadir="/lustre/scratch/client/fas/geodata/aw524/data"
 ```
 
 And create an output directory `outputdir` to hold the outputs.  It's a good idea to define these as variables so it's easy to change them later if you move to a different machine.  
@@ -146,11 +148,47 @@ points
 gsampling=raster(file.path(datadir,"eBirdSampling_filtered.tif"))
 ## crop to species range to create modelling domain
 sampling=crop(gsampling,range,file.path(outputdir,"sampling.grd"),overwrite=T)   
+```
+
+```
+## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |================                                                 |  25%
+  |                                                                       
+  |================================                                 |  50%
+  |                                                                       
+  |=================================================                |  75%
+  |                                                                       
+  |=================================================================| 100%
+## 
+```
+
+```r
 ## assign projection
 projection(sampling)="+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
 
 ## convert to points within data region
 samplingp=as(sampling,"SpatialPointsDataFrame")
+```
+
+```
+## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |================                                                 |  25%
+  |                                                                       
+  |================================                                 |  50%
+  |                                                                       
+  |=================================================                |  75%
+  |                                                                       
+  |=================================================================| 100%
+## 
+```
+
+```r
 samplingp=samplingp[samplingp$eBirdSampling_filtered>0,]
 
 ## edit column names to allow aligning with presence observations
@@ -220,6 +258,24 @@ env
 names(env)=names(fenv)
 ## mask by elevation to set ocean to 0
 env=mask(env,env[["elev"]],maskvalue=0)
+```
+
+```
+## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |================                                                 |  25%
+  |                                                                       
+  |================================                                 |  50%
+  |                                                                       
+  |=================================================                |  75%
+  |                                                                       
+  |=================================================================| 100%
+## 
+```
+
+```r
 ## check out the plot
 plot(env)
 ```
@@ -232,11 +288,11 @@ Variable selection is tricky business and we're not going to dwell on it here...
 vars=c("cld","cld_intra","elev","forest")
 ```
 
-Scaling and centering the environmental variables to zero mean and variance of 1, using the ```scale``` function is typically a good idea.  However, with so many people using this node at the same time, we'll skip this memory intensive step and use the unstandardized variables:
+Scaling and centering the environmental variables to zero mean and variance of 1, using the ```scale``` function is typically a good idea.  However, with so many people using this node at the same time, we'll skip this memory intensive step and use the unstandardized variables.  The downside of this is the regression coefficients are more difficult to interpret.  
 
 ```r
 #senv=scale(env[[vars]])
-senv=env
+senv=env[[vars]]
 ```
 
 
@@ -271,14 +327,14 @@ kable(head(pointsd))
 
 
 
- presence         lon          lat        cld    cld_intra        elev       forest
----------  ----------  -----------  ---------  -----------  ----------  -----------
-        1   -78.77841    -0.051069   1.714173   -1.1243775   0.4390431   -0.1884475
-        1   -77.88925    -0.464082   1.557595   -1.1792226   0.9121285   -1.3271736
-        1   -73.80932     4.262556   1.932123   -1.4106003   0.9138091    0.3638360
-        1   -66.47900   -16.691000   1.297156   -0.3188402   1.2667325    0.5830040
-        1   -79.13255    -4.494885   1.797576   -1.3540413   1.5011744    0.2808065
-        1   -77.88129    -0.589837   1.641785   -1.4123142   1.1112781    0.4575870
+ presence         lon          lat    cld   cld_intra   elev   forest
+---------  ----------  -----------  -----  ----------  -----  -------
+        1   -78.77841    -0.051069   9429         321   1268     6203
+        1   -77.88925    -0.464082   9230         289   1831     1636
+        1   -73.80932     4.262556   9706         154   1833     8418
+        1   -66.47900   -16.691000   8899         791   2253     9297
+        1   -79.13255    -4.494885   9535         187   2532     8085
+        1   -77.88129    -0.589837   9337         153   2068     8794
 
 
 ```r
@@ -297,14 +353,14 @@ summary(m1)
 ## -1.9623  -0.2377  -0.0219  -0.0009   4.6651  
 ## 
 ## Coefficients:
-##                Estimate Std. Error z value Pr(>|z|)    
-## (Intercept)    -5.05391    0.15974 -31.638  < 2e-16 ***
-## cld             1.24279    0.10073  12.338  < 2e-16 ***
-## cld_intra       0.12678    0.08594   1.475     0.14    
-## elev            6.85624    0.38031  18.028  < 2e-16 ***
-## I(elev^2)      -3.97036    0.31550 -12.584  < 2e-16 ***
-## forest          1.42572    0.05963  23.910  < 2e-16 ***
-## elev:I(elev^2)  0.58193    0.08070   7.211 5.54e-13 ***
+##                  Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)    -2.083e+01  8.818e-01 -23.619  < 2e-16 ***
+## cld             9.779e-04  7.925e-05  12.338  < 2e-16 ***
+## cld_intra       2.173e-04  1.473e-04   1.475     0.14    
+## elev            1.052e-02  7.179e-04  14.650  < 2e-16 ***
+## I(elev^2)      -3.576e-06  3.274e-07 -10.922  < 2e-16 ***
+## forest          3.555e-04  1.487e-05  23.910  < 2e-16 ***
+## elev:I(elev^2)  3.453e-10  4.788e-11   7.211 5.54e-13 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -321,11 +377,16 @@ summary(m1)
 ### Prediction
 
 ## Calculate estimates of p(occurrence) for each cell.  
-We can use the `predict` function in the `raster` package to make the predictions across the full raster grid.
+We can use the `predict` function in the `raster` package to make the predictions across the full raster grid and save the output.
 
 
 ```r
-p1=raster::predict(senv,m1,type="response")
+p1=raster::predict(senv,m1,type="response",file=file.path(outputdir,"prediction.grd"),overwrite=T)
+```
+
+Plot the results as a map:
+
+```r
 gplot(p1,max=1e5)+geom_tile(aes(fill=value))+
   scale_fill_gradientn(colours=c("blue","green","yellow","orange","red"),na.value = "transparent")+
   geom_polygon(aes(x=long,y=lat,group=group),
@@ -338,25 +399,8 @@ gplot(p1,max=1e5)+geom_tile(aes(fill=value))+
 ## Regions defined for each Polygons
 ```
 
-![](SDM_files/figure-html/unnamed-chunk-15-1.png) 
+![](SDM_files/figure-html/unnamed-chunk-16-1.png) 
 
-## Save results
-Save the results to a geotif for storage and/or use in another GIS.
-
-```r
-writeRaster(p1,file=file.path(outputdir,"prediction.grd"),overwrite=T)
-```
-
-```
-## class       : RasterLayer 
-## dimensions  : 3575, 2031, 7260825  (nrow, ncol, ncell)
-## resolution  : 0.008333333, 0.008333333  (x, y)
-## extent      : -79.88333, -62.95833, -18.56667, 11.225  (xmin, xmax, ymin, ymax)
-## coord. ref. : +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 
-## data source : /Users/adamw/scratch/data/tmp/prediction.grd 
-## names       : layer 
-## values      : 7.539311e-09, 0.8661494  (min, max)
-```
 
 # Summary
 
@@ -365,5 +409,5 @@ In this script we have illustrated a complete workflow, including:
  1. Extracting species data from an online database
  2. Pre-processing large spatial datasets for analysis
  3. Running a (simple) logistic GLM Species Distribution Model to make a prediction of p(occurrence|environment)
- 4. Writing results to disk as a geotif (for use in GIS, etc.)
+ 4. Writing results to disk
  
