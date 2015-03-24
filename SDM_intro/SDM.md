@@ -8,9 +8,9 @@ March 24, 2015
 
 This script is available:
 
-  * [SpatialAnalysisTutorials repository](http://github.com/adammwilson/SpatialAnalysisTutorials/blob/master/SDM_intro)
+  * [SpatialAnalysisTutorials repository](http://github.com/adammwilson/SpatialAnalysisTutorials/blob/master)
   * Plain text (.R) with commented text 
-  [here](https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/SDM_intro/SDM_intro/SDM.R)
+  [here](https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/SDM_intro/SDM.R)
 
 
 ## Objectives
@@ -49,8 +49,8 @@ First set the path to the data directory.  You'll need to uncomment the line set
 
 
 ```r
-datadir="~/work/env/"
-#datadir="/lustre/scratch/client/fas/geodata/aw524/data"
+#datadir="~/work/env/"
+datadir="/lustre/scratch/client/fas/geodata/aw524/data"
 ```
 
 And create an output directory `outputdir` to hold the outputs.  It's a good idea to define these as variables so it's easy to change them later if you move to a different machine.  
@@ -232,17 +232,12 @@ Variable selection is tricky business and we're not going to dwell on it here...
 vars=c("cld","cld_intra","elev","forest")
 ```
 
-Scaling and centering the environmental variables to zero mean and variance of 1, using the ```scale``` function:
+Scaling and centering the environmental variables to zero mean and variance of 1, using the ```scale``` function is typically a good idea.  However, with so many people using this node at the same time, we'll skip this memory intensive step and use the unstandardized variables:
 
 ```r
-senv=env#scale(env[[vars]])
-## Plot the rasters
-gplot(senv)+geom_tile(aes(fill=value))+facet_wrap(~variable)+
-  scale_fill_gradientn(colours=c("blue","green","yellow","red"))+
-    coord_equal()
+#senv=scale(env[[vars]])
+senv=env
 ```
-
-![](SDM_files/figure-html/scaledata-1.png) 
 
 
 ## Annotate the point records with the scaled environmental data
@@ -349,7 +344,7 @@ gplot(p1,max=1e5)+geom_tile(aes(fill=value))+
 Save the results to a geotif for storage and/or use in another GIS.
 
 ```r
-writeRaster(p1,file=file.path(outputdir,"prediction.tif"),overwrite=T)
+writeRaster(p1,file=file.path(outputdir,"prediction.grd"),overwrite=T)
 ```
 
 ```
@@ -358,8 +353,8 @@ writeRaster(p1,file=file.path(outputdir,"prediction.tif"),overwrite=T)
 ## resolution  : 0.008333333, 0.008333333  (x, y)
 ## extent      : -79.88333, -62.95833, -18.56667, 11.225  (xmin, xmax, ymin, ymax)
 ## coord. ref. : +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 
-## data source : /Users/adamw/scratch/data/tmp/prediction.tif 
-## names       : prediction 
+## data source : /Users/adamw/scratch/data/tmp/prediction.grd 
+## names       : layer 
 ## values      : 7.539311e-09, 0.8661494  (min, max)
 ```
 

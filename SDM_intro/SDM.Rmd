@@ -16,7 +16,7 @@ input  = knitr::current_input()  # filename of input document
 input="SDM_intro/SDM.Rmd"
 output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
 #knitr::purl(input,output,documentation=2,quiet=T)
-repo="adammwilson/SpatialAnalysisTutorials/blob/master/SDM_intro"
+repo="adammwilson/SpatialAnalysisTutorials/blob/master"
 knitr::opts_chunk$set(cache=T)
 
 Sys.setenv(PATH="/Library/Frameworks/GDAL.framework/Programs/:/Library/Frameworks/Python.framework/Versions/2.7/bin:/Applications/:${PATH}")
@@ -27,7 +27,7 @@ This script is available:
 
   * [SpatialAnalysisTutorials repository](`r paste0("http://github.com/",repo)`)
   * Plain text (.R) with commented text 
-  [here](`r paste0("https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/SDM_intro/",output)`)
+  [here](`r paste0("https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/",output)`)
 
 
 ## Objectives
@@ -65,8 +65,8 @@ lapply(packages, require, character.only=T,quietly=T)
 First set the path to the data directory.  You'll need to uncomment the line setting the directory to `lustre/...`.
 
 ```{r}
-datadir="~/work/env/"
-#datadir="/lustre/scratch/client/fas/geodata/aw524/data"
+#datadir="~/work/env/"
+datadir="/lustre/scratch/client/fas/geodata/aw524/data"
 ```
 
 And create an output directory `outputdir` to hold the outputs.  It's a good idea to define these as variables so it's easy to change them later if you move to a different machine.  
@@ -176,14 +176,10 @@ Variable selection is tricky business and we're not going to dwell on it here...
 vars=c("cld","cld_intra","elev","forest")
 ```
 
-Scaling and centering the environmental variables to zero mean and variance of 1, using the ```scale``` function is typically a good idea.  However, with so many people using this node at the same time, we'll skip this step and use the unstandardized variables:
+Scaling and centering the environmental variables to zero mean and variance of 1, using the ```scale``` function is typically a good idea.  However, with so many people using this node at the same time, we'll skip this memory intensive step and use the unstandardized variables:
 ```{r, scaledata}
 #senv=scale(env[[vars]])
 senv=env
-## Plot the rasters
-gplot(senv)+geom_tile(aes(fill=value))+facet_wrap(~variable)+
-  scale_fill_gradientn(colours=c("blue","green","yellow","red"))+
-    coord_equal()
 ```
 
 
@@ -207,7 +203,7 @@ ggplot(pointsdl,aes(x=value,y=presence))+facet_wrap(~variable)+
 ```
 
 ## Fit a simple GLM to the data
-```{r}
+```{r,results='asis'}
 kable(head(pointsd))
 ```
 
