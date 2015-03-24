@@ -1,0 +1,208 @@
+Spatially-explicit logistic regression
+======================================
+
+### Goal of this class
+
+To demonstrate a simple presence/absence modelling in spatial context. To model spatial     dependence (autocorrelation) in the response. 
+  
+  Overview of [R's spatial toolset is here](http://cran.r-project.org/web/views/Spatial.html).
+  
+### What is spatial autocorrelation?
+  
+Today we will model space by **smooth splines** in ```mgcv``` package. 
+  
+Examples of Alternative approaches:
+  - Simple polynomials
+  - Eigenvector Mapping: ```vegan```, ```spdep```
+  - Predictive process: ```spbayes```
+  
+Methods that tweak variance-covariance matrix of **Multivariate Normal Distribution**:
+  - Generalized Least Squares: ```MASS```, ```nlme```
+  - Autoregressive Models: ```spdep```
+  - GeoBUGS module in OpenBUGS
+  
+See Dormann et al. 2007 Ecography, 30: 609-628 for a review.
+
+### The object of modelling
+
+Purple finch (Carpodacus purpureus) (source: Wikipedia) in San Diego county, California:
+
+![purple finch figure](figure/finch_photo.png)
+
+Preparing the data
+------------------
+
+First we load the necessary packages:
+```{r, message=FALSE, warning=FALSE}
+  library(rgdal)
+  library(sp) # handles spatial data
+  library(mgcv) # package for Generalized Additive Models
+  library(colorRamps) # for pretty MatLab-like colors
+  library(ncf) # has an easy function for correlograms
+```
+
+Load a vector dataset (shapefile) representing the San Diego bird atlas data for Purple finch:
+```{r, , message=FALSE, warning=FALSE}
+   finch <- readOGR("finch", layer="finch")
+```
+
+Check how R handles vector data using the structure (```str```) command to look at one of the polygons:
+```{r}
+  str(finch[1,])
+```
+Now look at the associated data frame (analogous to the *.dbf file that accompanied the shapefile):
+```{r}
+  head(finch@data)
+```
+
+Scaling and centering the environmental variables to zero mean and variance of 1, using the ```scale``` function:
+```{r}
+  envi <- finch@data[,15:25] 
+  envi.scaled <- as.numeric(scale(envi))
+  finch@data[,15:25] <- envi.scaled
+```
+
+Plotting the response (presence/absence data) and the predictor (NDVI):
+```{r, fig.height=4}
+  spplot(finch, zcol=c("present"), col.regions=c("white","black"),
+         colorkey=FALSE, main="The response (presences and absences)")
+  spplot(finch, zcol=c("ndvi"), col.regions=grey.colors(20, start=0, end=1),
+         main="The predictor (NDVI)")
+```
+
+Fitting the models
+------------------
+
+### Model 1 - only NDVI
+
+Now we will do the actual modelling. The first simple model links the presences and absences to NDVI.
+
+First, we will fit model a model that only uses NDVI as a predictor of presence and absence:
+
+$\log ( \frac{p_i}{1-p_i} ) = \beta_0 + \beta_1 NDVI_i$
+
+$o_i \sim Bernoulli(p_i)$
+
+It can be fitted by simple glm() in R:
+```{r}
+  ndvi.only <- glm(present~ndvi, data=finch@data, family="binomial")
+  summary(ndvi.only)
+  ## and let's extract predictions and residuals:
+  preds.ndvi.only <- predict(ndvi.only, type="response")
+  resid.ndvi.only <- residuals(ndvi.only)
+```
+
+Now let's plot the logistic curve:
+```{r, fig.height=5}
+  newx <- data.frame(ndvi=seq(-2,3, by=0.1))
+  newy <- predict(ndvi.only, newdata=newx, type="response")
+  plot(newx[,1], newy, type="l", xlab="(Scaled) NDVI", ylab="P of presence", col="red")
+  points(finch@data$ndvi, finch@data$present)
+```
+
+### Model 2 - only space
+
+The second model fits only the spatial trend in the data (using GAM and splines):
+```{r}
+  space.only <- gam(present~s(X_CEN, Y_CEN),
+                   data=finch@data, family="binomial")
+  summary(space.only)
+  ## extracting predictions
+  preds.space.only <- predict(space.only, type="response")
+  resid.space.only <- residuals(space.only)
+```
+
+### Model 3 - space and NDVI
+
+The third model uses both the NDVI and spatial trends to explain the finch's occurrences:
+```{r}
+  space.and.ndvi <- gam(present~ndvi + s(X_CEN, Y_CEN),
+                   data=finch@data, family="binomial")
+  summary(space.and.ndvi)
+  ## extracting predictions and residuals:
+  preds.space.and.ndvi <- predict(space.and.ndvi, type="response")
+  resid.space.and.ndvi <- residuals(space.and.ndvi)
+```
+
+Examining the fitted models
+---------------------------
+
+Now let's put all of the predictions together:
+```{r}
+  predictions <- data.frame(RC=finch@data$RC, preds.ndvi.only, 
+                                              resid.ndvi.only,
+                                              preds.space.only,
+                                              preds.space.and.ndvi,
+                                              resid.space.and.ndvi,
+                                              resid.space.only)
+  finch.preds <- merge(finch, predictions, by="RC")
+```
+
+And we plot the predictions of the three models, together with the actual observed presences and absences:
+```{r, fig.height=7}
+  spplot(finch.preds, 
+         zcol=c("present",
+                "preds.ndvi.only",
+                "preds.space.only",
+                "preds.space.and.ndvi"), 
+                 col.regions=matlab.like2(50))
+```
+
+We can compare AIC values the models:
+```{r}
+ AIC(ndvi.only, space.only, space.and.ndvi)
+```
+
+We can also plot the ***partial residual plots*** of the best model (similar to function ```termplot``` in the ```stats``` package):
+```{r, fig.height=7, fig.width=14}
+  plot.gam(space.and.ndvi, se=FALSE, all.terms=TRUE, pages=1, pers=FALSE)
+```
+
+It is always useful to check the magnitude of spatial correlation in residuals. We will use the function ```correlog``` from the ```ncf``` package. An overview of other [functions that plot correlograms is here.](http://www.petrkeil.com/?p=1050).
+```{r}
+  presence.absence.cor <- correlog(finch@data$X_CEN,
+                            finch@data$Y_CEN,
+                            finch@data$present,
+                            increment=0.2, resamp=1)
+  ndvi.only.cor <- correlog(finch.preds@data$X_CEN,
+                            finch.preds@data$Y_CEN, 
+                            finch.preds@data$resid.ndvi.only, 
+                            increment=0.2, resamp=1)
+  space.only.cor <- correlog(finch.preds@data$X_CEN,
+                            finch.preds@data$Y_CEN, 
+                            finch.preds@data$resid.space.only, 
+                            increment=0.2, resamp=1)
+
+space.and.envi.cor <- correlog(finch.preds@data$X_CEN,
+                            finch.preds@data$Y_CEN,
+                            finch.preds@data$resid.space.and.ndvi,
+                            increment=0.2, resamp=1)
+
+```
+
+And we can plot the correlograms:
+```{r}
+  plot(presence.absence.cor, col="green", lwd=2)
+  points(ndvi.only.cor$mean.of.class, ndvi.only.cor$correlation,
+       type="b", col="blue", lwd=2)
+  points(space.and.envi.cor$mean.of.class, 
+         space.and.envi.cor$correlation,
+         col="red", type="b", lwd=2)
+  points(space.only.cor$mean.of.class, 
+         space.only.cor$correlation,
+         col="green", type="b", lwd=2)
+abline(h=0, lty=2)
+  legend("topright", legend=c("raw response",
+                              "ndvi.only",
+                              "space.only",
+                              "space.and.ndvi"),
+         col=c("black", "blue","green","red"), lwd=c(2,2,2))
+```
+
+What did we gain by making the model ``spatially explicit''?
+------------------------------------------------------------
+
+- We know that the effect of NDVI is not artificially amplified by pseudoreplication.
+- We have more realistic predictions.
+- We have a fitted surface that can be interpreted -- perhaps to guide us towards some additional spatially-structured predictors that can be important.
+
