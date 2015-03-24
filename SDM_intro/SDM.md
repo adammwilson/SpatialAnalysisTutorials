@@ -64,26 +64,6 @@ if(!file.exists(outputdir)) dir.create(outputdir,recursive=T)
 
 ## Example Species: *Montane Woodcreeper* (_Lepidocolaptes lacrymiger_)
 
-Set species name:
-
-```r
-species="Lepidocolaptes_lacrymiger"
-
-## Extract data from MOL
-dsp=MOLget(species,type=c("points","range"))
-```
-
-```
-## OGR data source with driver: GeoJSON 
-## Source: "http://mol.cartodb.com/api/v2/sql?q=SELECT%20ST_TRANSFORM(the_geom_webmercator,4326)%20as%20the_geom,%20*%20FROM%20get_detail_map('Lepidocolaptes%20lacrymiger')%20WHERE%20type='points'%20AND%20ST_GeometryType(the_geom_webmercator)%20=%20'ST_Point'&format=geojson", layer: "OGRGeoJSON"
-## with 3441 features and 7 fields
-## Feature type: wkbPoint with 2 dimensions
-## OGR data source with driver: GeoJSON 
-## Source: "http://mol.cartodb.com/api/v2/sql?q=SELECT%20ST_TRANSFORM(the_geom_webmercator,4326)%20as%20the_geom,%20*%20FROM%20get_species_tile('Lepidocolaptes%20lacrymiger')%20WHERE%20type='range'%20AND%20ST_GeometryType(the_geom_webmercator)%20=%20'ST_MultiPolygon'&format=geojson", layer: "OGRGeoJSON"
-## with 2 features and 5 fields
-## Feature type: wkbMultiPolygon with 2 dimensions
-```
-
 <img src="assets/Lepidocolaptes_lacrymiger.jpg" alt="Lepidocolaptes_lacrymiger Photo" width="250px" />
 
 <br><span style="color:grey; font-size:1em;">Figure from [hbw.com](http://www.hbw.com/species/montane-woodcreeper-lepidocolaptes-lacrymiger) </span>
@@ -93,6 +73,15 @@ dsp=MOLget(species,type=c("points","range"))
 <img src="assets/Lepidocolaptes_lacrymiger_range.png" alt="Lepidocolaptes_lacrymiger Photo" width="200px" />
 
 <br><span style="color:grey; font-size:1em;">Data via [MOL.org](http://map.mol.org/maps/Lepidocolaptes%20lacrymiger) </span>
+
+Set species name:
+
+```r
+species="Lepidocolaptes_lacrymiger"
+
+## Extract data from MOL
+dsp=MOLget(species,type=c("points","range"))
+```
 
 
 ## Explore dsp object

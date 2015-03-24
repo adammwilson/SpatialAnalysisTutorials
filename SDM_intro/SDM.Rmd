@@ -78,14 +78,6 @@ if(!file.exists(outputdir)) dir.create(outputdir,recursive=T)
 
 ## Example Species: *Montane Woodcreeper* (_Lepidocolaptes lacrymiger_)
 
-Set species name:
-```{r}
-species="Lepidocolaptes_lacrymiger"
-
-## Extract data from MOL
-dsp=MOLget(species,type=c("points","range"))
-```
-
 <img src="assets/Lepidocolaptes_lacrymiger.jpg" alt="Lepidocolaptes_lacrymiger Photo" width="250px" />
 
 <br><span style="color:grey; font-size:1em;">Figure from [hbw.com](http://www.hbw.com/species/montane-woodcreeper-lepidocolaptes-lacrymiger) </span>
@@ -95,6 +87,14 @@ dsp=MOLget(species,type=c("points","range"))
 <img src="assets/Lepidocolaptes_lacrymiger_range.png" alt="Lepidocolaptes_lacrymiger Photo" width="200px" />
 
 <br><span style="color:grey; font-size:1em;">Data via [MOL.org](http://map.mol.org/maps/Lepidocolaptes%20lacrymiger) </span>
+
+Set species name:
+```{r,message=FALSE,results='hide'}
+species="Lepidocolaptes_lacrymiger"
+
+## Extract data from MOL
+dsp=MOLget(species,type=c("points","range"))
+```
 
 
 ## Explore dsp object
