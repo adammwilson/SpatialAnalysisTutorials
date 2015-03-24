@@ -3,16 +3,19 @@ title: "Simple species distribution model workflow"
 author: "Adam M. Wilson"
 date: "March 24, 2015"
 output: 
-  md_document:
-    variant: markdown_github
+  html_document:
+    toc: true
+    keep_md: true
 ---
 
 
 ```{r setup, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
 ## This chunk automatically generates a text .R version of this script when running within knitr.  You do not need to run this...
+library(knitr)
 input  = knitr::current_input()  # filename of input document
+input="SDM_intro/SDM.Rmd"
 output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
-knitr::purl(input,output,documentation=2,quiet=T)
+#knitr::purl(input,output,documentation=2,quiet=T)
 repo="adammwilson/SpatialAnalysisTutorials/blob/master/SDM_intro"
 knitr::opts_chunk$set(cache=T)
 
@@ -24,11 +27,7 @@ This script is available:
 
   * [SpatialAnalysisTutorials repository](`r paste0("http://github.com/",repo)`)
   * Plain text (.R) with commented text 
-  [here](`r paste0("https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/Woodcreeper/",output)`)
-
-In this session we will perform a simple species distribution model workflow for the Solitary Tinamou (Tinamus solitarius).  
-![Tinamus](figure/TinamusSolitariusSmit.jpg)
-Illustration by Joseph Smit, 1895
+  [here](`r paste0("https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/SDM_intro/",output)`)
 
 
 ## Objectives
@@ -52,12 +51,12 @@ R
 
 And load some packages (either from your own privaite library or from mine).
 ```{r,results='hide',message=FALSE}
-packages=c("raster","dismo","maptools","sp","maps","dplyr","rgdal","rgeos","doParallel","rMOL","tidyr","rasterVis")
-
+library(rgdal)
+packages=c("raster","dismo","maptools","sp","maps","rgeos","doParallel","rMOL","reshape","rasterVis","ggplot2","knitr")
+.libPaths(new="/lustre/scratch/client/fas/geodata/aw524/R/")
 needpackages=packages[!packages%in%rownames(installed.packages())]
 lapply(needpackages,install.packages)
 lapply(packages, require, character.only=T,quietly=T)
-lapply(packages, require, character.only=T,quietly=T, lib.loc="/lustre/scratch/client/fas/geodata/aw524/R/")
 
 ```
 
@@ -67,7 +66,7 @@ First set the path to the data directory.  You'll need to uncomment the line set
 
 ```{r}
 datadir="~/work/env/"
-#datadir="/lustre/scratch/client/fas/geodata/aw524/data/worldclim"
+#datadir="/lustre/scratch/client/fas/geodata/aw524/data"
 ```
 
 And create an output directory `outputdir` to hold the outputs.  It's a good idea to define these as variables so it's easy to change them later if you move to a different machine.  
@@ -77,6 +76,20 @@ outputdir="~/scratch/data/tmp"
 if(!file.exists(outputdir)) dir.create(outputdir,recursive=T)
 ```
 
+## Example Species: *Montane Woodcreeper* (_Lepidocolaptes lacrymiger_)
+
+<img src="assets/Lepidocolaptes_lacrymiger.jpg" alt="Lepidocolaptes_lacrymiger Photo" width="250px" />
+
+<br><span style="color:grey; font-size:1em;">Figure from [hbw.com](http://www.hbw.com/species/montane-woodcreeper-lepidocolaptes-lacrymiger) </span>
+
+> This species has a large range, occurring from the coastal cordillera of Venezuela along the Andes south to south-east Peru and central Bolivia. [birdlife.org](http://www.birdlife.org/datazone/speciesfactsheet.php?id=31946)
+
+<img src="assets/Lepidocolaptes_lacrymiger_range.png" alt="Lepidocolaptes_lacrymiger Photo" width="200px" />
+
+<br><span style="color:grey; font-size:1em;">Data via [MOL.org](http://map.mol.org/maps/Lepidocolaptes%20lacrymiger) </span>
+
+
+Set species name:
 ```{r}
 species="Lepidocolaptes_lacrymiger"
 
@@ -103,8 +116,7 @@ points
 ## link to global sampling raster
 gsampling=raster(file.path(datadir,"eBirdSampling_filtered.tif"))
 ## crop to species range to create modelling domain
-sampling=crop(gsampling,range,
-              file=file.path(outputdir,"eBirdSampling_filtered.tif"),overwrite=T)   
+sampling=crop(gsampling,range,file.path(outputdir,"sampling.grd"),overwrite=T)   
 ## assign projection
 projection(sampling)="+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
 
@@ -141,18 +153,18 @@ fenv=c(
 To facilitate modelling, let's crop the global rasters to a smaller domain.  We can use the extent of the expert range and the `crop()` function in raster package.
 ```{r,results='hide'}
 ## crop to species domain and copy to project folder 
-foreach(i=1:length(fenv))%do%{
-  fo=file.path(outputdir,paste0(names(fenv)[i],"_clipped.tif"))
+env=foreach(i=1:length(fenv))%do%{
+  fo=file.path(outputdir,paste0(names(fenv)[i],"_clipped.grd"))
   crop(raster(file.path(datadir,fenv[i])),range,file=fo,overwrite=T)   
 }
 ```
 
 Read the environmental data in as a raster stack
 ```{r,ImportRaster}
-env=stack(list.files(path = outputdir, pattern="*_clipped.tif$" , full.names = TRUE ))
+env=stack(list.files(path = outputdir, pattern="*_clipped.grd$" , full.names = TRUE ))
 env
 ## rename layers for convenience
-names(env)=sub("_clipped","",names(env))
+names(env)=names(fenv)
 ## mask by elevation to set ocean to 0
 env=mask(env,env[["elev"]],maskvalue=0)
 ## check out the plot
@@ -164,9 +176,10 @@ Variable selection is tricky business and we're not going to dwell on it here...
 vars=c("cld","cld_intra","elev","forest")
 ```
 
-Scaling and centering the environmental variables to zero mean and variance of 1, using the ```scale``` function:
+Scaling and centering the environmental variables to zero mean and variance of 1, using the ```scale``` function is typically a good idea.  However, with so many people using this node at the same time, we'll skip this step and use the unstandardized variables:
 ```{r, scaledata}
-senv=scale(env[[vars]])
+#senv=scale(env[[vars]])
+senv=env
 ## Plot the rasters
 gplot(senv)+geom_tile(aes(fill=value))+facet_wrap(~variable)+
   scale_fill_gradientn(colours=c("blue","green","yellow","red"))+
@@ -185,7 +198,7 @@ pointsd=na.exclude(pointsd)
 Plotting the response (presence/absence data) and the predictors:
 ```{r,warning=FALSE}
 ## convert to 'long' format for easier plotting
-pointsdl=gather(pointsd@data,variable,value, -lat, -lon, -presence)
+pointsdl=reshape::melt(pointsd@data,id.vars=c("lat","lon","presence"),variable.name="variable")
 
 ggplot(pointsdl,aes(x=value,y=presence))+facet_wrap(~variable)+
   geom_point()+
@@ -221,7 +234,7 @@ gplot(p1,max=1e5)+geom_tile(aes(fill=value))+
 ## Save results
 Save the results to a geotif for storage and/or use in another GIS.
 ```{r}
-writeRaster(p1,file=file.path(outputdir,"prediction.tif"),overwrite=T)
+writeRaster(p1,file=file.path(outputdir,"prediction.grd"),overwrite=T)
 ```
 
 # Summary
