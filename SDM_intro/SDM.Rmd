@@ -256,8 +256,8 @@ In general, it is a good idea to use k-fold data partitioning instead of using t
 
 Summarize model output.  You can also use `screenreg` to print a more visually pleasing summary.
 ```{r,results='asis'}
-htmlreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)
 #screenreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)
+htmlreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)
 ```
 
 ## Caveats

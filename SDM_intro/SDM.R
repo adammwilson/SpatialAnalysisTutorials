@@ -53,6 +53,7 @@ rasterOptions(chunksize=1000,maxmemory=1000)
 #' First set the path to the data directory.  You'll need to uncomment the line setting the directory to `lustre/...`.
 #' 
 ## ------------------------------------------------------------------------
+#datadir="~/work/env/"
 datadir="/lustre/scratch/client/fas/geodata/aw524/data"
 
 #' 
@@ -75,14 +76,14 @@ if(!file.exists(outputdir)) dir.create(outputdir,recursive=T)
 #' 
 #' <br><span style="color:grey; font-size:1em;">Data via [MOL.org](http://map.mol.org/maps/Lepidocolaptes%20lacrymiger) </span>
 #' 
-#' 
 #' Set species name:
-## ------------------------------------------------------------------------
+## ----,message=FALSE,results='hide'---------------------------------------
 species="Lepidocolaptes_lacrymiger"
 
 ## Extract data from MOL
 dsp=MOLget(species,type=c("points","range"))
 
+#' 
 #' 
 #' ## Explore dsp object
 #' 
@@ -172,10 +173,13 @@ senv=env[[vars]]
 #' 
 #' ## Annotate the point records with the scaled environmental data
 #' Add the (scaled) environmental data to each point
-## ----, results='markup'--------------------------------------------------
+## ------------------------------------------------------------------------
 pointsd=raster::extract(senv,pdata,sp=T)
 pointsd=na.exclude(pointsd)
 
+#' 
+#' Look at the data table:
+## ----, results='asis'----------------------------------------------------
 kable(head(pointsd))
 
 #' 
@@ -221,7 +225,7 @@ p=stack(p1,p2); names(p)=c("Model 1","Model 2")
 
 #' 
 #' Plot the results as a map:
-## ----,results='hide'-----------------------------------------------------
+## ----,results='hide',message=FALSE---------------------------------------
 gplot(p,max=1e5)+geom_tile(aes(fill=value))+
   facet_wrap(~variable)+
   scale_fill_gradientn(
@@ -238,16 +242,10 @@ gplot(p,max=1e5)+geom_tile(aes(fill=value))+
 #' In general, it is a good idea to use k-fold data partitioning instead of using the data used for fitting. There is a function in the `dismo` package called `kfold` that makes this convenient. But for now, we'll just evaluate on the same data used for fitting.
 #' 
 #' 
-#' Summarize model output.
+#' Summarize model output.  You can also use `screenreg` to print a more visually pleasing summary.
 ## ----,results='asis'-----------------------------------------------------
-htmlreg(list(m1,m2),digits = 7)
-
-#' 
-#' There is also the `evaluate` function in the `dismo` package that does some useful summaries.
-#' 
-## ------------------------------------------------------------------------
-evaluate(points,samplingp,m1,senv)
-evaluate(points,samplingp,m2,senv)
+#screenreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)
+htmlreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)
 
 #' 
 #' ## Caveats
@@ -255,6 +253,7 @@ evaluate(points,samplingp,m2,senv)
 #' 1.  In this example we treated eBird _non-detections_ as _absences_ when the probability of detection given presence can be much less than zero. What are the chances that an observer would see a species in a 1km grid cell if it were present there?  
 #' 2. We ignored the spatial autocorrelation in species presences and treated each observation as an independent sample.  How can we account for this in SDMs?
 #' 
+#' Walter will provide some additional readings on the opportunities and challenges of Species Distribution Modeling.  The vignette from the [`dismo` package is also a great resource.](http://cran.r-project.org/web/packages/dismo/vignettes/sdm.pdf)
 #' 
 #' # Summary
 #' 

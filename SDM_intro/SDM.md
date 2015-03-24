@@ -311,6 +311,7 @@ In general, it is a good idea to use k-fold data partitioning instead of using t
 Summarize model output.  You can also use `screenreg` to print a more visually pleasing summary.
 
 ```r
+#screenreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)
 htmlreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)
 ```
 
@@ -421,10 +422,6 @@ htmlreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)
     <td style="padding-right: 12px; border: none;" colspan="3"><span style="font-size:0.8em"><sup style="vertical-align: 4px;">***</sup>p &lt; 0.001, <sup style="vertical-align: 4px;">**</sup>p &lt; 0.01, <sup style="vertical-align: 4px;">*</sup>p &lt; 0.05</span></td>
   </tr>
 </table>
-
-```r
-#screenreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)
-```
 
 ## Caveats
 
