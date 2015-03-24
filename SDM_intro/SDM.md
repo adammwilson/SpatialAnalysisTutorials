@@ -222,7 +222,11 @@ Add the (scaled) environmental data to each point
 ```r
 pointsd=raster::extract(senv,pdata,sp=T)
 pointsd=na.exclude(pointsd)
+```
 
+Look at the data table:
+
+```r
 kable(head(pointsd))
 ```
 
@@ -250,7 +254,7 @@ ggplot(pointsdl,aes(x=value,y=presence))+facet_wrap(~variable)+
   geom_smooth(method="gam",formula=y ~ s(x, bs = "cs"))
 ```
 
-![](SDM_files/figure-html/unnamed-chunk-12-1.png) 
+![](SDM_files/figure-html/unnamed-chunk-13-1.png) 
 
 # Model Fitting
 
@@ -297,7 +301,7 @@ gplot(p,max=1e5)+geom_tile(aes(fill=value))+
   coord_equal()
 ```
 
-![](SDM_files/figure-html/unnamed-chunk-15-1.png) 
+![](SDM_files/figure-html/unnamed-chunk-16-1.png) 
 
 ## Model Evaluation
 

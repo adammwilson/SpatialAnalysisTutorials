@@ -185,10 +185,13 @@ senv=env[[vars]]
 
 ## Annotate the point records with the scaled environmental data
 Add the (scaled) environmental data to each point
-```{r, results='asis'}
+```{r}
 pointsd=raster::extract(senv,pdata,sp=T)
 pointsd=na.exclude(pointsd)
+```
 
+Look at the data table:
+```{r, results='asis'}
 kable(head(pointsd))
 ```
 

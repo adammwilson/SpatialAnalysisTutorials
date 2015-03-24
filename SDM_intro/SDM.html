@@ -235,9 +235,9 @@ senv=env[[vars]]</code></pre>
 <h2>Annotate the point records with the scaled environmental data</h2>
 <p>Add the (scaled) environmental data to each point</p>
 <pre class="r"><code>pointsd=raster::extract(senv,pdata,sp=T)
-pointsd=na.exclude(pointsd)
-
-kable(head(pointsd))</code></pre>
+pointsd=na.exclude(pointsd)</code></pre>
+<p>Look at the data table:</p>
+<pre class="r"><code>kable(head(pointsd))</code></pre>
 <table>
 <thead>
 <tr class="header">
