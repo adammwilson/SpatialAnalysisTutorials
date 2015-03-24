@@ -7,11 +7,12 @@ output:
     variant: markdown_github
 ---
 
+
 ```{r setup, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
 ## This chunk automatically generates a text .R version of this script when running within knitr.  You do not need to run this...
 input  = knitr::current_input()  # filename of input document
 output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
-#knitr::purl(input,output,documentation=2,quiet=T)
+knitr::purl(input,output,documentation=2,quiet=T)
 repo="adammwilson/SpatialAnalysisTutorials/blob/master/SDM_intro"
 knitr::opts_chunk$set(cache=T)
 
@@ -51,7 +52,7 @@ R
 
 And load some packages (either from your own privaite library or from mine).
 ```{r,results='hide',message=FALSE}
-packages=c("raster","dismo","maptools","sp","maps","dplyr","rgdal","rgeos","doParallel","rMOL","tidyr","rasterVis","knitr")
+packages=c("raster","dismo","maptools","sp","maps","dplyr","rgdal","rgeos","doParallel","rMOL","tidyr","rasterVis")
 
 needpackages=packages[!packages%in%rownames(installed.packages())]
 lapply(needpackages,install.packages)
@@ -81,38 +82,20 @@ species="Lepidocolaptes_lacrymiger"
 
 ## Extract data from MOL
 dsp=MOLget(species,type=c("points","range"))
+```
 
 ## Explore dsp object
-str(dsp)
-
-## Define global modeling grid (will be subset by species)
-domain=raster(xmn=-180, xmx=180, ymn=-90, ymx=90, 
-              crs="+proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs", 
-              resolution=30/3600, vals=NULL)
-
-range=dsp[["range"]]
-points=dsp[["points"]]
-points@data[,c("lon","lat")]=coordinates(points)
-```
-
-
-## Data processing
 
 ```{r}
-## list of environmental rasters to use (names are used to re-name rasters):
-fenv=c(
-  cld="cloud/meanannual.tif",
-  cld_intra="cloud/intra.tif",
-  elev="elevation_mn_GMTED2010_mn.tif",
-  forest="tree_mn_percentage_GFC2013.tif")
+names(dsp)
 
-## crop to species domain and copy to project folder 
-foreach(i=1:length(fenv))%do%{
-  fo=file.path(outputdir,paste0(names(fenv)[i],"_clipped.tif"))
-  crop(raster(file.path(datadir,fenv[i])),range,file=fo,overwrite=T)   
-}
+range=dsp[["range"]]
+range
+
+points=dsp[["points"]]
+points@data[,c("lon","lat")]=coordinates(points)
+points
 ```
-
 
 ## Load eBird sampling dataset
 
@@ -134,10 +117,40 @@ colnames(samplingp@data)=c("observation")
 samplingp$presence=0
 ```
 
+## Create a combined presence-nondetection point dataset
+```{r}
+pdata=rbind(points[,"presence"],samplingp[,"presence"])
+pdata@data[,c("lon","lat")]=coordinates(pdata)
+table(pdata$presence)
+```
 
-Read them in as a raster stack
+
+## Environmental data processing
+
+```{r}
+## list of environmental rasters to use (names are used to re-name rasters):
+fenv=c(
+  cld="cloud/meanannual.tif",
+  cld_intra="cloud/intra.tif",
+  elev="elevation_mn_GMTED2010_mn.tif",
+  forest="tree_mn_percentage_GFC2013.tif")
+```
+> If you want to explore using other variables, you can use `list.files(datadir,recursive=T)` to see all the available files.
+
+
+To facilitate modelling, let's crop the global rasters to a smaller domain.  We can use the extent of the expert range and the `crop()` function in raster package.
+```{r,results='hide'}
+## crop to species domain and copy to project folder 
+foreach(i=1:length(fenv))%do%{
+  fo=file.path(outputdir,paste0(names(fenv)[i],"_clipped.tif"))
+  crop(raster(file.path(datadir,fenv[i])),range,file=fo,overwrite=T)   
+}
+```
+
+Read the environmental data in as a raster stack
 ```{r,ImportRaster}
 env=stack(list.files(path = outputdir, pattern="*_clipped.tif$" , full.names = TRUE ))
+env
 ## rename layers for convenience
 names(env)=sub("_clipped","",names(env))
 ## mask by elevation to set ocean to 0
@@ -146,8 +159,7 @@ env=mask(env,env[["elev"]],maskvalue=0)
 plot(env)
 ```
 
-
-Variable selection is tricky business and we're not going to dwell on it here... We'll use the following variables
+Variable selection is tricky business and we're not going to dwell on it here... We'll use the following variables.
 ```{r}
 vars=c("cld","cld_intra","elev","forest")
 ```
@@ -157,16 +169,12 @@ Scaling and centering the environmental variables to zero mean and variance of 1
 senv=scale(env[[vars]])
 ## Plot the rasters
 gplot(senv)+geom_tile(aes(fill=value))+facet_wrap(~variable)+
-  scale_fill_gradientn(colours=c("blue","green","yellow","red"))
+  scale_fill_gradientn(colours=c("blue","green","yellow","red"))+
+    coord_equal()
 ```
 
-## Create a combined presence-nondetection point dataset
-```{r}
-pdata=rbind(points[,"presence"],samplingp[,"presence"])
-pdata@data[,c("lon","lat")]=coordinates(pdata)
-table(pdata$presence)
-```
 
+## Annotate the point records with the scaled environmental data
 Add the (scaled) environmental data to each point
 ```{r}
 pointsd=raster::extract(senv,pdata,sp=T)
@@ -175,7 +183,7 @@ pointsd=na.exclude(pointsd)
 
 ## Explore the data
 Plotting the response (presence/absence data) and the predictors:
-```{r}
+```{r,warning=FALSE}
 ## convert to 'long' format for easier plotting
 pointsdl=gather(pointsd@data,variable,value, -lat, -lon, -presence)
 
@@ -191,7 +199,7 @@ kable(head(pointsd))
 ```
 
 ```{r}
-m1=glm(presence~cld*cld_intra*elev*I(elev^2)*forest,data=pointsd,family=binomial(logit))
+m1=glm(presence~cld+cld_intra+elev*I(elev^2)+forest,data=pointsd,family=binomial(logit))
 summary(m1)
 ```
 
@@ -206,7 +214,8 @@ gplot(p1,max=1e5)+geom_tile(aes(fill=value))+
   scale_fill_gradientn(colours=c("blue","green","yellow","orange","red"),na.value = "transparent")+
   geom_polygon(aes(x=long,y=lat,group=group),
                data=fortify(range),fill="transparent",col="darkred")+
-  geom_point(aes(x = lon, y = lat), data = points@data,col="black",size=1)
+  geom_point(aes(x = lon, y = lat), data = points@data,col="black",size=1)+
+  coord_equal()
 ```
 
 ## Save results
