@@ -308,10 +308,6 @@ gplot(p,max=1e5)+geom_tile(aes(fill=value))+
   coord_equal()
 ```
 
-```
-## Regions defined for each Polygons
-```
-
 ![](SDM_files/figure-html/unnamed-chunk-15-1.png) 
 
 ## Model Evaluation
