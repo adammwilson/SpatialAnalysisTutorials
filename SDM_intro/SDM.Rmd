@@ -34,11 +34,10 @@ This script is available:
 
 In this session we will:
 
- 1. Process some raster environmental data
- 2. Process occurrence data from various sources
- 3. Fit a Bayesian species distribution model using the observations and environmental data
- 4. Predict across the landscape and write the results to disk as a geotif (for use in GIS, etc.)
-
+ 1. Download species data from the Map of Life
+ 2. Pre-process environmental data
+ 3. Fit a generalized linear model to estimate the species distribution
+ 4. Predict across the landscape and write the results to disk (for use in GIS, etc.)
 
 
 ## Starting R on Omega
@@ -52,7 +51,7 @@ R
 And load some packages (either from your own privaite library or from mine).
 ```{r,results='hide',message=FALSE}
 library(rgdal)
-packages=c("raster","dismo","maptools","sp","maps","rgeos","doParallel","rMOL","reshape","rasterVis","ggplot2","knitr")
+packages=c("raster","dismo","maptools","sp","maps","rgeos","doParallel","rMOL","reshape","rasterVis","ggplot2","knitr","texreg")
 .libPaths(new="/lustre/scratch/client/fas/geodata/aw524/R/")
 needpackages=packages[!packages%in%rownames(installed.packages())]
 lapply(needpackages,install.packages)
@@ -186,9 +185,11 @@ senv=env[[vars]]
 
 ## Annotate the point records with the scaled environmental data
 Add the (scaled) environmental data to each point
-```{r}
+```{r, results='asis'}
 pointsd=raster::extract(senv,pdata,sp=T)
 pointsd=na.exclude(pointsd)
+
+kable(head(pointsd))
 ```
 
 ## Explore the data
@@ -203,34 +204,68 @@ ggplot(pointsdl,aes(x=value,y=presence))+facet_wrap(~variable)+
   geom_smooth(method="gam",formula=y ~ s(x, bs = "cs"))
 ```
 
+# Model Fitting
+
 ## Fit a simple GLM to the data
-```{r,results='asis'}
-kable(head(pointsd))
-```
+Choosing terms to include in a parametric model can be challenging, especially given the large number of possible interactions, etc.  In this example we'll keep it fairly simple and include only a quadratic term for elevation (as suggested by the above plot).
 
 ```{r}
-m1=glm(presence~cld+cld_intra+elev*I(elev^2)+forest,data=pointsd,family=binomial(logit))
-summary(m1)
+m1=glm(presence~cld+elev,
+       data=pointsd,family=binomial(logit))
+
+m2=glm(presence~cld+cld_intra+elev*I(elev^2)+forest,
+       data=pointsd,family=binomial(logit))
 ```
 
-### Prediction
+
+Summarize model output.
+```{r,results='asis'}
+htmlreg(list(m1,m2),digits = 7)
+```
+
+> Feel free to try various model formulas (adding or removing terms) and see how the model performs.
+
+
+
+# Prediction
 
 ## Calculate estimates of p(occurrence) for each cell.  
 We can use the `predict` function in the `raster` package to make the predictions across the full raster grid and save the output.
 
 ```{r}
-p1=raster::predict(senv,m1,type="response",file=file.path(outputdir,"prediction.grd"),overwrite=T)
+p1=raster::predict(senv,m1,type="response",
+                   file=file.path(outputdir,"prediction_m1.grd"),overwrite=T)
+p2=raster::predict(senv,m2,type="response",
+                   file=file.path(outputdir,"prediction_m2.grd"),overwrite=T)
+p=stack(p1,p2); names(p)=c("Model 1","Model 2")
 ```
 
 Plot the results as a map:
-```{r}
-gplot(p1,max=1e5)+geom_tile(aes(fill=value))+
-  scale_fill_gradientn(colours=c("blue","green","yellow","orange","red"),na.value = "transparent")+
+```{r,results='hide'}
+gplot(p,max=1e5)+geom_tile(aes(fill=value))+
+  facet_wrap(~variable)+
+  scale_fill_gradientn(
+    colours=c("blue","green","yellow","orange","red"),
+    na.value = "transparent")+
   geom_polygon(aes(x=long,y=lat,group=group),
                data=fortify(range),fill="transparent",col="darkred")+
   geom_point(aes(x = lon, y = lat), data = points@data,col="black",size=1)+
   coord_equal()
 ```
+
+## Model Evaluation
+
+In general, it is a good idea to use k-fold data partitioning instead of using the data used for fitting. There is a function in the `dismo` package called `kfold` that makes this convenient. But for now, we'll just evaluate on the same data used for fitting using the `evaluate` function.
+
+```{r}
+evaluate(points,samplingp,m1,senv)
+evaluate(points,samplingp,m2,senv)
+```
+
+## Caveats
+
+1.  In this example we treated eBird _non-detections_ as _absences_ when the probability of detection given presence can be much less than zero. What are the chances that an observer would see a species in a 1km grid cell if it were present there?  
+2. We ignored the spatial autocorrelation in species presences and treated each observation as an independent sample.  How can we account for this in SDMs?
 
 
 # Summary

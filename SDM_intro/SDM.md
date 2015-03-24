@@ -17,11 +17,10 @@ This script is available:
 
 In this session we will:
 
- 1. Process some raster environmental data
- 2. Process occurrence data from various sources
- 3. Fit a Bayesian species distribution model using the observations and environmental data
- 4. Predict across the landscape and write the results to disk as a geotif (for use in GIS, etc.)
-
+ 1. Download species data from the Map of Life
+ 2. Pre-process environmental data
+ 3. Fit a generalized linear model to estimate the species distribution
+ 4. Predict across the landscape and write the results to disk (for use in GIS, etc.)
 
 
 ## Starting R on Omega
@@ -36,13 +35,13 @@ And load some packages (either from your own privaite library or from mine).
 
 ```r
 library(rgdal)
-packages=c("raster","dismo","maptools","sp","maps","rgeos","doParallel","rMOL","reshape","rasterVis","ggplot2","knitr")
+packages=c("raster","dismo","maptools","sp","maps","rgeos","doParallel","rMOL","reshape","rasterVis","ggplot2","knitr","texreg")
 .libPaths(new="/lustre/scratch/client/fas/geodata/aw524/R/")
 needpackages=packages[!packages%in%rownames(installed.packages())]
 lapply(needpackages,install.packages)
 lapply(packages, require, character.only=T,quietly=T)
 
-rasterOptions(progress="text",chunksize=1000,maxmemory=1000)
+rasterOptions(chunksize=1000,maxmemory=1000)
 ```
 
 ## Load climate data
@@ -302,7 +301,20 @@ Add the (scaled) environmental data to each point
 ```r
 pointsd=raster::extract(senv,pdata,sp=T)
 pointsd=na.exclude(pointsd)
+
+kable(head(pointsd))
 ```
+
+
+
+ presence         lon          lat    cld   cld_intra   elev   forest
+---------  ----------  -----------  -----  ----------  -----  -------
+        1   -78.77841    -0.051069   9429         321   1268     6203
+        1   -77.88925    -0.464082   9230         289   1831     1636
+        1   -73.80932     4.262556   9706         154   1833     8418
+        1   -66.47900   -16.691000   8899         791   2253     9297
+        1   -79.13255    -4.494885   9535         187   2532     8085
+        1   -77.88129    -0.589837   9337         153   2068     8794
 
 ## Explore the data
 Plotting the response (presence/absence data) and the predictors:
@@ -319,76 +331,162 @@ ggplot(pointsdl,aes(x=value,y=presence))+facet_wrap(~variable)+
 
 ![](SDM_files/figure-html/unnamed-chunk-12-1.png) 
 
+# Model Fitting
+
 ## Fit a simple GLM to the data
-
-```r
-kable(head(pointsd))
-```
-
-
-
- presence         lon          lat    cld   cld_intra   elev   forest
----------  ----------  -----------  -----  ----------  -----  -------
-        1   -78.77841    -0.051069   9429         321   1268     6203
-        1   -77.88925    -0.464082   9230         289   1831     1636
-        1   -73.80932     4.262556   9706         154   1833     8418
-        1   -66.47900   -16.691000   8899         791   2253     9297
-        1   -79.13255    -4.494885   9535         187   2532     8085
-        1   -77.88129    -0.589837   9337         153   2068     8794
+Choosing terms to include in a parametric model can be challenging, especially given the large number of possible interactions, etc.  In this example we'll keep it fairly simple and include only a quadratic term for elevation (as suggested by the above plot).
 
 
 ```r
-m1=glm(presence~cld+cld_intra+elev*I(elev^2)+forest,data=pointsd,family=binomial(logit))
-summary(m1)
+m1=glm(presence~cld+elev,
+       data=pointsd,family=binomial(logit))
+
+m2=glm(presence~cld+cld_intra+elev*I(elev^2)+forest,
+       data=pointsd,family=binomial(logit))
 ```
 
-```
-## 
-## Call:
-## glm(formula = presence ~ cld + cld_intra + elev * I(elev^2) + 
-##     forest, family = binomial(logit), data = pointsd)
-## 
-## Deviance Residuals: 
-##     Min       1Q   Median       3Q      Max  
-## -1.9623  -0.2377  -0.0219  -0.0009   4.6651  
-## 
-## Coefficients:
-##                  Estimate Std. Error z value Pr(>|z|)    
-## (Intercept)    -2.083e+01  8.818e-01 -23.619  < 2e-16 ***
-## cld             9.779e-04  7.925e-05  12.338  < 2e-16 ***
-## cld_intra       2.173e-04  1.473e-04   1.475     0.14    
-## elev            1.052e-02  7.179e-04  14.650  < 2e-16 ***
-## I(elev^2)      -3.576e-06  3.274e-07 -10.922  < 2e-16 ***
-## forest          3.555e-04  1.487e-05  23.910  < 2e-16 ***
-## elev:I(elev^2)  3.453e-10  4.788e-11   7.211 5.54e-13 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## (Dispersion parameter for binomial family taken to be 1)
-## 
-##     Null deviance: 16789  on 16355  degrees of freedom
-## Residual deviance:  7817  on 16349  degrees of freedom
-##   (273 observations deleted due to missingness)
-## AIC: 7831
-## 
-## Number of Fisher Scoring iterations: 9
+
+Summarize model output.
+
+```r
+htmlreg(list(m1,m2),digits = 7)
 ```
 
-### Prediction
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<table cellspacing="0" align="center" style="border: none;">
+  <caption align="bottom" style="margin-top:0.3em;">Statistical models</caption>
+  <tr>
+    <th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;"></th>
+    <th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;"><b>Model 1</b></th>
+    <th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;"><b>Model 2</b></th>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;">(Intercept)</td>
+    <td style="padding-right: 12px; border: none;">-19.3409971<sup style="vertical-align: 4px;">***</sup></td>
+    <td style="padding-right: 12px; border: none;">-20.8260992<sup style="vertical-align: 4px;">***</sup></td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;"></td>
+    <td style="padding-right: 12px; border: none;">(0.3816231)</td>
+    <td style="padding-right: 12px; border: none;">(0.8817601)</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;">cld</td>
+    <td style="padding-right: 12px; border: none;">0.0020602<sup style="vertical-align: 4px;">***</sup></td>
+    <td style="padding-right: 12px; border: none;">0.0009779<sup style="vertical-align: 4px;">***</sup></td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;"></td>
+    <td style="padding-right: 12px; border: none;">(0.0000427)</td>
+    <td style="padding-right: 12px; border: none;">(0.0000793)</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;">elev</td>
+    <td style="padding-right: 12px; border: none;">-0.0000277</td>
+    <td style="padding-right: 12px; border: none;">0.0105170<sup style="vertical-align: 4px;">***</sup></td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;"></td>
+    <td style="padding-right: 12px; border: none;">(0.0000262)</td>
+    <td style="padding-right: 12px; border: none;">(0.0007179)</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;">cld_intra</td>
+    <td style="padding-right: 12px; border: none;"></td>
+    <td style="padding-right: 12px; border: none;">0.0002173</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;"></td>
+    <td style="padding-right: 12px; border: none;"></td>
+    <td style="padding-right: 12px; border: none;">(0.0001473)</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;">I(elev^2)</td>
+    <td style="padding-right: 12px; border: none;"></td>
+    <td style="padding-right: 12px; border: none;">-0.0000036<sup style="vertical-align: 4px;">***</sup></td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;"></td>
+    <td style="padding-right: 12px; border: none;"></td>
+    <td style="padding-right: 12px; border: none;">(0.0000003)</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;">forest</td>
+    <td style="padding-right: 12px; border: none;"></td>
+    <td style="padding-right: 12px; border: none;">0.0003555<sup style="vertical-align: 4px;">***</sup></td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;"></td>
+    <td style="padding-right: 12px; border: none;"></td>
+    <td style="padding-right: 12px; border: none;">(0.0000149)</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;">elev:I(elev^2)</td>
+    <td style="padding-right: 12px; border: none;"></td>
+    <td style="padding-right: 12px; border: none;">0.0000000<sup style="vertical-align: 4px;">***</sup></td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;"></td>
+    <td style="padding-right: 12px; border: none;"></td>
+    <td style="padding-right: 12px; border: none;">(0.0000000)</td>
+  </tr>
+  <tr>
+    <td style="border-top: 1px solid black;">AIC</td>
+    <td style="border-top: 1px solid black;">10370.8011995</td>
+    <td style="border-top: 1px solid black;">7830.9849023</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;">BIC</td>
+    <td style="padding-right: 12px; border: none;">10393.9082498</td>
+    <td style="padding-right: 12px; border: none;">7884.9013529</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;">Log Likelihood</td>
+    <td style="padding-right: 12px; border: none;">-5182.4005998</td>
+    <td style="padding-right: 12px; border: none;">-3908.4924512</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;">Deviance</td>
+    <td style="padding-right: 12px; border: none;">10364.8011995</td>
+    <td style="padding-right: 12px; border: none;">7816.9849023</td>
+  </tr>
+  <tr>
+    <td style="border-bottom: 2px solid black;">Num. obs.</td>
+    <td style="border-bottom: 2px solid black;">16356</td>
+    <td style="border-bottom: 2px solid black;">16356</td>
+  </tr>
+  <tr>
+    <td style="padding-right: 12px; border: none;" colspan="3"><span style="font-size:0.8em"><sup style="vertical-align: 4px;">***</sup>p &lt; 0.001, <sup style="vertical-align: 4px;">**</sup>p &lt; 0.01, <sup style="vertical-align: 4px;">*</sup>p &lt; 0.05</span></td>
+  </tr>
+</table>
+
+> Feel free to try various model formulas (adding or removing terms) and see how the model performs.
+
+
+
+# Prediction
 
 ## Calculate estimates of p(occurrence) for each cell.  
 We can use the `predict` function in the `raster` package to make the predictions across the full raster grid and save the output.
 
 
 ```r
-p1=raster::predict(senv,m1,type="response",file=file.path(outputdir,"prediction.grd"),overwrite=T)
+p1=raster::predict(senv,m1,type="response",
+                   file=file.path(outputdir,"prediction_m1.grd"),overwrite=T)
+p2=raster::predict(senv,m2,type="response",
+                   file=file.path(outputdir,"prediction_m2.grd"),overwrite=T)
+p=stack(p1,p2); names(p)=c("Model 1","Model 2")
 ```
 
 Plot the results as a map:
 
 ```r
-gplot(p1,max=1e5)+geom_tile(aes(fill=value))+
-  scale_fill_gradientn(colours=c("blue","green","yellow","orange","red"),na.value = "transparent")+
+gplot(p,max=1e5)+geom_tile(aes(fill=value))+
+  facet_wrap(~variable)+
+  scale_fill_gradientn(
+    colours=c("blue","green","yellow","orange","red"),
+    na.value = "transparent")+
   geom_polygon(aes(x=long,y=lat,group=group),
                data=fortify(range),fill="transparent",col="darkred")+
   geom_point(aes(x = lon, y = lat), data = points@data,col="black",size=1)+
@@ -400,6 +498,42 @@ gplot(p1,max=1e5)+geom_tile(aes(fill=value))+
 ```
 
 ![](SDM_files/figure-html/unnamed-chunk-16-1.png) 
+
+## Model Evaluation
+
+In general, it is a good idea to use k-fold data partitioning instead of using the data used for fitting. There is a function in the `dismo` package called `kfold` that makes this convenient. But for now, we'll just evaluate on the same data used for fitting using the `evaluate` function.
+
+
+```r
+evaluate(points,samplingp,m1,senv)
+```
+
+```
+## class          : ModelEvaluation 
+## n presences    : 3426 
+## n absences     : 12930 
+## AUC            : 0.8985967 
+## cor            : 0.4580749 
+## max TPR+TNR at : -0.7654234
+```
+
+```r
+evaluate(points,samplingp,m2,senv)
+```
+
+```
+## class          : ModelEvaluation 
+## n presences    : 3426 
+## n absences     : 12930 
+## AUC            : 0.9457265 
+## cor            : 0.5643068 
+## max TPR+TNR at : -1.432249
+```
+
+## Caveats
+
+1.  In this example we treated eBird _non-detections_ as _absences_ when the probability of detection given presence can be much less than zero. What are the chances that an observer would see a species in a 1km grid cell if it were present there?  
+2. We ignored the spatial autocorrelation in species presences and treated each observation as an independent sample.  How can we account for this in SDMs?
 
 
 # Summary
