@@ -147,47 +147,11 @@ points
 gsampling=raster(file.path(datadir,"eBirdSampling_filtered.tif"))
 ## crop to species range to create modelling domain
 sampling=crop(gsampling,range,file.path(outputdir,"sampling.grd"),overwrite=T)   
-```
-
-```
-## 
-  |                                                                       
-  |                                                                 |   0%
-  |                                                                       
-  |================                                                 |  25%
-  |                                                                       
-  |================================                                 |  50%
-  |                                                                       
-  |=================================================                |  75%
-  |                                                                       
-  |=================================================================| 100%
-## 
-```
-
-```r
 ## assign projection
 projection(sampling)="+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
 
 ## convert to points within data region
 samplingp=as(sampling,"SpatialPointsDataFrame")
-```
-
-```
-## 
-  |                                                                       
-  |                                                                 |   0%
-  |                                                                       
-  |================                                                 |  25%
-  |                                                                       
-  |================================                                 |  50%
-  |                                                                       
-  |=================================================                |  75%
-  |                                                                       
-  |=================================================================| 100%
-## 
-```
-
-```r
 samplingp=samplingp[samplingp$eBirdSampling_filtered>0,]
 
 ## edit column names to allow aligning with presence observations
@@ -239,42 +203,10 @@ Read the environmental data in as a raster stack
 ```r
 env=stack(list.files(path = outputdir, pattern="*_clipped.grd$" , full.names = TRUE ))
 env
-```
-
-```
-## class       : RasterStack 
-## dimensions  : 3575, 2031, 7260825, 4  (nrow, ncol, ncell, nlayers)
-## resolution  : 0.008333333, 0.008333333  (x, y)
-## extent      : -79.88333, -62.95833, -18.56667, 11.225  (xmin, xmax, ymin, ymax)
-## coord. ref. : +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 
-## names       : meanannual, intra, elevation_mn_GMTED2010_mn, tree_mn_percentage_GFC2013 
-## min values  :       1010,     0,                       -72,                          0 
-## max values  :      10000,  3790,                      6460,                      10000
-```
-
-```r
 ## rename layers for convenience
 names(env)=names(fenv)
 ## mask by elevation to set ocean to 0
 env=mask(env,env[["elev"]],maskvalue=0)
-```
-
-```
-## 
-  |                                                                       
-  |                                                                 |   0%
-  |                                                                       
-  |================                                                 |  25%
-  |                                                                       
-  |================================                                 |  50%
-  |                                                                       
-  |=================================================                |  75%
-  |                                                                       
-  |=================================================================| 100%
-## 
-```
-
-```r
 ## check out the plot
 plot(env)
 ```
@@ -344,6 +276,47 @@ m1=glm(presence~cld+elev,
 m2=glm(presence~cld+cld_intra+elev*I(elev^2)+forest,
        data=pointsd,family=binomial(logit))
 ```
+
+> Feel free to try various model formulas (adding or removing terms) and see how the model performs.
+
+
+# Prediction
+
+## Calculate estimates of p(occurrence) for each cell.  
+We can use the `predict` function in the `raster` package to make the predictions across the full raster grid and save the output.
+
+
+```r
+p1=raster::predict(senv,m1,type="response",
+                   file=file.path(outputdir,"prediction_m1.grd"),overwrite=T)
+p2=raster::predict(senv,m2,type="response",
+                   file=file.path(outputdir,"prediction_m2.grd"),overwrite=T)
+p=stack(p1,p2); names(p)=c("Model 1","Model 2")
+```
+
+Plot the results as a map:
+
+```r
+gplot(p,max=1e5)+geom_tile(aes(fill=value))+
+  facet_wrap(~variable)+
+  scale_fill_gradientn(
+    colours=c("blue","green","yellow","orange","red"),
+    na.value = "transparent")+
+  geom_polygon(aes(x=long,y=lat,group=group),
+               data=fortify(range),fill="transparent",col="darkred")+
+  geom_point(aes(x = lon, y = lat), data = points@data,col="black",size=1)+
+  coord_equal()
+```
+
+```
+## Regions defined for each Polygons
+```
+
+![](SDM_files/figure-html/unnamed-chunk-15-1.png) 
+
+## Model Evaluation
+
+In general, it is a good idea to use k-fold data partitioning instead of using the data used for fitting. There is a function in the `dismo` package called `kfold` that makes this convenient. But for now, we'll just evaluate on the same data used for fitting.
 
 
 Summarize model output.
@@ -461,47 +434,7 @@ htmlreg(list(m1,m2),digits = 7)
   </tr>
 </table>
 
-> Feel free to try various model formulas (adding or removing terms) and see how the model performs.
-
-
-
-# Prediction
-
-## Calculate estimates of p(occurrence) for each cell.  
-We can use the `predict` function in the `raster` package to make the predictions across the full raster grid and save the output.
-
-
-```r
-p1=raster::predict(senv,m1,type="response",
-                   file=file.path(outputdir,"prediction_m1.grd"),overwrite=T)
-p2=raster::predict(senv,m2,type="response",
-                   file=file.path(outputdir,"prediction_m2.grd"),overwrite=T)
-p=stack(p1,p2); names(p)=c("Model 1","Model 2")
-```
-
-Plot the results as a map:
-
-```r
-gplot(p,max=1e5)+geom_tile(aes(fill=value))+
-  facet_wrap(~variable)+
-  scale_fill_gradientn(
-    colours=c("blue","green","yellow","orange","red"),
-    na.value = "transparent")+
-  geom_polygon(aes(x=long,y=lat,group=group),
-               data=fortify(range),fill="transparent",col="darkred")+
-  geom_point(aes(x = lon, y = lat), data = points@data,col="black",size=1)+
-  coord_equal()
-```
-
-```
-## Regions defined for each Polygons
-```
-
-![](SDM_files/figure-html/unnamed-chunk-16-1.png) 
-
-## Model Evaluation
-
-In general, it is a good idea to use k-fold data partitioning instead of using the data used for fitting. There is a function in the `dismo` package called `kfold` that makes this convenient. But for now, we'll just evaluate on the same data used for fitting using the `evaluate` function.
+There is also the `evaluate` function in the `dismo` package that does some useful summaries.
 
 
 ```r

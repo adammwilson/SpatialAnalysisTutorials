@@ -53,7 +53,6 @@ rasterOptions(chunksize=1000,maxmemory=1000)
 #' First set the path to the data directory.  You'll need to uncomment the line setting the directory to `lustre/...`.
 #' 
 ## ------------------------------------------------------------------------
-#datadir="~/work/env/"
 datadir="/lustre/scratch/client/fas/geodata/aw524/data"
 
 #' 
@@ -100,7 +99,7 @@ points
 #' 
 #' ## Load eBird sampling dataset
 #' 
-## ------------------------------------------------------------------------
+## ----,results='hide'-----------------------------------------------------
 ## link to global sampling raster
 gsampling=raster(file.path(datadir,"eBirdSampling_filtered.tif"))
 ## crop to species range to create modelling domain
@@ -148,7 +147,7 @@ env=foreach(i=1:length(fenv))%do%{
 
 #' 
 #' Read the environmental data in as a raster stack
-## ----,ImportRaster-------------------------------------------------------
+## ----,ImportRaster, results='hide'---------------------------------------
 env=stack(list.files(path = outputdir, pattern="*_clipped.grd$" , full.names = TRUE ))
 env
 ## rename layers for convenience
@@ -173,7 +172,7 @@ senv=env[[vars]]
 #' 
 #' ## Annotate the point records with the scaled environmental data
 #' Add the (scaled) environmental data to each point
-## ----, results='asis'----------------------------------------------------
+## ----, results='markup'--------------------------------------------------
 pointsd=raster::extract(senv,pdata,sp=T)
 pointsd=na.exclude(pointsd)
 
@@ -205,14 +204,7 @@ m2=glm(presence~cld+cld_intra+elev*I(elev^2)+forest,
        data=pointsd,family=binomial(logit))
 
 #' 
-#' 
-#' Summarize model output.
-## ----,results='asis'-----------------------------------------------------
-htmlreg(list(m1,m2),digits = 7)
-
-#' 
 #' > Feel free to try various model formulas (adding or removing terms) and see how the model performs.
-#' 
 #' 
 #' 
 #' # Prediction
@@ -243,7 +235,15 @@ gplot(p,max=1e5)+geom_tile(aes(fill=value))+
 #' 
 #' ## Model Evaluation
 #' 
-#' In general, it is a good idea to use k-fold data partitioning instead of using the data used for fitting. There is a function in the `dismo` package called `kfold` that makes this convenient. But for now, we'll just evaluate on the same data used for fitting using the `evaluate` function.
+#' In general, it is a good idea to use k-fold data partitioning instead of using the data used for fitting. There is a function in the `dismo` package called `kfold` that makes this convenient. But for now, we'll just evaluate on the same data used for fitting.
+#' 
+#' 
+#' Summarize model output.
+## ----,results='asis'-----------------------------------------------------
+htmlreg(list(m1,m2),digits = 7)
+
+#' 
+#' There is also the `evaluate` function in the `dismo` package that does some useful summaries.
 #' 
 ## ------------------------------------------------------------------------
 evaluate(points,samplingp,m1,senv)
