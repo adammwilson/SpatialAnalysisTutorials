@@ -208,7 +208,7 @@ m2=glm(presence~cld+cld_intra+elev*I(elev^2)+forest,
 #' 
 #' Summarize model output.
 ## ----,results='asis'-----------------------------------------------------
-htmlreg(list(m1,m2))
+htmlreg(list(m1,m2),digits = 7)
 
 #' 
 #' > Feel free to try various model formulas (adding or removing terms) and see how the model performs.
