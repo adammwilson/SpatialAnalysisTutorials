@@ -50,8 +50,8 @@ First set the path to the data directory.  You'll need to uncomment the line set
 
 
 ```r
-#datadir="~/work/env/"
-datadir="/lustre/scratch/client/fas/geodata/aw524/data"
+datadir="~/work/env/"
+#datadir="/lustre/scratch/client/fas/geodata/aw524/data"
 ```
 
 And create an output directory `outputdir` to hold the outputs.  It's a good idea to define these as variables so it's easy to change them later if you move to a different machine.  
@@ -308,7 +308,7 @@ gplot(p,max=1e5)+geom_tile(aes(fill=value))+
 In general, it is a good idea to use k-fold data partitioning instead of using the data used for fitting. There is a function in the `dismo` package called `kfold` that makes this convenient. But for now, we'll just evaluate on the same data used for fitting.
 
 
-Summarize model output.
+Summarize model output.  You can also use `screenreg` to print a more visually pleasing summary.
 
 ```r
 htmlreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)
@@ -421,6 +421,10 @@ htmlreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)
     <td style="padding-right: 12px; border: none;" colspan="3"><span style="font-size:0.8em"><sup style="vertical-align: 4px;">***</sup>p &lt; 0.001, <sup style="vertical-align: 4px;">**</sup>p &lt; 0.01, <sup style="vertical-align: 4px;">*</sup>p &lt; 0.05</span></td>
   </tr>
 </table>
+
+```r
+#screenreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)
+```
 
 ## Caveats
 

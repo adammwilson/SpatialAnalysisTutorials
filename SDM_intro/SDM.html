@@ -360,7 +360,7 @@ p=stack(p1,p2); names(p)=c(&quot;Model 1&quot;,&quot;Model 2&quot;)</code></pre>
 <div id="model-evaluation" class="section level2">
 <h2>Model Evaluation</h2>
 <p>In general, it is a good idea to use k-fold data partitioning instead of using the data used for fitting. There is a function in the <code>dismo</code> package called <code>kfold</code> that makes this convenient. But for now, we’ll just evaluate on the same data used for fitting.</p>
-<p>Summarize model output.</p>
+<p>Summarize model output. You can also use <code>screenreg</code> to print a more visually pleasing summary.</p>
 <pre class="r"><code>htmlreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)</code></pre>
 <table cellspacing="0" align="center" style="border: none;">
   <caption align="bottom" style="margin-top:0.3em;">
@@ -561,6 +561,7 @@ Num. obs.
   </tr>
 </table>
 
+<pre class="r"><code>#screenreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)</code></pre>
 </div>
 <div id="caveats" class="section level2">
 <h2>Caveats</h2>
