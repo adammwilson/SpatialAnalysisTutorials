@@ -228,13 +228,13 @@ plot(env)</code></pre>
 <p>Variable selection is tricky business and we’re not going to dwell on it here… We’ll use the following variables.</p>
 <pre class="r"><code>vars=c(&quot;cld&quot;,&quot;cld_intra&quot;,&quot;elev&quot;,&quot;forest&quot;)</code></pre>
 <p>Scaling and centering the environmental variables to zero mean and variance of 1, using the <code>scale</code> function is typically a good idea. However, with so many people using this node at the same time, we’ll skip this memory intensive step and use the unstandardized variables. The downside of this is the regression coefficients are more difficult to interpret.</p>
-<pre class="r"><code>#senv=scale(env[[vars]])
-senv=env[[vars]]</code></pre>
+<pre class="r"><code>senv=scale(env[[vars]])
+#senv=env[[vars]]</code></pre>
 </div>
 <div id="annotate-the-point-records-with-the-scaled-environmental-data" class="section level2">
 <h2>Annotate the point records with the scaled environmental data</h2>
 <p>Add the (scaled) environmental data to each point</p>
-<pre class="r"><code>pointsd=raster::extract(senv,pdata,sp=T)
+<pre class="r"><code>pointsd=raster::extract(senv,pdata,sp=T) 
 pointsd=na.exclude(pointsd)</code></pre>
 <p>Look at the data table:</p>
 <pre class="r"><code>kable(head(pointsd))</code></pre>

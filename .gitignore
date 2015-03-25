@@ -37,3 +37,4 @@ climate/RCM/*.nc
 *.nav
 *.snm
 *.vrb
+*figure-latex*

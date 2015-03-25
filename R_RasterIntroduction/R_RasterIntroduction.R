@@ -2,14 +2,15 @@
 #' title: "Introduction to Raster Package"
 #' author: "Adam M. Wilson"
 #' date: "February 23, 2015"
-#' output: 
+#' output:
+#'   pdf_document:
+#'     toc: yes
 #'   html_document:
-#'     toc: true
-#'     keep_md: true
+#'     keep_md: yes
+#'     toc: yes
 #' ---
 #' 
 #' 
-
 #' 
 #' ----
 #' 
@@ -144,7 +145,7 @@ plot(r, main='Raster with 100 cells')
 #' First set the path to the data directory.  You'll need to uncomment the line setting the directory to `lustre/...`.
 #' 
 ## ------------------------------------------------------------------------
-datadir="data/"
+datadir="~/work/env/"
 #datadir="/lustre/scratch/client/fas/geodata/aw524/data/"
 
 #' 

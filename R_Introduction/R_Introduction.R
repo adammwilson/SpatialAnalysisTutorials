@@ -2,14 +2,14 @@
 #' title: "Introduction to R"
 #' author: "Adam M. Wilson"
 #' date: "February 17, 2015"
-#' output: 
+#' output:
+#'   pdf_document: default
 #'   html_document:
-#'     toc: true
-#'     keep_md: true
+#'     keep_md: yes
+#'     toc: yes
 #' ---
 #' 
 #' 
-
 #' 
 #' ----
 #' 

@@ -2,10 +2,12 @@
 title: "Language/software integration"
 author: "Adam M. Wilson"
 date: "March 3, 2015"
-output: 
+output:
+  pdf_document:
+    toc: yes
   html_document:
-    toc: true
-    keep_md: true
+    keep_md: yes
+    toc: yes
 ---
 
 
@@ -59,7 +61,7 @@ library(raster,lib.loc="/lustre/scratch/client/fas/geodata/aw524/R/")
 First set the path to the data directory.  You'll need to uncomment the line setting the directory to `lustre/...`.
 
 ```{r}
-datadir="~/Downloads/bio1-9_30s_bil"
+datadir="~/work/env/worldclim/"
 #datadir="/lustre/scratch/client/fas/geodata/aw524/data/worldclim"
 ```
 
@@ -70,10 +72,10 @@ outputdir="~/scratch/data/tmp"
 if(!file.exists(outputdir)) dir.create(outputdir,recursive=T)
 ```
 
-This time, let's look at BIO9, which is the [Mean Temperature of Driest Quarter](http://www.worldclim.org/bioclim):
+This time, let's look at BIO1, which is the [Mean Annual Temperature](http://www.worldclim.org/bioclim):
 ```{r,message=FALSE}
 ## first define the path to the data:
-file=paste0(datadir,"/bio_9.bil") 
+file=paste0(datadir,"/bio_1.bil") 
 ## now use that to load the raster dataset:
 data=raster(file)
 data

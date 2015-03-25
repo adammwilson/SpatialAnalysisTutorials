@@ -211,8 +211,8 @@ vars=c("cld","cld_intra","elev","forest")
 Scaling and centering the environmental variables to zero mean and variance of 1, using the ```scale``` function is typically a good idea.  However, with so many people using this node at the same time, we'll skip this memory intensive step and use the unstandardized variables.  The downside of this is the regression coefficients are more difficult to interpret.  
 
 ```r
-#senv=scale(env[[vars]])
-senv=env[[vars]]
+senv=scale(env[[vars]])
+#senv=env[[vars]]
 ```
 
 
@@ -220,7 +220,7 @@ senv=env[[vars]]
 Add the (scaled) environmental data to each point
 
 ```r
-pointsd=raster::extract(senv,pdata,sp=T)
+pointsd=raster::extract(senv,pdata,sp=T) 
 pointsd=na.exclude(pointsd)
 ```
 
