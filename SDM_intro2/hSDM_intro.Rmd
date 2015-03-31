@@ -171,7 +171,8 @@ range=dsp[["range"]]
 ```
 
 Check out the data structure:
-```{r headSpd, results='asis'}
+
+```{r headSpd}
 kable(head(points_all[,-1]))
 ```
 

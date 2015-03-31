@@ -166,6 +166,7 @@ range=dsp[["range"]]
 
 Check out the data structure:
 
+
 ```r
 kable(head(points_all[,-1]))
 ```
