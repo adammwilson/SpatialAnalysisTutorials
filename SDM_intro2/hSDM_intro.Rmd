@@ -42,7 +42,7 @@ theme_set(theme_light()+
 
 This script is available:
 
-  * [MD format with images/plots](https://github.com/adammwilson/SpatialAnalysisTutorials/blob/master/hSDM_intro.md)
+  * [MD format with images/plots](https://github.com/adammwilson/SpatialAnalysisTutorials/blob/master/SDM_intro2/hSDM_intro.md)
   * [Plain text (.R) with commented text](https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/hSDM_intro.R)
 
 You are welcome to follow along on the screen or download the R script and run it on your computer. 
@@ -102,12 +102,13 @@ qsub: job 4599636.rocks.omega.hpc.yale.internal ready
 
 And load some packages (either from your own privaite library or from mine).
 ```{r loadLibraries,results='hide',message=FALSE}
+lpath="/lustre/scratch/client/fas/geodata/aw524/R/"
+library(package = "lattice",lib.loc=lpath)
 library(rgdal)
-packages=c("hSDM","rasterVis","dismo","maptools","sp","maps","coda","rgdal","rgeos","doParallel","rMOL","reshape","rasterVis","ggplot2","knitr")
-.libPaths(new="/lustre/scratch/client/fas/geodata/aw524/R/")
-needpackages=packages[!packages%in%rownames(installed.packages())]
-lapply(needpackages,install.packages)
-lapply(packages, require, character.only=T,quietly=T)
+.libPaths(new=lpath)
+packages=c("hSDM","dismo","maptools","sp","maps","coda",
+           "rgdal","rgeos","doParallel","rMOL","reshape","ggplot2","knitr")
+l=lapply(packages, library, lib.loc=lpath, character.only=T,quietly=T)
 
 rasterOptions(chunksize=1000,maxmemory=1000)
 ncores=2  # number of processor cores you would like to use
