@@ -127,7 +127,7 @@ img {
 </blockquote>
 <p>This script is available:</p>
 <ul>
-<li><a href="https://github.com/adammwilson/SpatialAnalysisTutorials/blob/master/hSDM_intro.md">MD format with images/plots</a></li>
+<li><a href="https://github.com/adammwilson/SpatialAnalysisTutorials/blob/master/SDM_intro2/hSDM_intro.md">MD format with images/plots</a></li>
 <li><a href="https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/hSDM_intro.R">Plain text (.R) with commented text</a></li>
 </ul>
 <p>You are welcome to follow along on the screen or download the R script and run it on your computer.</p>
@@ -178,12 +178,13 @@ qsub: job 4599636.rocks.omega.hpc.yale.internal ready
 <div id="load-libraries" class="section level2">
 <h2>Load libraries</h2>
 <p>And load some packages (either from your own privaite library or from mine).</p>
-<pre class="r"><code>library(rgdal)
-packages=c(&quot;hSDM&quot;,&quot;rasterVis&quot;,&quot;dismo&quot;,&quot;maptools&quot;,&quot;sp&quot;,&quot;maps&quot;,&quot;coda&quot;,&quot;rgdal&quot;,&quot;rgeos&quot;,&quot;doParallel&quot;,&quot;rMOL&quot;,&quot;reshape&quot;,&quot;rasterVis&quot;,&quot;ggplot2&quot;,&quot;knitr&quot;)
-.libPaths(new=&quot;/lustre/scratch/client/fas/geodata/aw524/R/&quot;)
-needpackages=packages[!packages%in%rownames(installed.packages())]
-lapply(needpackages,install.packages)
-lapply(packages, require, character.only=T,quietly=T)
+<pre class="r"><code>lpath=&quot;/lustre/scratch/client/fas/geodata/aw524/R/&quot;
+library(package = &quot;lattice&quot;,lib.loc=lpath)
+library(rgdal)
+.libPaths(new=lpath)
+packages=c(&quot;hSDM&quot;,&quot;dismo&quot;,&quot;maptools&quot;,&quot;sp&quot;,&quot;maps&quot;,&quot;coda&quot;,
+           &quot;rgdal&quot;,&quot;rgeos&quot;,&quot;doParallel&quot;,&quot;rMOL&quot;,&quot;reshape&quot;,&quot;ggplot2&quot;,&quot;knitr&quot;)
+l=lapply(packages, library, lib.loc=lpath, character.only=T,quietly=T)
 
 rasterOptions(chunksize=1000,maxmemory=1000)
 ncores=2  # number of processor cores you would like to use
