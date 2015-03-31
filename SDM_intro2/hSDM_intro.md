@@ -569,8 +569,8 @@ kable(pDetect,row.names=F)
 
 modelname            gamma.hat   delta.est
 ------------------  ----------  ----------
-Cloud + Elevation    -2.291988   0.0917887
-Full Model           -2.281770   0.0926440
+Cloud + Elevation    -2.283343   0.0925119
+Full Model           -2.260142   0.0944783
 
 >  How does this change if you add environmental covariates to the observability regression?
 

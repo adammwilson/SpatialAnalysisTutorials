@@ -18,7 +18,7 @@ input="SDM_intro2/hSDM_intro.Rmd"
 output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
 #knitr::purl(input,output,documentation=2,quiet=T)
 repo="adammwilson/SpatialAnalysisTutorials/blob/master"
-knitr::opts_chunk$set(cache=T,fig.width=20,fig.height=20)
+knitr::opts_chunk$set(cache=T)
 
 #Sys.setenv(PATH="/Library/Frameworks/GDAL.framework/Programs/:/Library/Frameworks/Python.framework/Versions/2.7/bin:/Applications/:${PATH}")
 
