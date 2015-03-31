@@ -100,16 +100,20 @@ qsub: job 4599636.rocks.omega.hpc.yale.internal ready
 
 ## Load libraries
 
-And load some packages (either from your own privaite library or from mine).
+And load some packages (either from your own private library or from mine).
 ```{r loadLibraries,results='hide',message=FALSE}
 lpath="/lustre/scratch/client/fas/geodata/aw524/R/"
 library(package = "lattice",lib.loc=lpath)
 library(rgdal)
 .libPaths(new=lpath)
-packages=c("hSDM","dismo","maptools","sp","maps","coda",
-           "rgdal","rgeos","doParallel","rMOL","reshape","ggplot2","knitr")
-l=lapply(packages, library, lib.loc=lpath, character.only=T,quietly=T)
+packages=c("hSDM","dismo","maptools","sp",
+           "maps","coda","rgdal","rgeos",
+           "doParallel","rMOL","reshape",
+           "ggplot2","knitr")
+l=lapply(packages, library, lib.loc=lpath, 
+         character.only=T,quietly=T)
 
+## set some raster and processing options
 rasterOptions(chunksize=1000,maxmemory=1000)
 ncores=2  # number of processor cores you would like to use
 registerDoParallel(ncores)
@@ -142,27 +146,20 @@ __________
 
 <br><span style="color:grey; font-size:1em;">Figure from [hbw.com](http://www.hbw.com/species/montane-woodcreeper-lepidocolaptes-lacrymiger) </span>
 
-> This species has a large range, occurring from the coastal cordillera of Venezuela along the Andes south to south-east Peru and central Bolivia. [birdlife.org](http://www.birdlife.org/datazone/speciesfactsheet.php?id=31946)
-
-<img src="assets/Lepidocolaptes_lacrymiger_range.png" alt="Lepidocolaptes_lacrymiger Photo" width="200px" />
-
-<br><span style="color:grey; font-size:1em;">Data via [MOL.org](http://map.mol.org/maps/Lepidocolaptes%20lacrymiger) </span>
 
 ## Set species name and extract data from MOL:
 ```{r,message=FALSE,results='hide'}
 species="Lepidocolaptes_lacrymiger"
 ```
 
-
 ## Query eBird data contained in MOL
 
-* Find all observations of our species
-* Find all unique observation locations for any species limited to bounding box of expert range
-* Filter to where observer indicated recording all observed species (`all_species_reported='t'`)
+_Presences_: all observations of our species
+_Trials_: all unique observation locations for any species limited to bounding box of expert range where observer indicated recording all observed species (`all_species_reported='t'`)
 
 > The best method for selecting data to use for _non-detections_ is very case and dataset specific.
 
-Metadata for eBird^[M. Arthur Munson, Kevin Webb, Daniel Sheldon, Daniel Fink, Wesley M. Hochachka, Marshall Iliff, Mirek Riedewald, Daria Sorokina, Brian Sullivan, Christopher Wood, and Steve Kelling. The eBird Reference Dataset, Version 5.0. Cornell Lab of Ornithology and National Audubon Society, Ithaca, NY, January 2013.] is [available here](http://ebird.org/ebird/data/download)
+Metadata for eBird Reference Dataset ((Version 5.0. Cornell Lab of Ornithology) [is available here](http://ebird.org/ebird/data/download)
 
 ## Extract data from MOL
 ```{r}
