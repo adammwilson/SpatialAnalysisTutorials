@@ -85,7 +85,7 @@
 #' And load some packages (either from your own privaite library or from mine).
 ## ----loadLibraries,results='hide',message=FALSE--------------------------
 library(rgdal)
-packages=c("hSDM","rasterVis","dismo","maptools","sp","maps","coda","rgdal","rgeos","doParallel","rMOL","reshape","rasterVis","ggplot2","knitr")
+packages=c("hSDM","lattice","rasterVis","dismo","maptools","sp","maps","coda","rgdal","rgeos","doParallel","rMOL","reshape","rasterVis","ggplot2","knitr")
 .libPaths(new="/lustre/scratch/client/fas/geodata/aw524/R/")
 needpackages=packages[!packages%in%rownames(installed.packages())]
 lapply(packages, require, character.only=T,quietly=T)

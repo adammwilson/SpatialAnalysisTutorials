@@ -18,7 +18,7 @@ input="SDM_intro2/hSDM_intro.Rmd"
 output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
 #knitr::purl(input,output,documentation=2,quiet=T)
 repo="adammwilson/SpatialAnalysisTutorials/blob/master"
-knitr::opts_chunk$set(cache=T,fig.width=30)
+knitr::opts_chunk$set(cache=T,fig.width=20,fig.height=20)
 
 #Sys.setenv(PATH="/Library/Frameworks/GDAL.framework/Programs/:/Library/Frameworks/Python.framework/Versions/2.7/bin:/Applications/:${PATH}")
 
@@ -502,7 +502,7 @@ pred=foreach(r1=results,.combine=stack,.packages="raster")%dopar% {
 ```
 
 Compare the model predictions
-```{r plotmodel}
+```{r plotmodel,warning=FALSE,message=FALSE}
 predscale=scale_fill_gradientn(values=c(0,.5,1),colours=c('white','darkgreen','green'),na.value="transparent")
 
 gplot(pred,maxpixels=1e5)+geom_raster(aes(fill=value)) +
@@ -521,6 +521,7 @@ gplot(pred,maxpixels=1e5)+geom_raster(aes(fill=value)) +
   coord_equal()
 
 ```
+
 ## Model selection
 
 Model selection is an extremely important component of any modeling excercise.  See [Hooten and Hobbs (2015)](http://www.esajournals.org/doi/abs/10.1890/14-0661.1) for a recent review of various methods.

@@ -408,16 +408,14 @@ fitdata2=na.omit(fitdata@data)
 kable(head(fitdata2))
 ```
 
-
-
- presences   trials         lon        lat          cld    cld_intra         elev       forest
-----------  -------  ----------  ---------  -----------  -----------  -----------  -----------
-         0        2   -74.16250   11.22084   -0.9688942    3.2478049   -0.5987197   -1.6044373
-         0        1   -73.36250   11.22084   -0.4291335    0.5175475   -0.6180465   -0.9444399
-         0        1   -73.34583   11.22084   -0.4126102    0.4798415   -0.6146853   -1.1142390
-         0        1   -73.33750   11.22084   -0.4212653    0.4489911   -0.6130047   -1.4206753
-         0        2   -69.54583   11.22084    1.1468732   -0.8861441    0.2634217    0.4553430
-         0        4   -74.22917   11.21250   -1.5346200    2.4456954   -0.5600662   -1.5156730
+        presences   trials         lon        lat          cld    cld_intra         elev       forest
+-----  ----------  -------  ----------  ---------  -----------  -----------  -----------  -----------
+687             0        2   -74.16250   11.22084   -0.9688942    3.2478049   -0.5987197   -1.6044373
+783             0        1   -73.36250   11.22084   -0.4291335    0.5175475   -0.6180465   -0.9444399
+785             0        1   -73.34583   11.22084   -0.4126102    0.4798415   -0.6146853   -1.1142390
+786             0        1   -73.33750   11.22084   -0.4212653    0.4489911   -0.6130047   -1.4206753
+1241            0        2   -69.54583   11.22084    1.1468732   -0.8861441    0.2634217    0.4553430
+2710            0        4   -74.22917   11.21250   -1.5346200    2.4456954   -0.5600662   -1.5156730
 
 Then transform the full gridded dataset into a `data.frame` with associated environmental data for predicting across space.
 
@@ -526,35 +524,6 @@ results=foreach(m=1:nrow(mods),.packages="hSDM") %dopar% {
   }
 ```
 
-```
-## 
-## Running the Gibbs sampler. It may be long, please keep cool :)
-## 
-## **********:10.0%, mean accept. rates= beta:0.222, gamma:0.233
-## **********:20.0%, mean accept. rates= beta:0.111, gamma:0.033
-## **********:30.0%, mean accept. rates= beta:0.122, gamma:0.100
-## **********:40.0%, mean accept. rates= beta:0.178, gamma:0.200
-## **********:50.0%, mean accept. rates= beta:0.211, gamma:0.067
-## **********:60.0%, mean accept. rates= beta:0.289, gamma:0.133
-## **********:70.0%, mean accept. rates= beta:0.233, gamma:0.500
-## **********:80.0%, mean accept. rates= beta:0.222, gamma:0.267
-## **********:90.0%, mean accept. rates= beta:0.289, gamma:0.333
-## **********:100.0%, mean accept. rates= beta:0.244, gamma:0.267
-## 
-## Running the Gibbs sampler. It may be long, please keep cool :)
-## 
-## **********:10.0%, mean accept. rates= beta:0.186, gamma:0.167
-## **********:20.0%, mean accept. rates= beta:0.143, gamma:0.033
-## **********:30.0%, mean accept. rates= beta:0.143, gamma:0.100
-## **********:40.0%, mean accept. rates= beta:0.162, gamma:0.167
-## **********:50.0%, mean accept. rates= beta:0.219, gamma:0.133
-## **********:60.0%, mean accept. rates= beta:0.262, gamma:0.300
-## **********:70.0%, mean accept. rates= beta:0.243, gamma:0.267
-## **********:80.0%, mean accept. rates= beta:0.248, gamma:0.100
-## **********:90.0%, mean accept. rates= beta:0.262, gamma:0.167
-## **********:100.0%, mean accept. rates= beta:0.305, gamma:0.333
-```
-
 ## Summarize posterior parameters
 The model returns full posterior distributions for all model parameters.  To summarize them you need to choose your summary metric (e.g. mean/median/quantiles). 
 
@@ -600,8 +569,8 @@ kable(pDetect,row.names=F)
 
 modelname            gamma.hat   delta.est
 ------------------  ----------  ----------
-Cloud + Elevation    -2.283288   0.0925165
-Full Model           -2.281795   0.0926420
+Cloud + Elevation    -2.291988   0.0917887
+Full Model           -2.281770   0.0926440
 
 >  How does this change if you add environmental covariates to the observability regression?
 
@@ -638,19 +607,8 @@ gplot(pred,maxpixels=1e5)+geom_raster(aes(fill=value)) +
   coord_equal()
 ```
 
-```
-## Regions defined for each Polygons
-```
-
-```
-## Warning: Removed 30 rows containing missing values (geom_path).
-```
-
-```
-## Warning: Removed 30 rows containing missing values (geom_path).
-```
-
 ![](hSDM_intro_files/figure-html/plotmodel-1.png) 
+
 ## Model selection
 
 Model selection is an extremely important component of any modeling excercise.  See [Hooten and Hobbs (2015)](http://www.esajournals.org/doi/abs/10.1890/14-0661.1) for a recent review of various methods.
