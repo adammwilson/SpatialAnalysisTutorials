@@ -34,12 +34,17 @@ R
 And load some packages (either from your own privaite library or from mine).
 
 ```r
+lpath="/lustre/scratch/client/fas/geodata/aw524/R/"
+library(package = "lattice",lib.loc=lpath)
 library(rgdal)
-packages=c("raster","dismo","maptools","sp","maps","rgeos","doParallel","rMOL","reshape","rasterVis","ggplot2","knitr","texreg")
-.libPaths(new="/lustre/scratch/client/fas/geodata/aw524/R/")
-needpackages=packages[!packages%in%rownames(installed.packages())]
-lapply(needpackages,install.packages)
-lapply(packages, require, character.only=T,quietly=T)
+.libPaths(new=lpath)
+packages=c("hSDM","dismo","maptools","sp",
+           "maps","coda","rgdal","rgeos",
+           "doParallel","rMOL","reshape",
+           "ggplot2","knitr","rasterVis","texreg")
+l=lapply(packages, library, 
+         character.only=T,quietly=T)
+
 
 rasterOptions(chunksize=1000,maxmemory=1000)
 ```
