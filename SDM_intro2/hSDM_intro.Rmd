@@ -14,17 +14,18 @@ output:
 ## This chunk automatically generates a text .R version of this script when running within knitr.  You do not need to run this...
 library(knitr)
 input  = knitr::current_input()  # filename of input document
+input="SDM_intro2/hSDM_intro.Rmd"
 output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
 #knitr::purl(input,output,documentation=2,quiet=T)
 repo="adammwilson/SpatialAnalysisTutorials/blob/master"
-knitr::opts_chunk$set(cache=T)
+knitr::opts_chunk$set(cache=T,fig.width=30)
 
 #Sys.setenv(PATH="/Library/Frameworks/GDAL.framework/Programs/:/Library/Frameworks/Python.framework/Versions/2.7/bin:/Applications/:${PATH}")
 
 ## set light theme for ggplot
 library(ggplot2)
 theme_set(theme_light()+
-            theme(text=element_text(size = 38)))
+            theme(text=element_text(size = 28)))
 
 ```
 
@@ -102,14 +103,14 @@ qsub: job 4599636.rocks.omega.hpc.yale.internal ready
 And load some packages (either from your own privaite library or from mine).
 ```{r loadLibraries,results='hide',message=FALSE}
 library(rgdal)
-packages=c("hSDM","rasterVis","dismo","maptools","sp","maps","dplyr","coda","rgdal","rgeos","doParallel","rMOL","reshape","rasterVis","ggplot2","knitr")
+packages=c("hSDM","rasterVis","dismo","maptools","sp","maps","coda","rgdal","rgeos","doParallel","rMOL","reshape","rasterVis","ggplot2","knitr")
 .libPaths(new="/lustre/scratch/client/fas/geodata/aw524/R/")
 needpackages=packages[!packages%in%rownames(installed.packages())]
 lapply(needpackages,install.packages)
 lapply(packages, require, character.only=T,quietly=T)
 
 rasterOptions(chunksize=1000,maxmemory=1000)
-ncores=1  # number of processor cores you would like to use
+ncores=2  # number of processor cores you would like to use
 registerDoParallel(ncores)
 
 ```
@@ -220,7 +221,7 @@ projection(sampling)="+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=
 presences=rasterize(as(points,"SpatialPoints"),sampling,fun='count',background=0)
 fitdata=cbind.data.frame(presences=values(presences),trials=values(sampling),coordinates(presences))
 ## filter to locations with at least one trial
-fitdata=filter(fitdata,trials>0)
+fitdata=fitdata[fitdata$trials>0,]
 ```
 
 
@@ -250,10 +251,10 @@ ggplot(fitdata@data,aes(y=lat,x=lon))+
   geom_path(data=fortify(range),
             aes(y=lat,x=long,group=piece),
             col="green")+
-  geom_point(data=filter(fitdata@data,presences==0),
+  geom_point(data=fitdata@data[fitdata$presences==0,],
              aes(x=lon,y=lat),pch=1,
              col="black",cex=.8,lwd=2,alpha=.3)+
-  geom_point(data=filter(fitdata@data,presences==1),
+  geom_point(data=fitdata@data[fitdata$presences>=1,],
              aes(x=lon,y=lat),pch=3,
              col="red",cex=2,lwd=3,alpha=1)+
   ylab("Latitude")+xlab("Longitude")+
@@ -319,7 +320,7 @@ senv=scale(env[[vars]])
 
 ### Visualize the environmental data
 
-```{r plotEnv,fig.width=11}
+```{r plotEnv,fig.width=11,warning=FALSE,message=FALSE}
 ## set plotting limits using expert range above
 
 gx=xlim(extent(env)@xmin,extent(env)@xmax)
@@ -393,7 +394,8 @@ mods=data.frame(
 kable(mods)
 ```
 
-Specify model run-lengths.  
+Specify model run-lengths. _Real_ model runs generally require far more iterations (e.g. 10^3-10^5 samples) to achieve convergence and aquire a suitable sample.  For now, we'll do a very short run:
+
 ```{r modelSetup}
 burnin=200
 mcmc=100
@@ -413,11 +415,11 @@ If the species has been observed at least once during multiple visits, we can as
 
 **Ecological process:**
 
- ![](assets/M1.png)
+<img src="assets/M1.png" alt="Drawing" style="width: 300px;"/>
 
 **Observation process:**
 
- ![](assets/M2.png)
+<img src="assets/M2.png" alt="Drawing" style="width: 300px;"/>
 
 In this example we'll assume a spatially constant p(observation|presence), but it's also possible to put in covariates for this parameter.
 
@@ -510,16 +512,18 @@ gplot(pred,maxpixels=1e5)+geom_raster(aes(fill=value)) +
   geom_path(data=fortify(range),
             aes(y=lat,x=long,group=piece),
             fill="red",col="red")+
-  geom_point(data=filter(fitdata@data,presences==0),
+  geom_point(data=fitdata@data[fitdata$presences==0,],
              aes(x=lon,y=lat,fill=1),pch=1,col="black",cex=.8,lwd=2,alpha=.3)+
-  geom_point(data=filter(fitdata@data,presences>=1),
+  geom_point(data=fitdata@data[fitdata$presences>=1,],
              aes(x=lon,y=lat,fill=1),pch=3,col="red",cex=2,lwd=3,alpha=1)+
   ggcoast+gx+gy+ylab("Latitude")+xlab("Longitude")+
   labs(col = "p(presence)")+
   coord_equal()
 
 ```
+## Model selection
 
+Model selection is an extremely important component of any modeling excercise.  See [Hooten and Hobbs (2015)](http://www.esajournals.org/doi/abs/10.1890/14-0661.1) for a recent review of various methods.
 
 ## Additional Models in hSDM
 

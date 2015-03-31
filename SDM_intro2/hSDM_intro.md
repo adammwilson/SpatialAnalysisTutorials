@@ -80,14 +80,14 @@ And load some packages (either from your own privaite library or from mine).
 
 ```r
 library(rgdal)
-packages=c("hSDM","rasterVis","dismo","maptools","sp","maps","dplyr","coda","rgdal","rgeos","doParallel","rMOL","reshape","rasterVis","ggplot2","knitr")
+packages=c("hSDM","rasterVis","dismo","maptools","sp","maps","coda","rgdal","rgeos","doParallel","rMOL","reshape","rasterVis","ggplot2","knitr")
 .libPaths(new="/lustre/scratch/client/fas/geodata/aw524/R/")
 needpackages=packages[!packages%in%rownames(installed.packages())]
 lapply(needpackages,install.packages)
 lapply(packages, require, character.only=T,quietly=T)
 
 rasterOptions(chunksize=1000,maxmemory=1000)
-ncores=1  # number of processor cores you would like to use
+ncores=2  # number of processor cores you would like to use
 registerDoParallel(ncores)
 ```
 
@@ -239,7 +239,7 @@ projection(sampling)="+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=
 presences=rasterize(as(points,"SpatialPoints"),sampling,fun='count',background=0)
 fitdata=cbind.data.frame(presences=values(presences),trials=values(sampling),coordinates(presences))
 ## filter to locations with at least one trial
-fitdata=filter(fitdata,trials>0)
+fitdata=fitdata[fitdata$trials>0,]
 ```
 
 
@@ -271,10 +271,10 @@ ggplot(fitdata@data,aes(y=lat,x=lon))+
   geom_path(data=fortify(range),
             aes(y=lat,x=long,group=piece),
             col="green")+
-  geom_point(data=filter(fitdata@data,presences==0),
+  geom_point(data=fitdata@data[fitdata$presences==0,],
              aes(x=lon,y=lat),pch=1,
              col="black",cex=.8,lwd=2,alpha=.3)+
-  geom_point(data=filter(fitdata@data,presences==1),
+  geom_point(data=fitdata@data[fitdata$presences>=1,],
              aes(x=lon,y=lat),pch=3,
              col="red",cex=2,lwd=3,alpha=1)+
   ylab("Latitude")+xlab("Longitude")+
@@ -364,29 +364,9 @@ gplot(senv)+
   scale_fill_gradientn(
     colours=c('darkblue','blue','white','red','darkred'),
     na.value="transparent")+
-  ylab("")+xlab("")+labs(fill = "Standardized\nValue")+
+  ylab("")+xlab("")+labs(fill = "Std\nValue")+
     geom_path(data=fortify(range),aes(y=lat,x=long,group=piece),fill="green",col="black")+
   ggcoast+gx+gy+coord_equal()
-```
-
-```
-## Regions defined for each Polygons
-```
-
-```
-## Warning: Removed 30 rows containing missing values (geom_path).
-```
-
-```
-## Warning: Removed 30 rows containing missing values (geom_path).
-```
-
-```
-## Warning: Removed 30 rows containing missing values (geom_path).
-```
-
-```
-## Warning: Removed 30 rows containing missing values (geom_path).
 ```
 
 ![](hSDM_intro_files/figure-html/plotEnv-1.png) 
@@ -487,7 +467,8 @@ model   formula                                name
 m1      ~cld+elev                              Cloud + Elevation 
 m2      ~cld+cld_intra+elev*I(elev^2)+forest   Full Model        
 
-Specify model run-lengths.  
+Specify model run-lengths. _Real_ model runs generally require far more iterations (e.g. 10^3-10^5 samples) to achieve convergence and aquire a suitable sample.  For now, we'll do a very short run:
+
 
 ```r
 burnin=200
@@ -508,11 +489,11 @@ If the species has been observed at least once during multiple visits, we can as
 
 **Ecological process:**
 
- ![](assets/M1.png)
+<img src="assets/M1.png" alt="Drawing" style="width: 300px;"/>
 
 **Observation process:**
 
- ![](assets/M2.png)
+<img src="assets/M2.png" alt="Drawing" style="width: 300px;"/>
 
 In this example we'll assume a spatially constant p(observation|presence), but it's also possible to put in covariates for this parameter.
 
@@ -648,9 +629,9 @@ gplot(pred,maxpixels=1e5)+geom_raster(aes(fill=value)) +
   geom_path(data=fortify(range),
             aes(y=lat,x=long,group=piece),
             fill="red",col="red")+
-  geom_point(data=filter(fitdata@data,presences==0),
+  geom_point(data=fitdata@data[fitdata$presences==0,],
              aes(x=lon,y=lat,fill=1),pch=1,col="black",cex=.8,lwd=2,alpha=.3)+
-  geom_point(data=filter(fitdata@data,presences>=1),
+  geom_point(data=fitdata@data[fitdata$presences>=1,],
              aes(x=lon,y=lat,fill=1),pch=3,col="red",cex=2,lwd=3,alpha=1)+
   ggcoast+gx+gy+ylab("Latitude")+xlab("Longitude")+
   labs(col = "p(presence)")+
@@ -670,7 +651,9 @@ gplot(pred,maxpixels=1e5)+geom_raster(aes(fill=value)) +
 ```
 
 ![](hSDM_intro_files/figure-html/plotmodel-1.png) 
+## Model selection
 
+Model selection is an extremely important component of any modeling excercise.  See [Hooten and Hobbs (2015)](http://www.esajournals.org/doi/abs/10.1890/14-0661.1) for a recent review of various methods.
 
 ## Additional Models in hSDM
 
