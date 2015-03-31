@@ -85,9 +85,10 @@
 #' And load some packages (either from your own privaite library or from mine).
 ## ----loadLibraries,results='hide',message=FALSE--------------------------
 library(rgdal)
-packages=c("hSDM","lattice","rasterVis","dismo","maptools","sp","maps","coda","rgdal","rgeos","doParallel","rMOL","reshape","rasterVis","ggplot2","knitr")
+packages=c("hSDM","rasterVis","dismo","maptools","sp","maps","coda","rgdal","rgeos","doParallel","rMOL","reshape","rasterVis","ggplot2","knitr")
 .libPaths(new="/lustre/scratch/client/fas/geodata/aw524/R/")
 needpackages=packages[!packages%in%rownames(installed.packages())]
+lapply(needpackages,install.packages)
 lapply(packages, require, character.only=T,quietly=T)
 
 rasterOptions(chunksize=1000,maxmemory=1000)
@@ -152,7 +153,8 @@ range=dsp[["range"]]
 
 #' 
 #' Check out the data structure:
-## ----headSpd, results='asis'---------------------------------------------
+#' 
+## ----headSpd,results='asis'----------------------------------------------
 kable(head(points_all[,-1]))
 
 #' 
@@ -271,7 +273,7 @@ fenv=c(
 #' 
 ## ----,results='hide'-----------------------------------------------------
 ## crop to species domain and copy to project folder 
-env=foreach(i=1:length(fenv))%dopar%{
+env=foreach(i=1:length(fenv))%do%{
   fo=file.path(outputdir,paste0(names(fenv)[i],"_clipped.grd"))
   crop(raster(file.path(datadir,fenv[i])),range,file=fo,overwrite=T)   
 }
@@ -375,7 +377,8 @@ mods=data.frame(
 kable(mods)
 
 #' 
-#' Specify model run-lengths.  
+#' Specify model run-lengths. _Real_ model runs generally require far more iterations (e.g. 10^3-10^5 samples) to achieve convergence and aquire a suitable sample.  For now, we'll do a very short run:
+#' 
 ## ----modelSetup----------------------------------------------------------
 burnin=200
 mcmc=100
@@ -482,7 +485,7 @@ pred=foreach(r1=results,.combine=stack,.packages="raster")%dopar% {
 
 #' 
 #' Compare the model predictions
-## ----plotmodel-----------------------------------------------------------
+## ----plotmodel,warning=FALSE,message=FALSE-------------------------------
 predscale=scale_fill_gradientn(values=c(0,.5,1),colours=c('white','darkgreen','green'),na.value="transparent")
 
 gplot(pred,maxpixels=1e5)+geom_raster(aes(fill=value)) +
@@ -501,6 +504,7 @@ gplot(pred,maxpixels=1e5)+geom_raster(aes(fill=value)) +
   coord_equal()
 
 
+#' 
 #' ## Model selection
 #' 
 #' Model selection is an extremely important component of any modeling excercise.  See [Hooten and Hobbs (2015)](http://www.esajournals.org/doi/abs/10.1890/14-0661.1) for a recent review of various methods.

@@ -13,7 +13,7 @@ output:
 ```{r setup, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
 ## This chunk automatically generates a text .R version of this script when running within knitr.  You do not need to run this...
 library(knitr)
-input  = knitr::current_input()  # filename of input document
+#input  = knitr::current_input()  # filename of input document
 input="SDM_intro2/hSDM_intro.Rmd"
 output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
 #knitr::purl(input,output,documentation=2,quiet=T)
@@ -172,7 +172,7 @@ range=dsp[["range"]]
 
 Check out the data structure:
 
-```{r headSpd}
+```{r headSpd,results='asis'}
 kable(head(points_all[,-1]))
 ```
 
