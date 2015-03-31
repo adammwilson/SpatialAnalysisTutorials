@@ -169,19 +169,19 @@ Check out the data structure:
 
 
 ```r
-kable(head(points_all[,-1]))
+kable(head(points_all[,-1]), format = "markdown")
 ```
 
 
 
-   latitude   longitude  scientific_name             observation_date            effort_distance_km  effort_area_ha    cartodb_id  created_at                 updated_at               
------------  ----------  --------------------------  -------------------------  -------------------  ---------------  -----------  -------------------------  -------------------------
-  -0.051069   -78.77841  Lepidocolaptes lacrymiger   1996-02-13T01:00:00+0100                 9.656  NA                      5083  2015-02-18T11:19:10+0100   2015-02-24T17:54:27+0100 
-  -0.464081   -77.88925  Lepidocolaptes lacrymiger   1996-04-06T02:00:00+0200                 3.219  NA                      8655  2015-02-18T11:19:10+0100   2015-02-24T17:54:27+0100 
-   4.262556   -73.80932  Lepidocolaptes lacrymiger   1989-10-16T01:00:00+0100                    NA  NA                      9137  2015-02-18T11:19:10+0100   2015-02-24T17:54:27+0100 
- -16.691000   -66.47900  Lepidocolaptes lacrymiger   2001-08-18T02:00:00+0200                 1.000  NA                     12207  2015-02-18T11:19:10+0100   2015-02-24T17:54:27+0100 
-  -4.494885   -79.13255  Lepidocolaptes lacrymiger   1999-09-08T02:00:00+0200                20.000  NA                     14528  2015-02-18T11:19:10+0100   2015-02-24T17:54:27+0100 
-  -0.589837   -77.88129  Lepidocolaptes lacrymiger   2000-07-29T02:00:00+0200                 1.609  NA                     15384  2015-02-18T11:19:10+0100   2015-02-24T17:54:27+0100 
+|   latitude| longitude|scientific_name           |observation_date         | effort_distance_km|effort_area_ha | cartodb_id|created_at               |updated_at               |
+|----------:|---------:|:-------------------------|:------------------------|------------------:|:--------------|----------:|:------------------------|:------------------------|
+|  -0.051069| -78.77841|Lepidocolaptes lacrymiger |1996-02-13T01:00:00+0100 |              9.656|NA             |       5083|2015-02-18T11:19:10+0100 |2015-02-24T17:54:27+0100 |
+|  -0.464081| -77.88925|Lepidocolaptes lacrymiger |1996-04-06T02:00:00+0200 |              3.219|NA             |       8655|2015-02-18T11:19:10+0100 |2015-02-24T17:54:27+0100 |
+|   4.262556| -73.80932|Lepidocolaptes lacrymiger |1989-10-16T01:00:00+0100 |                 NA|NA             |       9137|2015-02-18T11:19:10+0100 |2015-02-24T17:54:27+0100 |
+| -16.691000| -66.47900|Lepidocolaptes lacrymiger |2001-08-18T02:00:00+0200 |              1.000|NA             |      12207|2015-02-18T11:19:10+0100 |2015-02-24T17:54:27+0100 |
+|  -4.494885| -79.13255|Lepidocolaptes lacrymiger |1999-09-08T02:00:00+0200 |             20.000|NA             |      14528|2015-02-18T11:19:10+0100 |2015-02-24T17:54:27+0100 |
+|  -0.589837| -77.88129|Lepidocolaptes lacrymiger |2000-07-29T02:00:00+0200 |              1.609|NA             |      15384|2015-02-18T11:19:10+0100 |2015-02-24T17:54:27+0100 |
 
 Explore  observer effort: sampling duration, distance travelled, and area surveyed.
 
@@ -407,17 +407,19 @@ fitdata=fitdata[fitdata$presences<=fitdata$trials,]
 ## omit rows with missing data (primarily ocean pixels)
 fitdata2=na.omit(fitdata@data)
 
-kable(head(fitdata2))
+kable(head(fitdata2), format = "markdown")
 ```
 
-        presences   trials         lon        lat          cld    cld_intra         elev       forest
------  ----------  -------  ----------  ---------  -----------  -----------  -----------  -----------
-687             0        2   -74.16250   11.22084   -0.9688942    3.2478049   -0.5987197   -1.6044373
-783             0        1   -73.36250   11.22084   -0.4291335    0.5175475   -0.6180465   -0.9444399
-785             0        1   -73.34583   11.22084   -0.4126102    0.4798415   -0.6146853   -1.1142390
-786             0        1   -73.33750   11.22084   -0.4212653    0.4489911   -0.6130047   -1.4206753
-1241            0        2   -69.54583   11.22084    1.1468732   -0.8861441    0.2634217    0.4553430
-2710            0        4   -74.22917   11.21250   -1.5346200    2.4456954   -0.5600662   -1.5156730
+
+
+|     | presences| trials|       lon|      lat|        cld|  cld_intra|       elev|     forest|
+|:----|---------:|------:|---------:|--------:|----------:|----------:|----------:|----------:|
+|687  |         0|      2| -74.16250| 11.22084| -0.9688942|  3.2478049| -0.5987197| -1.6044373|
+|783  |         0|      1| -73.36250| 11.22084| -0.4291335|  0.5175475| -0.6180465| -0.9444399|
+|785  |         0|      1| -73.34583| 11.22084| -0.4126102|  0.4798415| -0.6146853| -1.1142390|
+|786  |         0|      1| -73.33750| 11.22084| -0.4212653|  0.4489911| -0.6130047| -1.4206753|
+|1241 |         0|      2| -69.54583| 11.22084|  1.1468732| -0.8861441|  0.2634217|  0.4553430|
+|2710 |         0|      4| -74.22917| 11.21250| -1.5346200|  2.4456954| -0.5600662| -1.5156730|
 
 Then transform the full gridded dataset into a `data.frame` with associated environmental data for predicting across space.
 
@@ -430,17 +432,19 @@ colnames(pdata)[1:2]=c("lon","lat")
 ## omit rows with missing data (primarily ocean pixels)
 pdata=na.omit(pdata)
 
-kable(head(pdata))
+kable(head(pdata), format = "markdown")
 ```
 
-             lon        lat         cld   cld_intra         elev      forest
-----  ----------  ---------  ----------  ----------  -----------  ----------
-678    -74.23750   11.22083   -1.838334    2.216032   -0.6037615   -1.655552
-679    -74.22917   11.22083   -1.684116    2.341147   -0.5558647   -1.028218
-680    -74.22083   11.22083   -1.492131    2.531391   -0.5096486   -1.144409
-681    -74.21250   11.22083   -1.225399    2.869031   -0.5987197   -1.717886
-682    -74.20417   11.22083   -1.113670    3.060989   -0.6062824   -1.700682
-683    -74.19583   11.22083   -1.054658    3.150112   -0.6121644   -1.729356
+
+
+|    |       lon|      lat|       cld| cld_intra|       elev|    forest|
+|:---|---------:|--------:|---------:|---------:|----------:|---------:|
+|678 | -74.23750| 11.22083| -1.838334|  2.216032| -0.6037615| -1.655552|
+|679 | -74.22917| 11.22083| -1.684116|  2.341147| -0.5558647| -1.028218|
+|680 | -74.22083| 11.22083| -1.492131|  2.531391| -0.5096486| -1.144409|
+|681 | -74.21250| 11.22083| -1.225399|  2.869031| -0.5987197| -1.717886|
+|682 | -74.20417| 11.22083| -1.113670|  3.060989| -0.6062824| -1.700682|
+|683 | -74.19583| 11.22083| -1.054658|  3.150112| -0.6121644| -1.729356|
 
 This table is similar to the data available from the "Annotate" function in MOL, with the exception that it contains the point data aggregated to the resolution of the environmental data.
 
@@ -457,15 +461,15 @@ mods=data.frame(
   name=c( "Cloud + Elevation",
           "Full Model"))
 
-kable(mods)
+kable(mods, format = "markdown")
 ```
 
 
 
-model   formula                                name              
-------  -------------------------------------  ------------------
-m1      ~cld+elev                              Cloud + Elevation 
-m2      ~cld+cld_intra+elev*I(elev^2)+forest   Full Model        
+|model |formula                              |name              |
+|:-----|:------------------------------------|:-----------------|
+|m1    |~cld+elev                            |Cloud + Elevation |
+|m2    |~cld+cld_intra+elev*I(elev^2)+forest |Full Model        |
 
 Specify model run-lengths. _Real_ model runs generally require far more iterations (e.g. 10^3-10^5 samples) to achieve convergence and aquire a suitable sample.  For now, we'll do a very short run:
 
@@ -564,15 +568,15 @@ pDetect <-   params[params$parameter=="gamma.(Intercept)",
                     c("modelname","mean")]
 pDetect$delta.est <- inv.logit(pDetect$mean)
 colnames(pDetect)[2]="gamma.hat"
-kable(pDetect,row.names=F)
+kable(pDetect,row.names=F, format = "markdown")
 ```
 
 
 
-modelname            gamma.hat   delta.est
-------------------  ----------  ----------
-Cloud + Elevation    -2.283343   0.0925119
-Full Model           -2.260142   0.0944783
+|modelname         | gamma.hat| delta.est|
+|:-----------------|---------:|---------:|
+|Cloud + Elevation | -2.283343| 0.0925119|
+|Full Model        | -2.260142| 0.0944783|
 
 >  How does this change if you add environmental covariates to the observability regression?
 

@@ -242,7 +242,7 @@ if(!file.exists(outputdir)) dir.create(outputdir,recursive=T)</code></pre>
 <pre class="r"><code>points_all=dsp[[&quot;ebird&quot;]]
 range=dsp[[&quot;range&quot;]]</code></pre>
 <p>Check out the data structure:</p>
-<pre class="r"><code>kable(head(points_all[,-1]))</code></pre>
+<pre class="r"><code>kable(head(points_all[,-1]), format = &quot;markdown&quot;)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -474,7 +474,7 @@ table(fitdata$presences&gt;fitdata$trials)</code></pre>
 ## omit rows with missing data (primarily ocean pixels)
 fitdata2=na.omit(fitdata@data)
 
-kable(head(fitdata2))</code></pre>
+kable(head(fitdata2), format = &quot;markdown&quot;)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -566,7 +566,7 @@ colnames(pdata)[1:2]=c(&quot;lon&quot;,&quot;lat&quot;)
 ## omit rows with missing data (primarily ocean pixels)
 pdata=na.omit(pdata)
 
-kable(head(pdata))</code></pre>
+kable(head(pdata), format = &quot;markdown&quot;)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -650,7 +650,7 @@ mods=data.frame(
   name=c( &quot;Cloud + Elevation&quot;,
           &quot;Full Model&quot;))
 
-kable(mods)</code></pre>
+kable(mods, format = &quot;markdown&quot;)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -667,8 +667,7 @@ kable(mods)</code></pre>
 </tr>
 <tr class="even">
 <td align="left">m2</td>
-<td align="left">~cld+cld_intra+elev*I(elev^2)+forest</td>
-<td align="left">Full Model</td>
+<td align="left">~cld+cld_intra+elev*I(elev^2)+forest |Full Model |</td>
 </tr>
 </tbody>
 </table>
@@ -744,7 +743,7 @@ ggplot(params[!grepl(&quot;Deviance*&quot;,rownames(params)),],
                     c(&quot;modelname&quot;,&quot;mean&quot;)]
 pDetect$delta.est &lt;- inv.logit(pDetect$mean)
 colnames(pDetect)[2]=&quot;gamma.hat&quot;
-kable(pDetect,row.names=F)</code></pre>
+kable(pDetect,row.names=F, format = &quot;markdown&quot;)</code></pre>
 <table>
 <thead>
 <tr class="header">

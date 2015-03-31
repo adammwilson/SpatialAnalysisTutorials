@@ -156,7 +156,7 @@ range=dsp[["range"]]
 #' Check out the data structure:
 #' 
 ## ----headSpd,results='asis'----------------------------------------------
-kable(head(points_all[,-1]))
+kable(head(points_all[,-1]), format = "markdown")
 
 #' 
 #' Explore  observer effort: sampling duration, distance travelled, and area surveyed.
@@ -345,7 +345,7 @@ fitdata=fitdata[fitdata$presences<=fitdata$trials,]
 ## omit rows with missing data (primarily ocean pixels)
 fitdata2=na.omit(fitdata@data)
 
-kable(head(fitdata2))
+kable(head(fitdata2), format = "markdown")
 
 #' 
 #' Then transform the full gridded dataset into a `data.frame` with associated environmental data for predicting across space.
@@ -358,7 +358,7 @@ colnames(pdata)[1:2]=c("lon","lat")
 ## omit rows with missing data (primarily ocean pixels)
 pdata=na.omit(pdata)
 
-kable(head(pdata))
+kable(head(pdata), format = "markdown")
 
 #' 
 #' This table is similar to the data available from the "Annotate" function in MOL, with the exception that it contains the point data aggregated to the resolution of the environmental data.
@@ -375,7 +375,7 @@ mods=data.frame(
   name=c( "Cloud + Elevation",
           "Full Model"))
 
-kable(mods)
+kable(mods, format = "markdown")
 
 #' 
 #' Specify model run-lengths. _Real_ model runs generally require far more iterations (e.g. 10^3-10^5 samples) to achieve convergence and aquire a suitable sample.  For now, we'll do a very short run:
@@ -469,7 +469,7 @@ pDetect <-   params[params$parameter=="gamma.(Intercept)",
                     c("modelname","mean")]
 pDetect$delta.est <- inv.logit(pDetect$mean)
 colnames(pDetect)[2]="gamma.hat"
-kable(pDetect,row.names=F)
+kable(pDetect,row.names=F, format = "markdown")
 
 #' 
 #' >  How does this change if you add environmental covariates to the observability regression?
