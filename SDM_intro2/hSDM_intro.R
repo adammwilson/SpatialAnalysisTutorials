@@ -25,7 +25,7 @@
 #' This script is available:
 #' 
 #'   * [MD format with images/plots](https://github.com/adammwilson/SpatialAnalysisTutorials/blob/master/SDM_intro2/hSDM_intro.md)
-#'   * [Plain text (.R) with commented text](https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/hSDM_intro.R)
+#'   * [Plain text (.R) with commented text](https://github.com/adammwilson/SpatialAnalysisTutorials/raw/master/SDM_intro2/hSDM_intro.R)
 #' 
 #' You are welcome to follow along on the screen or download the R script and run it on your computer. 
 #' 
