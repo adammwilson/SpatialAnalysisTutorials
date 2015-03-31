@@ -3,10 +3,10 @@ title: "Simple species distribution model workflow"
 author: "Adam M. Wilson"
 date: "March 24, 2015"
 output:
-  pdf_document: default
   html_document:
     keep_md: yes
     toc: yes
+  pdf_document: default
 ---
 
 

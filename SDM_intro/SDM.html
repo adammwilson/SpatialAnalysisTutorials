@@ -364,204 +364,113 @@ p=stack(p1,p2); names(p)=c(&quot;Model 1&quot;,&quot;Model 2&quot;)</code></pre>
 <pre class="r"><code>#screenreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)
 htmlreg(list(m1,m2),digits = 7,doctype=FALSE,align.center=TRUE)</code></pre>
 <table cellspacing="0" align="center" style="border: none;">
-  <caption align="bottom" style="margin-top:0.3em;">
+<caption align="bottom" style="margin-top:0.3em;">
 Statistical models
 </caption>
-  <tr>
-    <th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;"></th>
-    <th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
-<b>Model 1</b>
-</th>
-    <th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
-<b>Model 2</b>
-</th>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;">
-(Intercept)
-</td>
-    <td style="padding-right: 12px; border: none;">
--19.3409971<sup style="vertical-align: 4px;">***</sup>
-</td>
-    <td style="padding-right: 12px; border: none;">
--20.8260992<sup style="vertical-align: 4px;">***</sup>
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">
-(0.3816231)
-</td>
-    <td style="padding-right: 12px; border: none;">
-(0.8817601)
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;">
-cld
-</td>
-    <td style="padding-right: 12px; border: none;">
-0.0020602<sup style="vertical-align: 4px;">***</sup>
-</td>
-    <td style="padding-right: 12px; border: none;">
-0.0009779<sup style="vertical-align: 4px;">***</sup>
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">
-(0.0000427)
-</td>
-    <td style="padding-right: 12px; border: none;">
-(0.0000793)
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;">
-elev
-</td>
-    <td style="padding-right: 12px; border: none;">
--0.0000277
-</td>
-    <td style="padding-right: 12px; border: none;">
-0.0105170<sup style="vertical-align: 4px;">***</sup>
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">
-(0.0000262)
-</td>
-    <td style="padding-right: 12px; border: none;">
-(0.0007179)
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;">
-cld_intra
-</td>
-    <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">
-0.0002173
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">
-(0.0001473)
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;">
-I(elev^2)
-</td>
-    <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">
--0.0000036<sup style="vertical-align: 4px;">***</sup>
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">
-(0.0000003)
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;">
-forest
-</td>
-    <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">
-0.0003555<sup style="vertical-align: 4px;">***</sup>
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">
-(0.0000149)
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;">
-elev:I(elev^2)
-</td>
-    <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">
-0.0000000<sup style="vertical-align: 4px;">***</sup>
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;"></td>
-    <td style="padding-right: 12px; border: none;">
-(0.0000000)
-</td>
-  </tr>
-  <tr>
-    <td style="border-top: 1px solid black;">
-AIC
-</td>
-    <td style="border-top: 1px solid black;">
-10370.8011995
-</td>
-    <td style="border-top: 1px solid black;">
-7830.9849023
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;">
-BIC
-</td>
-    <td style="padding-right: 12px; border: none;">
-10393.9082498
-</td>
-    <td style="padding-right: 12px; border: none;">
-7884.9013529
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;">
-Log Likelihood
-</td>
-    <td style="padding-right: 12px; border: none;">
--5182.4005998
-</td>
-    <td style="padding-right: 12px; border: none;">
--3908.4924512
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;">
-Deviance
-</td>
-    <td style="padding-right: 12px; border: none;">
-10364.8011995
-</td>
-    <td style="padding-right: 12px; border: none;">
-7816.9849023
-</td>
-  </tr>
-  <tr>
-    <td style="border-bottom: 2px solid black;">
-Num. obs.
-</td>
-    <td style="border-bottom: 2px solid black;">
-16356
-</td>
-    <td style="border-bottom: 2px solid black;">
-16356
-</td>
-  </tr>
-  <tr>
-    <td style="padding-right: 12px; border: none;" colspan="3">
-<span style="font-size:0.8em"><sup style="vertical-align: 4px;"><em><strong></sup>p &lt; 0.001, <sup style="vertical-align: 4px;"></strong></sup>p &lt; 0.01, <sup style="vertical-align: 4px;"></em></sup>p &lt; 0.05</span>
-</td>
-  </tr>
+<tr>
+<pre><code>&lt;th style=&quot;text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;&quot;&gt;&lt;/th&gt;
+&lt;th style=&quot;text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;&quot;&gt;&lt;b&gt;Model 1&lt;/b&gt;&lt;/th&gt;
+&lt;th style=&quot;text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;&quot;&gt;&lt;b&gt;Model 2&lt;/b&gt;&lt;/th&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;(Intercept)&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;-19.3409971&lt;sup style=&quot;vertical-align: 4px;&quot;&gt;***&lt;/sup&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;-20.8260992&lt;sup style=&quot;vertical-align: 4px;&quot;&gt;***&lt;/sup&gt;&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;(0.3816231)&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;(0.8817601)&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;cld&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;0.0020602&lt;sup style=&quot;vertical-align: 4px;&quot;&gt;***&lt;/sup&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;0.0009779&lt;sup style=&quot;vertical-align: 4px;&quot;&gt;***&lt;/sup&gt;&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;(0.0000427)&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;(0.0000793)&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;elev&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;-0.0000277&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;0.0105170&lt;sup style=&quot;vertical-align: 4px;&quot;&gt;***&lt;/sup&gt;&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;(0.0000262)&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;(0.0007179)&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;cld_intra&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;0.0002173&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;(0.0001473)&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;I(elev^2)&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;-0.0000036&lt;sup style=&quot;vertical-align: 4px;&quot;&gt;***&lt;/sup&gt;&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;(0.0000003)&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;forest&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;0.0003555&lt;sup style=&quot;vertical-align: 4px;&quot;&gt;***&lt;/sup&gt;&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;(0.0000149)&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;elev:I(elev^2)&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;0.0000000&lt;sup style=&quot;vertical-align: 4px;&quot;&gt;***&lt;/sup&gt;&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;(0.0000000)&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;border-top: 1px solid black;&quot;&gt;AIC&lt;/td&gt;
+&lt;td style=&quot;border-top: 1px solid black;&quot;&gt;10370.8011995&lt;/td&gt;
+&lt;td style=&quot;border-top: 1px solid black;&quot;&gt;7830.9849023&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;BIC&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;10393.9082498&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;7884.9013529&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;Log Likelihood&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;-5182.4005998&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;-3908.4924512&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;Deviance&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;10364.8011995&lt;/td&gt;
+&lt;td style=&quot;padding-right: 12px; border: none;&quot;&gt;7816.9849023&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;border-bottom: 2px solid black;&quot;&gt;Num. obs.&lt;/td&gt;
+&lt;td style=&quot;border-bottom: 2px solid black;&quot;&gt;16356&lt;/td&gt;
+&lt;td style=&quot;border-bottom: 2px solid black;&quot;&gt;16356&lt;/td&gt;</code></pre>
+</tr>
+<tr>
+<pre><code>&lt;td style=&quot;padding-right: 12px; border: none;&quot; colspan=&quot;3&quot;&gt;&lt;span style=&quot;font-size:0.8em&quot;&gt;&lt;sup style=&quot;vertical-align: 4px;&quot;&gt;***&lt;/sup&gt;p &amp;lt; 0.001, &lt;sup style=&quot;vertical-align: 4px;&quot;&gt;**&lt;/sup&gt;p &amp;lt; 0.01, &lt;sup style=&quot;vertical-align: 4px;&quot;&gt;*&lt;/sup&gt;p &amp;lt; 0.05&lt;/span&gt;&lt;/td&gt;</code></pre>
+</tr>
 </table>
-
 </div>
 <div id="caveats" class="section level2">
 <h2>Caveats</h2>
