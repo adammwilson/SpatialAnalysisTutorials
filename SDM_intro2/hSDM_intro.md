@@ -86,7 +86,7 @@ library(rgdal)
 packages=c("hSDM","dismo","maptools","sp",
            "maps","coda","rgdal","rgeos",
            "doParallel","rMOL","reshape",
-           "ggplot2","knitr")
+           "ggplot2","knitr","rasterVis")
 l=lapply(packages, library, lib.loc=lpath, 
          character.only=T,quietly=T)
 
