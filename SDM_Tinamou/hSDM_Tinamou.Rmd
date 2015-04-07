@@ -1,7 +1,7 @@
 ---
 title: "Overview of hSDM"
 author: "Adam M. Wilson"
-date: "March 31, 2015"
+date: "April 7, 2015"
 output:
   html_document:
     keep_md: yes
