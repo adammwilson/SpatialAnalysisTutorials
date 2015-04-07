@@ -12,47 +12,6 @@
 #' 
 #' 
 #' 
-#' # Introduction to hSDM
-#' 
-#' ## Objectives
-#' 
-#' * Use opportunistic species occurrence data for occupancy modelling
-#' * Use `hSDM` R package to fit hierarchical distribution model
-#' * Compare output from models built with interpolated and satellite-derived environmental data
-#' 
-#' > One could easily teach an full semester course on the use of this package and modelling framework.  Today we will provide only a quick introduction.
-#' 
-#' This script is available:
-#' 
-#'   * [MD format with images/plots](https://github.com/adammwilson/SpatialAnalysisTutorials/blob/master/SDM_intro2/hSDM_intro.md)
-#'   * [Plain text (.R) with commented text](https://github.com/adammwilson/SpatialAnalysisTutorials/raw/master/SDM_intro2/hSDM_intro.R)
-#' 
-#' You are welcome to follow along on the screen or download the R script and run it on your computer. 
-#' 
-#' # Species Distribution Modeling
-#' 
-#' Two important problems which can bias model results: 
-#' 
-#' 1. imperfect detections ("false absences")
-#' 2. spatial correlation of the observations.
-#' 
-#' ## hSDM R Package
-#' 
-#' Developed by [Ghislain Vieilledent](mailto:ghislain.vieilledent@cirad.fr) with Cory Merow, Jérôme Guélat, Andrew M. Latimer, Marc Kéry, Alan E. Gelfand, Adam M. Wilson, Frédéric Mortier & John A. Silander Jr
-#' 
-#' * User-friendly statistical functions to overcome limitations above.
-#' * Developed in a hierarchical Bayesian framework. 
-#' * Call a Metropolis-within-Gibbs algorithm (coded in C) to estimate model parameters and drastically the computation time compared to other methods (e.g. ~2-10x faster than OpenBUGS).
-#' 
-#' ### Software for modeling species distribution including imperfect detection.
-#' ![hSDM](assets/DetectionMods.png)
-#' 
-#' ## The problem of imperfect detection
-#' 
-#' Site-occupancy models (MacKenzie et al., 2002, _aka_ zero inflated binomial (ZIB) models) for presence-absence data and Nmixture models (Royle, 2004) or zero inflated Poisson (ZIP) models for abundance data (Flores et al., 2009), were developed to solve the problems created by imperfect detection.
-#' 
-#' _________________
-#' 
 #' # Example application
 #' 
 #' ## Starting R on Omega (_in an interactive job_)
@@ -86,14 +45,14 @@
 #' And load some packages (either from your own private library or from mine).
 ## ----loadLibraries,results='hide',message=FALSE--------------------------
 lpath="/lustre/scratch/client/fas/geodata/aw524/R/"
-library(package = "lattice",lib.loc=lpath)
+#library(package = "lattice",lib.loc=lpath)
 library(rgdal)
 .libPaths(new=lpath)
 packages=c("hSDM","dismo","maptools","sp",
            "maps","coda","rgdal","rgeos",
            "doParallel","rMOL","reshape",
            "ggplot2","knitr","rasterVis")
-l=lapply(packages, library, lib.loc=lpath, 
+l=lapply(packages, library,
          character.only=T,quietly=T)
 
 ## set some raster and processing options
@@ -123,16 +82,12 @@ if(!file.exists(outputdir)) dir.create(outputdir,recursive=T)
 #' 
 #' __________
 #' 
-#' # Example Species: *Montane Woodcreeper* (_Lepidocolaptes lacrymiger_)
-#' 
-#' <img src="assets/Lepidocolaptes_lacrymiger.jpg" alt="Lepidocolaptes_lacrymiger Photo" width="250px" />
-#' 
-#' <br><span style="color:grey; font-size:1em;">Figure from [hbw.com](http://www.hbw.com/species/montane-woodcreeper-lepidocolaptes-lacrymiger) </span>
-#' 
-#' 
+#' # Example Species: 
 #' ## Set species name and extract data from MOL:
 ## ----,message=FALSE,results='hide'---------------------------------------
-species="Lepidocolaptes_lacrymiger"
+#species="Lepidocolaptes_lacrymiger"
+
+species="Tinamus_solitarius"
 
 #' 
 #' ## Query eBird data contained in MOL
@@ -231,7 +186,7 @@ ggcoast=geom_path(data=coast,
 ggplot(fitdata@data,aes(y=lat,x=lon))+
   ggcoast+ 
   geom_path(data=fortify(range),
-            aes(y=lat,x=long,group=piece),
+            aes(y=lat,x=long,group=group),
             col="green")+
   geom_point(data=fitdata@data[fitdata$presences==0,],
              aes(x=lon,y=lat),pch=1,
@@ -316,7 +271,7 @@ gplot(senv)+
     colours=c('darkblue','blue','white','red','darkred'),
     na.value="transparent")+
   ylab("")+xlab("")+labs(fill = "Std\nValue")+
-    geom_path(data=fortify(range),aes(y=lat,x=long,group=piece),fill="green",col="black")+
+    geom_path(data=fortify(range),aes(y=lat,x=long,group=group),fill="green",col="black")+
   ggcoast+gx+gy+coord_equal()
 
 #' 
@@ -492,7 +447,7 @@ gplot(pred,maxpixels=1e5)+geom_raster(aes(fill=value)) +
   predscale+
   coord_equal()+
   geom_path(data=fortify(range),
-            aes(y=lat,x=long,group=piece),
+            aes(y=lat,x=long,group=group),
             fill="red",col="red")+
   geom_point(data=fitdata@data[fitdata$presences==0,],
              aes(x=lon,y=lat,fill=1),pch=1,col="black",cex=.8,lwd=2,alpha=.3)+
