@@ -167,7 +167,8 @@ img {
 <pre><code>ssh USER@omega.hpc.yale.edu</code></pre>
 <p>Today we’re going to work in an <em>interactive</em> session on a compute node rather than the <em>head</em> node. To start one, first <code>source .bashrc</code> and then request an <em>interactive</em> job with X forwarding. Then start <code>R</code>:</p>
 <pre><code>source .bashrc
-qsub -q fas_devel -I -X -l nodes=1:ppn=2</code></pre>
+qsub -q fas_devel -I -X -l nodes=1:ppn=2
+R</code></pre>
 <p>For more information on what <code>qsub</code> means, check out the <a href="https://hpc.research.yale.edu/hpc_user_wiki/index.php/Torque_Userguide#qsub_-I">Yale HPC FAQ</a>.</p>
 <p>You should see something like this:</p>
 <pre><code>[aw524@login-0-0 ~]$ qsub -q fas_devel -I -X -l walltime=02:00:00,nodes=1:ppn=2

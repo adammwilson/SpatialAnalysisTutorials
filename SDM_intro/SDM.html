@@ -129,8 +129,8 @@ rasterOptions(chunksize=1000,maxmemory=1000)</code></pre>
 <div id="load-climate-data" class="section level2">
 <h2>Load climate data</h2>
 <p>First set the path to the data directory. You’ll need to uncomment the line setting the directory to <code>lustre/...</code>.</p>
-<pre class="r"><code>datadir=&quot;~/work/env/&quot;
-#datadir=&quot;/lustre/scratch/client/fas/geodata/aw524/data&quot;</code></pre>
+<pre class="r"><code>if(Sys.info()[[&quot;sysname&quot;]]==&quot;Darwin&quot;) datadir=&quot;~/work/env/&quot;
+if(Sys.info()[[&quot;sysname&quot;]]==&quot;Linux&quot;) datadir=&quot;/lustre/scratch/client/fas/geodata/aw524/data&quot;</code></pre>
 <p>And create an output directory <code>outputdir</code> to hold the outputs. It’s a good idea to define these as variables so it’s easy to change them later if you move to a different machine.</p>
 <pre class="r"><code>outputdir=&quot;~/scratch/data/tmp&quot;
 ## check that the directory exists, and if it doesn't then create it.

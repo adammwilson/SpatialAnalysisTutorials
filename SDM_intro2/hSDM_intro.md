@@ -61,6 +61,7 @@ Today we're going to work in an _interactive_ session on a compute node rather t
 ```{}
 source .bashrc
 qsub -q fas_devel -I -X -l nodes=1:ppn=2
+R
 ```
 
 For more information on what `qsub` means, check out the [Yale HPC FAQ](https://hpc.research.yale.edu/hpc_user_wiki/index.php/Torque_Userguide#qsub_-I).  

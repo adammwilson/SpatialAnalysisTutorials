@@ -2,10 +2,11 @@
 #' title: "Simple species distribution model workflow"
 #' author: "Adam M. Wilson"
 #' date: "March 24, 2015"
-#' output: 
+#' output:
 #'   html_document:
-#'     toc: true
-#'     keep_md: true
+#'     keep_md: yes
+#'     toc: yes
+#'   pdf_document: default
 #' ---
 #' 
 #' 
@@ -38,14 +39,22 @@
 #' 
 #' And load some packages (either from your own privaite library or from mine).
 ## ----,results='hide',message=FALSE---------------------------------------
+
+lpath="/lustre/scratch/client/fas/geodata/aw524/R/"
+library(package = "lattice",lib.loc=lpath)
 library(rgdal)
-packages=c("raster","dismo","maptools","sp","maps","rgeos","doParallel","rMOL","reshape","rasterVis","ggplot2","knitr","texreg")
-.libPaths(new="/lustre/scratch/client/fas/geodata/aw524/R/")
-needpackages=packages[!packages%in%rownames(installed.packages())]
-lapply(needpackages,install.packages)
-lapply(packages, require, character.only=T,quietly=T)
+.libPaths(new=lpath)
+packages=c("hSDM","dismo","maptools","sp",
+           "maps","coda","rgdal","rgeos",
+           "doParallel","rMOL","reshape",
+           "ggplot2","knitr","rasterVis","texreg")
+l=lapply(packages, library, 
+         character.only=T,quietly=T)
+
 
 rasterOptions(chunksize=1000,maxmemory=1000)
+
+
 
 #' 
 #' ## Load climate data
@@ -53,8 +62,8 @@ rasterOptions(chunksize=1000,maxmemory=1000)
 #' First set the path to the data directory.  You'll need to uncomment the line setting the directory to `lustre/...`.
 #' 
 ## ------------------------------------------------------------------------
-#datadir="~/work/env/"
-datadir="/lustre/scratch/client/fas/geodata/aw524/data"
+if(Sys.info()[["sysname"]]=="Darwin") datadir="~/work/env/"
+if(Sys.info()[["sysname"]]=="Linux") datadir="/lustre/scratch/client/fas/geodata/aw524/data"
 
 #' 
 #' And create an output directory `outputdir` to hold the outputs.  It's a good idea to define these as variables so it's easy to change them later if you move to a different machine.  
@@ -166,15 +175,15 @@ vars=c("cld","cld_intra","elev","forest")
 #' 
 #' Scaling and centering the environmental variables to zero mean and variance of 1, using the ```scale``` function is typically a good idea.  However, with so many people using this node at the same time, we'll skip this memory intensive step and use the unstandardized variables.  The downside of this is the regression coefficients are more difficult to interpret.  
 ## ----scaledata-----------------------------------------------------------
-#senv=scale(env[[vars]])
-senv=env[[vars]]
+senv=scale(env[[vars]])
+#senv=env[[vars]]
 
 #' 
 #' 
 #' ## Annotate the point records with the scaled environmental data
 #' Add the (scaled) environmental data to each point
 ## ------------------------------------------------------------------------
-pointsd=raster::extract(senv,pdata,sp=T)
+pointsd=raster::extract(senv,pdata,sp=T) 
 pointsd=na.exclude(pointsd)
 
 #' 
