@@ -617,6 +617,34 @@ gplot(pred,maxpixels=1e5)+geom_raster(aes(fill=value)) +
 
 Model selection is an extremely important component of any modeling excercise.  See [Hooten and Hobbs (2015)](http://www.esajournals.org/doi/abs/10.1890/14-0661.1) for a recent review of various methods.
 
+One metric for Bayesian model evaluation is the Deviance Information Criterion (DIC), which assess model fit penalized by model complexity (similar to the AIC).  For more information, see [Gelman, Andrew, Jessica Hwang, and Aki Vehtari. 2013. _Understanding Predictive Information Criteria for Bayesian Models_](http://www.stat.columbia.edu/~gelman/research/unpublished/waic_understand.pdf).
+
+
+Calculate DIC for the two models
+
+```r
+  eval=cbind.data.frame(Model=mods$model,
+            Deviance=params$mean[
+              grepl("Deviance",rownames(params))],
+            Pd=(params$sd[
+              grepl("Deviance",rownames(params))]^2)/2 
+            # Gelman BDA pg 182 
+            # http://www.stat.columbia.edu/~gelman/book/
+            )
+  # add the DIC
+  eval$DIC=eval$Deviance+eval$Pd
+  # print the table
+
+kable(eval,row.names=F, format = "markdown")
+```
+
+
+
+|Model | Deviance|        Pd|      DIC|
+|:-----|--------:|---------:|--------:|
+|m1    | 3742.204|  5.128476| 3747.332|
+|m2    | 3353.459| 12.530340| 3365.989|
+
 ## Additional Models in hSDM
 
 `*.icar`

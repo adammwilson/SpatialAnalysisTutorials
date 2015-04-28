@@ -734,6 +734,45 @@ gplot(pred,maxpixels=1e5)+geom_raster(aes(fill=value)) +
 <div id="model-selection" class="section level2">
 <h2>Model selection</h2>
 <p>Model selection is an extremely important component of any modeling excercise. See <a href="http://www.esajournals.org/doi/abs/10.1890/14-0661.1">Hooten and Hobbs (2015)</a> for a recent review of various methods.</p>
+<p>One metric for Bayesian model evaluation is the Deviance Information Criterion (DIC), which assess model fit penalized by model complexity (similar to the AIC). For more information, see <a href="http://www.stat.columbia.edu/~gelman/research/unpublished/waic_understand.pdf">Gelman, Andrew, Jessica Hwang, and Aki Vehtari. 2013. <em>Understanding Predictive Information Criteria for Bayesian Models</em></a>.</p>
+<p>Calculate DIC for the two models</p>
+<pre class="r"><code>  eval=cbind.data.frame(Model=mods$model,
+            Deviance=params$mean[
+              grepl(&quot;Deviance&quot;,rownames(params))],
+            Pd=(params$sd[
+              grepl(&quot;Deviance&quot;,rownames(params))]^2)/2 
+            # Gelman BDA pg 182 
+            # http://www.stat.columbia.edu/~gelman/book/
+            )
+  # add the DIC
+  eval$DIC=eval$Deviance+eval$Pd
+  # print the table
+
+kable(eval,row.names=F, format = &quot;markdown&quot;)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Model</th>
+<th align="right">Deviance</th>
+<th align="right">Pd</th>
+<th align="right">DIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">m1</td>
+<td align="right">232.9519</td>
+<td align="right">3.054827</td>
+<td align="right">236.0068</td>
+</tr>
+<tr class="even">
+<td align="left">m2</td>
+<td align="right">206.2574</td>
+<td align="right">9.054834</td>
+<td align="right">215.3123</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="additional-models-in-hsdm" class="section level2">
 <h2>Additional Models in hSDM</h2>
